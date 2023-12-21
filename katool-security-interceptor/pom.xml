@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.katool.security</groupId>
+        <artifactId>katool-security-starter-parent</artifactId>
+        <version>1.0.0.ALPHA</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <artifactId>katool-security-interceptor</artifactId>
+    <name>katool-security-interceptor</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>cn.katool.security</groupId>
+            <artifactId>katool-security-interface</artifactId>
+            <version>1.0.0.ALPHA</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+</project>

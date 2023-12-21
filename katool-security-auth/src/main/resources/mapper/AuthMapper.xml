@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.katool.security.auth.mapper.AuthMapper">
+
+    <resultMap id="BaseResultMap" type="cn.katool.security.common.model.entity.Auth">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="fid" column="fid" jdbcType="VARCHAR"/>
+        <result property="method" column="method" jdbcType="VARCHAR"/>
+        <result property="uri" column="uri" jdbcType="VARCHAR"/>
+        <result property="route" column="route" jdbcType="VARCHAR"/>
+        <result property="authRole" column="auth_role" jdbcType="VARCHAR"/>
+        <result property="operKaSecurityUser" column="oper_KaSecurityUser" jdbcType="VARCHAR"/>
+        <result property="checkLogin" column="check_login" jdbcType="BOOLEAN"/>
+        <result property="isOpen" column="is_open" jdbcType="BOOLEAN"/>
+        <result property="isDef" column="is_def" jdbcType="BOOLEAN"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,fid,uri,
+        route,auth_role,oper_KaSecurityUser,
+        check_login,is_open,is_def,is_delete
+    </sql>
+</mapper>

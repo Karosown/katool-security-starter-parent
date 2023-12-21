@@ -1,0 +1,210 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  #####DruidDataSource配置#####################
+  type: com.alibaba.druid.pool.DruidDataSource
+  initialSize: 5
+  minIdle: 5
+  maxActive: 20
+  # 配置获取连接等待超时的时间
+  maxWait: 60000
+  # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+  timeBetweenEvictionRunsMillis: 60000
+  # 配置一个连接在池中最小生存的时间，单位是毫秒
+  minEvictableIdleTimeMillis: 300000
+  validationQuery: SELECT 1 FROM DUAL
+  testWhileIdle: true
+  testOnBorrow: false
+  testOnReturn: false
+  # 打开PSCache，并且指定每个连接上PSCache的大小
+  poolPreparedStatements: true
+  maxPoolPreparedStatementPerConnectionSize: 20
+  # 配置监控统计拦截的filters，去掉后监控界面sql无法统计，'wall'用于防火墙
+  filters: stat,wall,slf4j
+  # 通过connectProperties属性来打开mergeSql功能；慢SQL记录
+  connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+  #合并多个DruidDataSource的监控数据
+  useGlobalDataSourceStat: true
+  application:
+    name: @projectName@
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  # 默认 dev 环境
+  profiles:
+    active: dev
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # session 配置
+  session:
+    # todo 取消注释开启分布式 session（须先配置 Redis）
+    store-type: redis
+    # 30 天过期
+    timeout: 2592000
+  # 数据库配置
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://47.108.49.84:4078/auth
+    KaSecurityUsername: root
+    password: wzl20030211
+  # Redis 配置
+
+  redis:
+    database: 2
+    host: 47.108.49.84
+    port: 3345
+    timeout: 5000
+    password: wzl20030211
+  # Elasticsearch 配置
+
+  elasticsearch:
+    uris: 47.108.49.84:9200
+    KaSecurityUsername: elastic
+    password: 123456
+  #  rabbitmq:
+  #    host: http://47.108.49.84
+  #    port: 5672
+  #    KaSecurityUsername: guest
+  #    password: guest
+  # 文件上传
+  mail:
+    default-encoding: UTF-8
+    host: smtp.exmail.qq.com
+    KaSecurityUsername: mail@wzl1.top
+    password: Di9s5ouGB6REzk6i
+    port: 465
+    properties:
+      mail:
+        smtp:
+          auth: true
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            port: 465
+          ssl:
+            enable: true
+          starttls:
+            enable: true
+            required: true
+    test-connection: true
+  servlet:
+    multipart:
+      location: /data/upload_tmp
+# 大小限制
+      max-file-size: 10GB
+      max-request-size: 100GB
+server:
+  address: 0.0.0.0
+  port: 7777
+  servlet:
+    context-path: /api/auth
+    # cookie 30 天过期
+    session:
+      cookie:
+        max-age: 2592000
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: false
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      logic-delete-field: isDelete # 全局逻辑删除的实体字段名
+      logic-delete-value: 1 # 逻辑已删除值（默认为 1）
+      logic-not-delete-value: 0 # 逻辑未删除值（默认为 0）
+katool:
+  qiniu:
+    accessKey: QZVhj0O3G2ptwrUXRqqnH71IDS-GYJW82rWAN_8P
+    secretKey: mfXhBU-xWl4pPUeaFMcVZQ0aiTSMyeA3MVaHhdnW
+    # 对象储存
+    bucket: karos-01 # 空间名称
+    zone: huanan # 存储区域
+    domain: gd.7n.cdn.wzl1.top # 访问域名
+    basedir: /thinktank
+  util:
+    redis:
+      policy: caffeine
+      time-unit: days
+      exp-time: 7
+  lock:
+    internal-lock-lease-time: 30
+    time-unit: minutes
+dubbo:
+  application:
+    name: dubbo-@projectName@
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
+seata:
+  application-id: @projectName@
+  enabled: true
+  tx-service-group: default_tx_group  # 事务群组（可以每个应用独立取名，也可以使用相同的名字）
+  client:
+    rm-report-success-enable: true
+    rm-table-meta-check-enable: false # 自动刷新缓存中的表结构（默认false）
+    rm-report-retry-count: 5 # 一阶段结果上报TC重试次数（默认5）
+    rm-async-commit-buffer-limit: 10000 # 异步提交缓存队列长度（默认10000）
+    rm:
+      lock:
+        lock-retry-internal: 10 # 校验或占用全局锁重试间隔（默认10ms）
+        lock-retry-times: 30 # 校验或占用全局锁重试次数（默认30）
+        lock-retry-policy-branch-rollback-on-conflict: true # 分支事务与其它全局回滚事务冲突时锁策略（优先释放本地锁让回滚成功）
+    tm-commit-retry-count: 3 # 一阶段全局提交结果上报TC重试次数（默认1次，建议大于1）
+    tm-rollback-retry-count: 3 # 一阶段全局回滚结果上报TC重试次数（默认1次，建议大于1）
+    undo:
+      undo-data-validation: true # 二阶段回滚镜像校验（默认true开启）
+      undo-log-serialization: jackson # undo序列化方式（默认jackson）
+      undo-log-table: undo_log  # 自定义undo表名（默认undo_log）
+    support:
+      spring:
+        datasource-autoproxy: true
+  service:
+    vgroup-mapping:
+      default_tx_group: default # TC 集群（必须与seata-server保持一致）
+    enable-degrade: false # 降级开关
+    disable-global-transaction: false # 禁用全局事务（默认false）
+    grouplist:
+      default: 127.0.0.1:7091
+  transport:
+    shutdown:
+      wait: 3
+    thread-factory:
+      boss-thread-prefix: NettyBoss
+      worker-thread-prefix: NettyServerNIOWorker
+      server-executor-thread-prefix: NettyServerBizHandler
+      share-boss-worker: false
+      client-selector-thread-prefix: NettyClientSelector
+      client-selector-thread-size: 1
+      client-worker-thread-prefix: NettyClientWorkerThread
+    type: TCP
+    server: NIO
+    heartbeat: true
+    serialization: seata
+    compressor: none
+    enable-client-batch-send-request: true # 客户端事务消息请求是否批量合并发送（默认true）
+  registry:
+    type: nacos
+    nacos:
+      server-addr: 127.0.0.1:8848
+      namespace:
+      cluster: default
+      group: SEATA_GROUP
+      KaSecurityUsername: nacos
+      password: nacos
+  config:
+    type: nacos
+    nacos:
+      namespace:
+      server-addr: 127.0.0.1:8848
+      group: SEATA_GROUP
+      KaSecurityUsername: nacos
+      password: nacos
+      dataId: seataServer.properties
+  log:
+    exception-rate: 100
+
