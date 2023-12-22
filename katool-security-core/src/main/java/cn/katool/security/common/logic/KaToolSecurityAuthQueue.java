@@ -32,9 +32,9 @@ public class KaToolSecurityAuthQueue {
         return list.isEmpty();
     }
 
-    public static Boolean run(List<String> authList){
+    public static Boolean run(List<String> roleList){
         for (KaSecurityAuthLogic logic : list) {
-            Boolean runResult = logic.doAuth(authList);
+            Boolean runResult = logic.doAuth(roleList);
             if (!runResult) {
                 return runResult;
             }

@@ -6,6 +6,8 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
 
 ## 2. 模块简介
 
+### 2.1 主要模块
+
 - katool-security-starter-parent 								主工程父模块
   - katool-security-core  										 核心模块
   - katool-security-interceptor                               AOP注解拦截器
@@ -17,55 +19,69 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
     - katool-security-gateway-spring-cloud-gateway-starter	      Spring Cloud GateWay 网关鉴权Starter
     - katool-security-gateway-zuul-starter                                         Zuul 网关鉴权Starter
 
-```bash
+```markdown
 └─katool-security-starter-parent
-    └─katool-security-auth						# 微服务鉴权中心服务
-    │  └─src/main/java
-    │          └─cn.katool.security
-    │                      └─auth
-    │                          ├─aop			# 日志记录切面
-    │                          ├─controller		# 鉴权服务控制器
-    │                          ├─exception		# 异常处理
-    │                          ├─job			# 定时任务 - 每10分钟自动关闭所有接口鉴权
-    │                          ├─mapper
-    │                          ├─model			# Auth实体类
-    │                          ├─service
-    │                          └─utils			# 用到的一些工具类
-    ├─katool-security-core
-    │  └─src/main/java
-    │         └─cn.katool.security
-    │                     └─common
-    │                         ├─annotation		# 鉴权注解（@AuthCheck）
-    │                         ├─constant		# 常量
-    │                         ├─logic			# 微服务鉴权处理逻辑层
-    │                         ├─model
-    │                         │  ├─dto/auth
-    │                         │  ├─entity
-    │                         │  └─vo
-    │                         └─utils			# JSON转换工具
-    ├─katool-security-gateway-starter-parent	# 微服务 - 网关层面鉴权starter父模块
-    │  ├─katool-security-gateway-interface		# 统一接口（用于获取Token，但是Request由于不同框架实现不同，各自自行实现Request上下文获取）
-    │  │  └─src/main/java
-    │  │              └─cn.katool.security.gateway
-    │  │                              └─service
-    │  ├─katool-security-gateway-spring-cloud-gateway-starter		# Spring Cloud GateWay Starter
-    │  │  └─src/main/java
-    │  │           └─cn.katool.security.starter
-    │  │                           ├─gateway
-    │  │                           └─utils
-    │  └─katool-security-gateway-zuul-starter						# Zuul Stater
-    ├─katool-security-interceptor
-    │  └─src/main/java
-    │              └─cn.katool.security
-    │                          └─interceptor	# AOP鉴权拦截切面逻辑
-    ├─katool-security-interface
-    │  └─src/main/java
-    │              └─cn.katool.security
-    │                          └─service		# Dubbo 远程调用接口
-    └─katool-security-spring-boot-starter		# 单体项目引入的Starter
-        └─src/main/java
-                    └─cn.katool.security
-                                └─starter
+   └─katool-security-auth						# 微服务鉴权中心服务
+   │  └─src/main/java
+   │          └─cn.katool.security
+   │                      └─auth
+   │                          ├─aop				# 日志记录切面
+   │                          ├─controller		# 鉴权服务控制器
+   │                          ├─exception		# 异常处理
+   │                          ├─job				# 定时任务 - 每10分钟自动关闭所有接口鉴权
+   │                          ├─mapper			# MyBatisPlus-Mapper层
+   │                          ├─model			# Auth实体类、KaSecurityUser实体类
+   │                          ├─service			# AuthController对应的service层,以及KaSecurityUser
+   │                          └─utils			# 用到的一些工具类
+   ├─katool-security-core
+   │  └─src/main/java
+   │         └─cn.katool.security
+   │                     └─common
+   │                         ├─annotation		# 鉴权注解（@AuthCheck）
+   │                         ├─constant		# 常量
+   │                         ├─logic			# 微服务鉴权处理逻辑层
+   │                         ├─model
+   │                         │  ├─dto/auth
+   │                         │  ├─entity
+   │                         │  └─vo
+   │                         └─utils			# JSON转换工具
+   ├─katool-security-gateway-starter-parent	# 微服务 - 网关层面鉴权starter父模块
+   │  ├─katool-security-gateway-interface		# 统一接口（用于获取Token，但是Request由于不同框架实现不同，各自自行实现Request上下文获取）
+   │  │  └─src/main/java
+   │  │              └─cn.katool.security.gateway
+   │  │                              └─service
+   │  ├─katool-security-gateway-spring-cloud-gateway-starter		# Spring Cloud GateWay Starter
+   │  │  └─src/main/java
+   │  │           └─cn.katool.security.starter
+   │  │                           ├─gateway
+   │  │                           └─utils
+   │  └─katool-security-gateway-zuul-starter						# Zuul Stater
+   ├─katool-security-interceptor
+   │  └─src/main/java
+   │              └─cn.katool.security
+   │                          └─interceptor	# AOP鉴权拦截切面逻辑
+   ├─katool-security-interface
+   │  └─src/main/java
+   │              └─cn.katool.security
+   │                          └─service		# Dubbo 远程调用接口
+   └─katool-security-spring-boot-starter		# 单体项目引入的Starter
+       └─src/main/java
+                   └─cn.katool.security
+                               └─starter
+```
+
+### 2.2 其他模块
+
+- katool-security-demo	一些使用样例
+  - katool-security-boot-simple-demo	    在单体项目下的使用样例
+  - katool-security-gateway-simple-demo  微服务模式，在SpringCloudGateWay作为网关的前提下的使用样例
+  - katool-security-zuul-simple-demo          微服务模式，在Zuul作为网关的前提下的使用样例
+
+```markdown
+└─katool-security-demo
+   ├─katool-security-boot-simple-demo
+   ├─katool-security-gateway-simple-demo
+   └─katool-security-zuul-simple-demo
 ```
 
 ## 3. 鉴权逻辑实现
@@ -76,7 +92,7 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
 @Component
 public class MySecurityAuthLogic implements KaSecurityAuthLogic {
 
-   void doAuth(){
+   void doAuth(List<String> routeList){
        // 你的业务逻辑
    }
     
@@ -91,8 +107,8 @@ public class MySecurityAuthLogic implements KaSecurityAuthLogic {
 public class BeanClass{
     
     @Bean
-    void run(){
-        KaToolSecurityAuthQueue.add(new MySecurityAuthLogic());
+    void run(List<String> routeList){
+        KaToolSecurityAuthQueue.add(new MySecurityAuthLogic(routeList));
     }
     
 }
