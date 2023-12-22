@@ -4,7 +4,7 @@ package cn.katool.security.interceptor;
 
 import cn.katool.security.common.annotation.AuthCheck;
 import cn.katool.security.common.annotation.AuthServiceCheck;
-import cn.katool.security.common.logic.KaAuthList;
+import cn.katool.security.common.logic.KaToolSecurityAuthQueue;
 import cn.katool.security.common.model.entity.Auth;
 import cn.katool.security.service.AuthService;
 
@@ -91,8 +91,9 @@ public class AuthInterceptor {
             log.info("认证中心保存更新状态state: {}",state);
             // 网关没有鉴权，那么在这里鉴权
             log.info("AOP鉴权开始");
-            // todo: 使用开发者自定义的及安全策略进行及安全
-            KaAuthList.run();
+            if (!KaToolSecurityAuthQueue.run(anyRole)) {
+                return ResponseData.builder().code(403).message("无权限");
+            }
             log.info("AOP鉴权结束");
         }
         else{
@@ -126,7 +127,9 @@ public class AuthInterceptor {
         }
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         log.info("AOP鉴权开始");
-        KaAuthList.run();
+        if (!KaToolSecurityAuthQueue.run(anyRole)) {
+            return ResponseData.builder().code(403).message("无权限");
+        }
         log.info("AOP鉴权结束");
         // 进行响应日志记录
         return handelResponse(joinPoint);

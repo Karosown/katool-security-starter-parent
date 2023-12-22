@@ -4,17 +4,24 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-starter-parent</artifactId>
-        <version>1.0.0.ALPHA</version>
+        <version>1.0.0.SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>katool-security-interface</artifactId>
     <name>katool-security-interface</name>
     <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>cn.katool.security</groupId>
-            <artifactId>katool-security-common</artifactId>
-            <version>1.0.0.ALPHA</version>
+            <artifactId>katool-security-core</artifactId>
+            <version>1.0.0.SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.katool.security</groupId>
+            <artifactId>katool-security-core</artifactId>
+            <version>1.0.0.SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
