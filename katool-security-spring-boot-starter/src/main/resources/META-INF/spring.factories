@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
+cn.katool.security.core.config.KaSecurityCoreConfig,\
+cn.katool.security.config.KaSecurityModeConfig

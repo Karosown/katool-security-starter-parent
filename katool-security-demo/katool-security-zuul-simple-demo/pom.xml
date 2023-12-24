@@ -2,11 +2,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>cn.katool.security</groupId>
-        <artifactId>katool-security-starter-parent</artifactId>
-        <version>1.0.0.SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <groupId>cn.katool.security.demo</groupId>
+        <artifactId>katool-security-demo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+    <groupId>cn.katool.security.demo</groupId>
     <artifactId>katool-security-zuul-simple-demo</artifactId>
     <name>katool-security-zuul-simple-demo</name>
     <url>http://maven.apache.org</url>

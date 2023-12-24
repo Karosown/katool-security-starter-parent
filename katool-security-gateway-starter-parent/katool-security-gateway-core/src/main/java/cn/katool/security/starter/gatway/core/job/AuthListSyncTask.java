@@ -1,0 +1,48 @@
+/**
+ * Title
+ *
+ * @ClassName: AuthListSyncTask
+ * @Description:
+ * @author: 巫宗霖
+ * @date: 2023/5/27 21:01
+ * @Blog: https://www.wzl1.top/
+ */
+
+package cn.katool.security.starter.gatway.core.job;
+
+
+import cn.katool.security.core.model.vo.AuthVO;
+import cn.katool.security.starter.gatway.core.constant.GlobalContainer;
+import cn.katool.security.service.AuthService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Slf4j
+@Component
+public class AuthListSyncTask {
+    @DubboReference(check = false)
+    AuthService authService;
+
+    //通过定时任务
+    @Scheduled(fixedRate = 60 * 1000)
+    public void run() {
+        GlobalContainer.authRouteList.removeAllElements(); // 删除所有元素，保证数据一致性
+        List<AuthVO> list = authService.getlistByIsOpen();
+        list.forEach(v->{
+            GlobalContainer.Route e = new GlobalContainer.Route(v.getMethod(), v.getUri(), v.getRoute(), v.getAuthRoles())
+                    .setCheckLogin(v.getCheckLogin())
+                    .setOpen(v.getIsOpen())
+                    .setDef(v.getIsDef())
+                    .setRole(v.getAuthRoles())
+                    .setRole(v.getAuthRole());
+            log.info("open the route:{}",e);
+            GlobalContainer.authRouteList.add(
+                    e
+            );
+        });
+    }
+}

@@ -15,7 +15,7 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
   - katool-security-interface                                   微服务模式 - Dubbo远程调用Interface层
   - katool-security-auth                                           微服务模式 - 鉴权中心服务
   - katool-security-gateway-starter-parent          微服务 - 网关层面鉴权starter父模块
-    - katool-security-gateway-interface                                              
+    - katool-security-gateway-core                                              
     - katool-security-gateway-spring-cloud-gateway-starter	      Spring Cloud GateWay 网关鉴权Starter
     - katool-security-gateway-zuul-starter                                         Zuul 网关鉴权Starter
 
@@ -46,7 +46,7 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
    │                         │  └─vo
    │                         └─utils			# JSON转换工具
    ├─katool-security-gateway-starter-parent	# 微服务 - 网关层面鉴权starter父模块
-   │  ├─katool-security-gateway-interface		# 统一接口（用于获取Token，但是Request由于不同框架实现不同，各自自行实现Request上下文获取）
+   │  ├─katool-security-gateway-core		# 统一接口（用于获取Token，但是Request由于不同框架实现不同，各自自行实现Request上下文获取）
    │  │  └─src/main/java
    │  │              └─cn.katool.security.gateway
    │  │                              └─service

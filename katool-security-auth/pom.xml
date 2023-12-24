@@ -7,11 +7,17 @@
         <version>1.0.0.SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-auth</artifactId>
     <name>katool-security-auth</name>
 
     <url>http://maven.apache.org</url>
     <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mp.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-gateway-spring-boot-starter</artifactId>

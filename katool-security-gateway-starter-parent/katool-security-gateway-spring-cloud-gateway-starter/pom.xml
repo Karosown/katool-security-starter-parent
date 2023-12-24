@@ -7,7 +7,7 @@
         <version>1.0.0.SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-
+    <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
     <name>katool-security-gateway</name>
     <url>http://maven.apache.org</url>
@@ -31,7 +31,7 @@
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
-            <artifactId>katool-security-gateway-interface</artifactId>
+            <artifactId>katool-security-gateway-core</artifactId>
             <version>1.0.0.SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -49,7 +49,7 @@
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
-            <artifactId>katool-security-gateway-interface</artifactId>
+            <artifactId>katool-security-gateway-core</artifactId>
             <version>1.0.0.SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

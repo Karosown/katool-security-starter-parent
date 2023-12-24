@@ -1,0 +1,35 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.katool.security.demo</groupId>
+        <artifactId>katool-security-gateway-simple-demo</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <groupId>cn.katool.security.demo.gateway</groupId>
+    <artifactId>katool-security-gateway-simple-demo-gateway</artifactId>
+    <name>katool-security-gateway-simple-demo-gateway</name>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.katool.security.demo.gateway</groupId>
+            <artifactId>katool-security-gateway-simple-demo-core</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
+        </dependency>
+<!--        引入SpringCloudGateWay对应的Starter-->
+        <dependency>
+            <groupId>cn.katool.security</groupId>
+            <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
+            <version>1.0.0.SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>

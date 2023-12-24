@@ -7,6 +7,7 @@
         <version>1.0.0.SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-interface</artifactId>
     <name>katool-security-interface</name>
     <url>http://maven.apache.org</url>

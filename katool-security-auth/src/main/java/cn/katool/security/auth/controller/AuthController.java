@@ -14,13 +14,14 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
+import cn.katool.security.auth.service.AuthServiceInterface;
 import cn.katool.security.auth.utils.BaseResponse;
 import cn.katool.security.auth.utils.ResultUtils;
-import cn.katool.security.common.annotation.AuthCheck;
-import cn.katool.security.common.constant.CommonConstant;
-import cn.katool.security.common.model.dto.auth.*;
-import cn.katool.security.common.model.entity.Auth;
-import cn.katool.security.common.model.vo.AuthVO;
+import cn.katool.security.core.annotation.AuthCheck;
+import cn.katool.security.core.constant.KaSecurityConstant;
+import cn.katool.security.core.model.dto.auth.*;
+import cn.katool.security.auth.model.entity.Auth;
+import cn.katool.security.core.model.vo.AuthVO;
 import cn.katool.security.service.AuthService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -45,7 +46,7 @@ import java.util.List;
 @RequestMapping
 public class AuthController {
     @Resource
-    AuthService authService;
+    AuthServiceInterface authService;
 
     @Operation(description = "权限刷新总接口")
     @GetMapping("/reload")
@@ -57,7 +58,6 @@ public class AuthController {
     @Operation(description = "路由权限列表分页查询获取")
     @GetMapping("/page")
     public BaseResponse<IPage<AuthVO>> getPage(AuthQueryRequest authQueryRequest){
-
      String fid = authQueryRequest.getFid();
      String method = authQueryRequest.getMethod();
      String uri = authQueryRequest.getUri();
@@ -99,7 +99,7 @@ public class AuthController {
         if (StringUtils.isNotBlank(operKaSecurityUser)) {
                 queryWrapper.like("oper_KaSecurityUser",operKaSecurityUser);
         }
-        queryWrapper.orderBy(true, CommonConstant.SORT_ORDER_ASC.equals(sortOrder),sortField)
+        queryWrapper.orderBy(true, KaSecurityConstant.SORT_ORDER_ASC.equals(sortOrder),sortField)
                 .eq(BooleanUtils.isTrue(checkLogin),"check_login",checkLogin)
                 .eq(BooleanUtils.isTrue(isDef),"is_def",isDef);
         authService.page(authPage, queryWrapper);

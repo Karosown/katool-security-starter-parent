@@ -1,7 +1,7 @@
 package cn.katool.security.auth.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import cn.katool.security.common.model.entity.Auth;
+import cn.katool.security.auth.model.entity.Auth;
 
 /**
 * @author 30398

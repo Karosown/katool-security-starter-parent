@@ -1,9 +1,8 @@
 package cn.katool.security.service;
 
-import cn.katool.security.common.model.dto.auth.AuthAddRequest;
-import cn.katool.security.common.model.dto.auth.AuthUpdateRequest;
-import cn.katool.security.common.model.entity.Auth;
-import com.baomidou.mybatisplus.extension.service.IService;
+import cn.katool.security.core.model.dto.auth.AuthAddRequest;
+import cn.katool.security.core.model.dto.auth.AuthUpdateRequest;
+import cn.katool.security.core.model.vo.AuthVO;
 
 import java.util.List;
 
@@ -12,7 +11,7 @@ import java.util.List;
 * @description 针对表【auth】的数据库操作Service
 * @createDate 2023-05-27 11:29:05
 */
-public interface AuthService extends IService<Auth> {
+public interface AuthService {
 
         Boolean insert(AuthAddRequest addRequest);
         Boolean change(AuthUpdateRequest authUpdateRequest);
@@ -28,7 +27,9 @@ public interface AuthService extends IService<Auth> {
 
         Boolean close(String method, String uri, String route);
 
-    Auth getOne(String method, String requestURI, String contextPath);
+    AuthVO getOne(String method, String requestURI, String contextPath);
 
-    List<Auth> getlistByIsOpen();
+    List<AuthVO> getlistByIsOpen();
+
+        boolean saveOrUpdate(AuthVO one);
 }

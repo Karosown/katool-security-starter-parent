@@ -15,7 +15,7 @@ package cn.katool.security.auth.aop;
 import cn.katool.security.auth.model.KaSecurityUser;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
-import cn.katool.security.common.constant.CommonConstant;
+import cn.katool.security.core.config.KaSecurityCoreConfig;
 import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.verify.IPUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ public class ValidRole {
     @Around("execution(* cn.katool.security.auth.controller.*.*(..)) && !execution(* cn.katool.security.auth.controller.AuthController.uuid(..))")
     public Object Valid(ProceedingJoinPoint point) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.getRequestAttributes())).getRequest();
-        String authorization = request.getHeader(CommonConstant.TOKEN_HEADER);
+        String authorization = request.getHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
         KaSecurityUser KaSecurityUser = (KaSecurityUser) AuthUtil.getUserFromToken(authorization,KaSecurityUser.class);
         if (ObjectUtils.isEmpty(KaSecurityUser)){
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
