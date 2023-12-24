@@ -108,7 +108,7 @@ public class BeanClass{
     
     @Bean
     void run(List<String> routeList){
-        KaToolSecurityAuthQueue.add(new MySecurityAuthLogic(routeList));
+        KaToolSecurityAuthQueue.add(new MySecurityAuthLogic());
     }
     
 }
