@@ -1,0 +1,74 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      discovery:
+        locator:
+          # 是否与服务发现组件进行结合,通过  serviceId 转发到具体的微服务
+          enabled: true                       #是否开启基于服务发现得路由规则
+          lower-case-service-id: true         # 是否将服务名称转小写
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            # 允许携带认证信息
+            # 允许跨域的源(网站域名/ip)，设置*为全部
+            # 允许跨域请求里的head字段，设置*为全部
+            # 允许跨域的method， 默认为GET和OPTIONS，设置*为全部
+            # 跨域允许的有效期
+            allow-credentials: true
+            allowed-originPatterns: '*'
+            allowed-headers: Content-Type,Content-Length, Authorization, Accept,X-Requested-With,Uuid,Authorization,X-Ca-Timestamp,X-Ca-Nonce,X-Ca-Sign,ngrok-skip-browser-warning,User-Agent,x-forwarded-for
+            allowed-methods: '*'
+            exposed-headers: Content-Type,Content-Length, Authorization, Accept,X-Requested-With,Uuid,Token
+            max-age: 3600
+      default-filters:
+        - AddResponseHeader=source, @projectName@
+        - AddRequestHeader=source, gateway
+      routes:
+        - id: thinktank-tool             # 工具接口路由 —— 文件上传、验证码生成
+          uri: http://localhost:8682/ #http://localhost:6421
+          predicates:
+            - Path=/api/
+  main:
+    web-application-type: reactive
+  application:
+    name: katool-security-simple-demo-boot
+  # DataSource Config
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  jackson:
+    #  格式化返回时间 yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # session 失效时间（分钟）
+  session:
+    timeout: 86400
+    store-type: redis
+  redis:
+    port: 6379
+    host: localhost
+    database: 0
+
+dubbo:
+  application:
+    name: dubbo-KaTool-Security-GateWay
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
+
+server:
+  port: 8681
+  servlet:
+    context-path: /api
+katool:
+  security:
+    mode: single
+    core:
+      token-header: "Authorization"

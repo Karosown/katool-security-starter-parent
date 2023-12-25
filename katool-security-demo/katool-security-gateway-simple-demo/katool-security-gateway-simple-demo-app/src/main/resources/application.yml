@@ -1,0 +1,47 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  # 使用配置文件   -- 改好下面的配置以后把该配置删掉即可，本用于多环境部署
+#  profiles:
+#    active: prod         # 如果打算就用application.yml请把这一行注释掉
+  application:
+    name: katool-security-simple-demo-gateway-app
+  # DataSource Config
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  jackson:
+    #  格式化返回时间 yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # session 失效时间（分钟）
+  session:
+    timeout: 86400
+    store-type: redis
+  redis:
+    port: 6379
+    host: localhost
+    database: 0
+
+dubbo:
+  application:
+    name: dubbo-KaTool-Security-GateWay-APP
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
+
+server:
+  port: 8682
+  servlet:
+    context-path: /api
+katool:
+  security:
+    mode: gateway
+    core:
+      token-header: "Authorization"
