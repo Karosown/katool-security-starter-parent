@@ -4,7 +4,7 @@ import cn.katool.security.starter.gateway.gateway.utils.RequestContextUtil;
 import reactor.core.publisher.Mono;
 
 
-public class KaSecurityAuthUtilUtil<T> implements DefaultKaSecurityAuthUtilInterface<T>{
+public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface<T>{
 
     @Override
     public String getTokenWithHeader(String headerName){

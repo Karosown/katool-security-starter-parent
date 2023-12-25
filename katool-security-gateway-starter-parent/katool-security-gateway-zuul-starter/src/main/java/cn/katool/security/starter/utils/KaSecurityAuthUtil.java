@@ -1,5 +1,7 @@
 package cn.katool.security.starter.utils;
 
+import com.netflix.zuul.context.RequestContext;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -7,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public HttpServletResponse getResponse() {
-        return AbstractKaSecurityAuthUtil.super.getResponse();
+        return RequestContext.getCurrentContext().getResponse();
     }
 
     @Override
@@ -17,7 +19,7 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
 
     @Override
     public HttpServletRequest getRequest() {
-        return AbstractKaSecurityAuthUtil.super.getRequest();
+        return RequestContext.getCurrentContext().getRequest();
     }
 
     @Override
