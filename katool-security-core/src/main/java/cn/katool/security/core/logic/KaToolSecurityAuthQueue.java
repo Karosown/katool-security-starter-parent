@@ -35,7 +35,9 @@ public class KaToolSecurityAuthQueue {
 
     public static KaSecurityValidMessage run(List<String> roleList,Boolean checkLogin){
         for (KaSecurityAuthLogic logic : list) {
-            KaSecurityValidMessage runResult = KaSecurityAuthLogic.allValid(new KaSecurityValidMessage[]{logic.checkLogin(checkLogin), logic.doAuth(roleList)});
+            KaSecurityValidMessage runResult = KaSecurityAuthLogic.allValid(new KaSecurityValidMessage[]{
+                    logic.checkLogin(checkLogin),
+                    logic.doAuth(roleList)});
             // 如果返回结果是null，那么就是未知错误
             if (ObjectUtils.isEmpty(runResult)){
                 runResult = KaSecurityValidMessage.unKnow();

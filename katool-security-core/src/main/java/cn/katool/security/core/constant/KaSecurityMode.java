@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public enum KaSecurityMode {
     GATEWAY("gateway"),
-    SINGLE("single");
+    SINGLE("single"),
+    ZUUL("zuul");
 
     private String mode;
 

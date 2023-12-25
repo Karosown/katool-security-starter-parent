@@ -5,12 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * 权限校验，如果检查登录，用于Controller层
- **/
-@Target({ElementType.METHOD})
+@Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AuthCheck {
+public @interface AuthControllerCheck {
     /**
      * 拥有任意一个角色即可通过
      */
@@ -23,11 +20,15 @@ public @interface AuthCheck {
     @Deprecated
     String mustRole() default "";
 
+
     /**
      * 检查登录，不会检查权限
      */
     boolean checkLogin() default false;
 
-
+    /**
+     * 排除的方法
+     * @return
+     */
+    String[] excludeMethods() default "";
 }
-

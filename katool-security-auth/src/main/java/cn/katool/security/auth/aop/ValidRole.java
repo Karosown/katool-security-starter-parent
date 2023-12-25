@@ -38,7 +38,7 @@ public class ValidRole {
     public Object Valid(ProceedingJoinPoint point) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.getRequestAttributes())).getRequest();
         String authorization = request.getHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-        KaSecurityUser KaSecurityUser = (KaSecurityUser) AuthUtil.getUserFromToken(authorization,KaSecurityUser.class);
+        KaSecurityUser KaSecurityUser = (KaSecurityUser) AuthUtil.getPayLoadFromToken(authorization,KaSecurityUser.class);
         if (ObjectUtils.isEmpty(KaSecurityUser)){
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }

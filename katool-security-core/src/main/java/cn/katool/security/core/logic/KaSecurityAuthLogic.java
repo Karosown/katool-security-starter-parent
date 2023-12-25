@@ -1,12 +1,25 @@
 package cn.katool.security.core.logic;
 
+import cn.katool.Exception.ErrorCode;
+import cn.katool.Exception.KaToolException;
+import cn.katool.security.core.config.KaSecurityCoreConfig;
+import cn.katool.security.core.constant.KaSecurityMode;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.yaml.snakeyaml.introspector.PropertySubstitute;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 @FunctionalInterface
 public interface KaSecurityAuthLogic {
 
    KaSecurityValidMessage doAuth(List<String> roleList);
+
    default KaSecurityValidMessage checkLogin(Boolean checkLogin){
       if (checkLogin){
          return KaSecurityValidMessage.unKnow().setMessage("请检查您 KaSecurityAuthLogic 实现类是否实现了checkLogin方法");
@@ -21,6 +34,15 @@ public interface KaSecurityAuthLogic {
          }
       }
       return KaSecurityValidMessage.success();
+   }
+
+   default HttpServletRequest getRequest(){
+      HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();;
+      if (KaSecurityMode.GATEWAY.equals(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER)) {
+         Logger logger = Logger.getLogger(PropertySubstitute.class.getPackage().getName());
+         logger.log(Level.WARNING, "KaSecurityMode.GATEWAY 模式下，网关层请使用TokenUtil来获取Token，我们不建议使用Request来获取");
+      }
+      return request;
    }
 
 }
