@@ -53,7 +53,7 @@ public class AuthVO implements Serializable {
      *
      */
     
-    private String operKaSecurityUser;
+    private String operUser;
 
     /**
      *
@@ -103,8 +103,8 @@ public class AuthVO implements Serializable {
     }
 
 
-    public AuthVO setOperKaSecurityUser(String operKaSecurityUser) {
-        this.operKaSecurityUser = operKaSecurityUser;
+    public AuthVO setoperUser(String operUser) {
+        this.operUser = operUser;
         return this;
     }
 

@@ -76,7 +76,7 @@ public class AuthInterceptor {
             // 判断在gateway上是否鉴权
             String authed = request.getHeader("Authed");
             if (!"gateway".equals(authed)) {
-                log.info("\n新注册到认证中心的接口，路由信息如下:\n" +
+                log.info("\n未被网关鉴权的接口，路由信息如下:\n" +
                         "method: [{}]\n" +
                         "requestURI: [{}]\n" +
                         "contextPath:  [{}]",method,requestURI,contextPath);
@@ -84,6 +84,10 @@ public class AuthInterceptor {
                 AuthVO one = authService.getOne(method, requestURI, contextPath);
                 // 如果是新增的路由，那么就加上
                 if (ObjectUtils.isEmpty(one)) {
+                    log.info("\n新增鉴权路由，路由信息如下:\n" +
+                            "method: [{}]\n" +
+                            "requestURI: [{}]\n" +
+                            "contextPath:  [{}]",method,requestURI,contextPath);
                     one = new AuthVO()
                             .setMethod(method)
                             .setUri(requestURI)

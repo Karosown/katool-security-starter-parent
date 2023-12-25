@@ -35,7 +35,7 @@ public class AuthAddRequest implements Serializable {
     /**
      * 
      */
-    private String operKaSecurityUser;
+    private String operUser;
 
     /**
      * 

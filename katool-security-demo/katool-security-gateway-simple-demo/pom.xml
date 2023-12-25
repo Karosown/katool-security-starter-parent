@@ -19,9 +19,9 @@
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
-            <groupId>cn.katool.security</groupId>
-            <artifactId>katool-security-spring-boot-starter</artifactId>
-            <version>1.0.0.SNAPSHOT</version>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>3.1.2</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,82 +1,91 @@
 package cn.katool.security.auth.service.impl;
 
 import cn.katool.security.auth.model.entity.Auth;
-import cn.katool.security.auth.service.AuthServiceInterface;
+import cn.katool.security.auth.service.AuthInnerService;
+import cn.katool.security.core.annotation.AuthCheck;
 import cn.katool.security.core.model.dto.auth.AuthAddRequest;
 import cn.katool.security.core.model.dto.auth.AuthUpdateRequest;
 import cn.katool.security.core.model.vo.AuthVO;
 import cn.katool.security.service.AuthService;
+import cn.katool.util.database.nosql.RedisUtils;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import javax.annotation.Resources;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @DubboService
 public class AuthServiceImpl implements AuthService {
     @Resource
-    AuthServiceInterface authService;
+    AuthInnerService authInnerService;
     @Override
     public Boolean insert(AuthAddRequest addRequest) {
-        return authService.insert(addRequest);
+        return authInnerService.insert(addRequest);
     }
 
     @Override
     public Boolean change(AuthUpdateRequest authUpdateRequest) {
-        return authService.change(authUpdateRequest);
+        return authInnerService.change(authUpdateRequest);
     }
 
     @Override
     public Boolean open(String method, String uri, String route) {
-        return  authService.open(method, uri, route);
+        return  authInnerService.open(method, uri, route);
     }
 
     @Override
     public Boolean open(String id) {
-        return  authService.open(id);
+        return  authInnerService.open(id);
     }
 
     @Override
     public Boolean isOpen(String method, String uri, String route) {
-        return  authService.isOpen(method, uri, route);
+        return  authInnerService.isOpen(method, uri, route);
     }
 
     @Override
     public Boolean reload() {
-        return   authService.reload();
+        return   authInnerService.reload();
     }
 
     @Override
     public Boolean open(List<String> ids) {
-        return  authService.open(ids);
+        return  authInnerService.open(ids);
     }
 
     @Override
     public Boolean close(List<String> ids) {
-        return   authService.close(ids);
+        return   authInnerService.close(ids);
     }
 
     @Override
     public Boolean close(String id) {
-        return    authService.close(id);
+        return    authInnerService.close(id);
     }
 
     @Override
     public Boolean close(String method, String uri, String route) {
-        return   authService.close(method, uri, route);
+        return   authInnerService.close(method, uri, route);
     }
 
     @Override
     public AuthVO getOne(String method, String requestURI, String contextPath) {
         AuthVO authVO = new AuthVO();
-        BeanUtils.copyProperties(authService.getOne(method, requestURI, contextPath), authVO);
+        Auth one = authInnerService.getOne(method, requestURI, contextPath);
+        if (ObjectUtils.isEmpty(one)){
+            return null;
+        }
+        BeanUtils.copyProperties(one, authVO);
         return authVO;
     }
 
     @Override
     public List<AuthVO> getlistByIsOpen() {
-        return   authService.getlistByIsOpen().stream().map(v->{
+        return   authInnerService.getlistByIsOpen().stream().map(v->{
             AuthVO authVO = new AuthVO();
             BeanUtils.copyProperties(v, authVO);
             return authVO;
@@ -84,9 +93,9 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean saveOrUpdate(AuthVO one) {
+    public Boolean saveOrUpdate(AuthVO one) {
         Auth auth = new Auth();
         BeanUtils.copyProperties(one, auth);
-        return    authService.saveOrUpdate(auth);
+        return    authInnerService.saveOrUpdate(auth);
     }
 }

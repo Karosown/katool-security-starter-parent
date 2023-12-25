@@ -58,8 +58,8 @@ public class Auth implements Serializable {
     /**
      * 
      */
-    @TableField(value = "oper_KaSecurityUser")
-    private String operKaSecurityUser;
+    @TableField(value = "oper_user")
+    private String operUser;
 
     /**
      *
@@ -114,8 +114,8 @@ public class Auth implements Serializable {
         return this;
     }
 
-    public Auth setOperKaSecurityUser(String operKaSecurityUser) {
-        this.operKaSecurityUser = operKaSecurityUser;
+    public Auth setoperUser(String operUser) {
+        this.operUser = operUser;
         return this;
     }
 

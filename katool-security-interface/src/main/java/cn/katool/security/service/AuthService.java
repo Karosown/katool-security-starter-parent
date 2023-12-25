@@ -31,5 +31,5 @@ public interface AuthService {
 
     List<AuthVO> getlistByIsOpen();
 
-        boolean saveOrUpdate(AuthVO one);
+        Boolean saveOrUpdate(AuthVO one);
 }

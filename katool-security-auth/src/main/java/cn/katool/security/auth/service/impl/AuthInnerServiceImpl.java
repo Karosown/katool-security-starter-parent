@@ -3,7 +3,7 @@ package cn.katool.security.auth.service.impl;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
 import cn.katool.security.auth.mapper.AuthMapper;
-import cn.katool.security.auth.service.AuthServiceInterface;
+import cn.katool.security.auth.service.AuthInnerService;
 import cn.katool.security.core.annotation.AuthServiceCheck;
 import cn.katool.security.core.model.dto.auth.AuthAddRequest;
 import cn.katool.security.core.model.dto.auth.AuthUpdateRequest;
@@ -12,10 +12,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,11 +30,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 */
 @Service
 @AuthServiceCheck(
-        anyRole = {"admin"},
         excludeMethods = {"reload","getlistByIsOpen"})
-public class AuthServiceInterfaceImpl extends ServiceImpl<AuthMapper, Auth>
-    implements AuthServiceInterface {
-
+public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
+    implements AuthInnerService {
     @Override
     public Boolean insert(AuthAddRequest addRequest) {
         if (ObjectUtils.isEmpty(addRequest)){
@@ -48,10 +46,10 @@ public class AuthServiceInterfaceImpl extends ServiceImpl<AuthMapper, Auth>
         String uri = addRequest.getUri();
         String route = addRequest.getRoute();
         List<String> authRole = addRequest.getAuthRole();
-        String operKaSecurityUser = addRequest.getOperKaSecurityUser();
+        String operUser = addRequest.getOperUser();
         Boolean checkLogin = addRequest.getCheckLogin();
         Boolean isDef = addRequest.getIsDef();
-        if (StringUtils.isAnyBlank(method,uri,route,operKaSecurityUser)) {
+        if (StringUtils.isAnyBlank(method,uri,route,operUser)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         if (ObjectUtils.isEmpty(authRole)||authRole.size()<1){
@@ -77,10 +75,10 @@ public class AuthServiceInterfaceImpl extends ServiceImpl<AuthMapper, Auth>
         String uri = authUpdateRequest.getUri();
         String route = authUpdateRequest.getRoute();
         List<String> authRole = authUpdateRequest.getAuthRole();
-        String operKaSecurityUser = authUpdateRequest.getOperKaSecurityUser();
+        String operUser = authUpdateRequest.getOperUser();
         Boolean checkLogin = authUpdateRequest.getCheckLogin();
         Boolean isDef = authUpdateRequest.getIsDef();
-        if (StringUtils.isAnyBlank(method,uri,route,operKaSecurityUser)) {
+        if (StringUtils.isAnyBlank(method,uri,route,operUser)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         if (ObjectUtils.isEmpty(authRole)||authRole.size()<1){

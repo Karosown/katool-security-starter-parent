@@ -40,7 +40,7 @@ public class AuthUpdateRequest implements Serializable {
     /**
      *
      */
-    private String operKaSecurityUser;
+    private String operUser;
 
     /**
      *

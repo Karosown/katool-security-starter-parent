@@ -14,11 +14,17 @@ package cn.katool.security.starter.gatway.core.constant;
 
 
 import cn.katool.security.starter.gatway.utils.NetUtils;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Vector;
 
 public interface GlobalContainer {
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     class Route{
         String method;
         String url;

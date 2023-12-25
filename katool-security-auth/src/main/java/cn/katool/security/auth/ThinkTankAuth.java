@@ -5,17 +5,17 @@ import org.apache.dubbo.config.spring.context.annotation.EnableDubbo;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @EnableKnife4j
-@SpringBootApplication(scanBasePackages = {"cn.katool.security"})
-@MapperScan("cn.katool.security.*")
-@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
+@SpringBootApplication(scanBasePackages = {"cn.katool.security.auth", "cn.katool.security.core"})
+@MapperScan("cn.katool.security.auth.mapper")
 @EnableDubbo
-@EnableTransactionManagement
+@EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 @EnableScheduling
 public class ThinkTankAuth {
     public static void main(String[] args) {

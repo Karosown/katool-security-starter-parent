@@ -14,7 +14,7 @@ import java.util.List;
 * @description 针对表【auth】的数据库操作Service
 * @createDate 2023-05-27 11:29:05
 */
-public interface AuthServiceInterface extends IService<Auth>  {
+public interface AuthInnerService extends IService<Auth>  {
 
         Boolean insert(AuthAddRequest addRequest);
         Boolean change(AuthUpdateRequest authUpdateRequest);

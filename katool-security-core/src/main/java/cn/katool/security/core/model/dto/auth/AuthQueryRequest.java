@@ -39,7 +39,7 @@ public class AuthQueryRequest extends AuthPageRequest implements Serializable {
     /**
      *
      */
-    private String operKaSecurityUser;
+    private String operUser;
 
     /**
      *

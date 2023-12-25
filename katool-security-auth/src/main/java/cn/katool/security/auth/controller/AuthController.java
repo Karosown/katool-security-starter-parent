@@ -14,7 +14,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
-import cn.katool.security.auth.service.AuthServiceInterface;
+import cn.katool.security.auth.service.AuthInnerService;
 import cn.katool.security.auth.utils.BaseResponse;
 import cn.katool.security.auth.utils.ResultUtils;
 import cn.katool.security.core.annotation.AuthCheck;
@@ -46,13 +46,13 @@ import java.util.List;
 @RequestMapping
 public class AuthController {
     @Resource
-    AuthServiceInterface authService;
+    AuthInnerService authInnerService;
 
     @Operation(description = "权限刷新总接口")
     @GetMapping("/reload")
     @Transactional
     public BaseResponse<Boolean> reload(){
-        return ResultUtils.success(authService.reload());
+        return ResultUtils.success(authInnerService.reload());
     }
 
     @Operation(description = "路由权限列表分页查询获取")
@@ -63,7 +63,7 @@ public class AuthController {
      String uri = authQueryRequest.getUri();
      String route = authQueryRequest.getRoute();
      List<String> authRole = authQueryRequest.getAuthRole();
-     String operKaSecurityUser = authQueryRequest.getOperKaSecurityUser();
+     String operUser = authQueryRequest.getOperUser();
      Boolean checkLogin = authQueryRequest.getCheckLogin();
      Boolean isDef = authQueryRequest.getIsDef();
      long current = authQueryRequest.getCurrent();
@@ -96,13 +96,13 @@ public class AuthController {
 
             });
         }
-        if (StringUtils.isNotBlank(operKaSecurityUser)) {
-                queryWrapper.like("oper_KaSecurityUser",operKaSecurityUser);
+        if (StringUtils.isNotBlank(operUser)) {
+                queryWrapper.like("oper_user",operUser);
         }
         queryWrapper.orderBy(true, KaSecurityConstant.SORT_ORDER_ASC.equals(sortOrder),sortField)
                 .eq(BooleanUtils.isTrue(checkLogin),"check_login",checkLogin)
                 .eq(BooleanUtils.isTrue(isDef),"is_def",isDef);
-        authService.page(authPage, queryWrapper);
+        authInnerService.page(authPage, queryWrapper);
         IPage<AuthVO> convert = authPage.convert(v -> {
             AuthVO authVO = new AuthVO();
             BeanUtils.copyProperties(v, authVO);
@@ -118,7 +118,7 @@ public class AuthController {
 
         Page<Auth> page = new Page<>();
         page.setCurrent(authQueryRequest.getCurrent()).setSize(authQueryRequest.getPageSize());
-        page = authService.page(page);
+        page = authInnerService.page(page);
         IPage<AuthVO> convert = page.convert(v -> {
             AuthVO authVO = new AuthVO();
             BeanUtils.copyProperties(v, authVO);
@@ -136,11 +136,11 @@ public class AuthController {
         String id = authOperRequest.getId();
         Boolean open=false;
         if (StringUtils.isNotBlank(id)){
-            open = authService.open(id);
+            open = authInnerService.open(id);
         }
         String[] ids = authOperRequest.getIds();
         if (ObjectUtils.isNotEmpty(ids)){
-             open = authService.open(ListUtil.toList(ids));
+             open = authInnerService.open(ListUtil.toList(ids));
         }
         return ResultUtils.success(BooleanUtils.isTrue(open));
     }
@@ -154,11 +154,11 @@ public class AuthController {
         String id = authOperRequest.getId();
         Boolean close=false;
         if (StringUtils.isNotBlank(id)){
-            close = authService.close(id);
+            close = authInnerService.close(id);
         }
         String[] ids = authOperRequest.getIds();
         if (ObjectUtil.isNotEmpty(ids)){
-            close = authService.close(ListUtil.toList(ids));
+            close = authInnerService.close(ListUtil.toList(ids));
         }
         return ResultUtils.success(BooleanUtils.isTrue(close));
     }
@@ -166,7 +166,7 @@ public class AuthController {
     @Operation(description = "修改鉴权接口")
     @PostMapping("/")
     public BaseResponse<AuthVO> insert(@RequestBody AuthAddRequest authAddRequest){
-        Boolean insert = authService.insert(authAddRequest);
+        Boolean insert = authInnerService.insert(authAddRequest);
         if (ObjectUtil.isEmpty(insert)){
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
@@ -175,7 +175,7 @@ public class AuthController {
             query.eq("method",authAddRequest.getMethod())
                     .eq("route",authAddRequest.getRoute())
                     .eq("uri",authAddRequest.getUri());
-            Auth one = authService.getOne(query);
+            Auth one = authInnerService.getOne(query);
             AuthVO target = new AuthVO();
             BeanUtils.copyProperties(one, target);
             return ResultUtils.success(target);
@@ -201,7 +201,7 @@ public class AuthController {
         }
         // 删除
 
-        Boolean delete = authService.remove(query);
+        Boolean delete = authInnerService.remove(query);
         return ResultUtils.success(delete);
     }
 
@@ -223,7 +223,7 @@ public class AuthController {
         }
         // 删除
 
-        Boolean delete = authService.remove(query);
+        Boolean delete = authInnerService.remove(query);
         return ResultUtils.success(delete);
     }
 
@@ -232,8 +232,8 @@ public class AuthController {
     public BaseResponse<AuthVO> update(@RequestBody AuthUpdateRequest updateRequest){
         Auth auth = new Auth();
         BeanUtils.copyProperties(updateRequest,auth);
-        boolean b = authService.updateById(auth);
-        Auth byId = authService.getById(auth.getId());
+        boolean b = authInnerService.updateById(auth);
+        Auth byId = authInnerService.getById(auth.getId());
         AuthVO target = new AuthVO();
         BeanUtils.copyProperties(byId, target);
         return ResultUtils.success(target);
