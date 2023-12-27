@@ -4,7 +4,7 @@ package cn.katool.security.starter.gateway.zuul.filter;
 import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.core.utils.JSONUtils;
-import cn.katool.security.starter.gatway.core.constant.GlobalContainer;
+import cn.katool.security.starter.gateway.core.constant.GlobalContainer;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
@@ -13,19 +13,16 @@ import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 
 
-    // Zuul网关过滤器
+// Zuul网关过滤器
 @Component
 @Slf4j
 public class KaAuthFilter extends ZuulFilter {
 
         @Override
         public String filterType() {
-            return FilterConstants.PRE_TYPE+":";
+            return FilterConstants.PRE_TYPE;
         }
 
         @Override
@@ -46,10 +43,9 @@ public class KaAuthFilter extends ZuulFilter {
             for(GlobalContainer.Route v:GlobalContainer.authRouteList){
                 String method = v.getMethod();
                 String url = v.getUrl();
-
-                log.info("url:{} path:{}",url,path);
-                log.info("method:{} name:{}",method,requestMethod);
-                if (url.equals(path)&&method.equals(requestMethod)){
+                if (path.equals(url)&& requestMethod.equals(method)){
+                    log.info("url:{} path:{}",url,path);
+                    log.info("method:{} name:{}",method,requestMethod);
                     Boolean checkLogin = v.getCheckLogin();
                     KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),checkLogin);
                     if(!KaSecurityValidMessage.success().equals(run)){
@@ -57,8 +53,10 @@ public class KaAuthFilter extends ZuulFilter {
                         RequestContext.getCurrentContext().setResponseStatusCode(401);
                         RequestContext.getCurrentContext().setResponseBody(JSONUtils.getJSON(run));
                     }
-                    // 添加请求头 request
-                    RequestContext.getCurrentContext().addZuulRequestHeader("Authed","KaTool-Security");
+                    else{
+                        // 添加请求头 request
+                        RequestContext.getCurrentContext().addZuulRequestHeader("Authed","KaTool-Security");
+                    }
                     break;
                 }
             }

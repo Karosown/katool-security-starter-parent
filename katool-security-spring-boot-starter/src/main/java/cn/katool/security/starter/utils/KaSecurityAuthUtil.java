@@ -16,6 +16,26 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     }
 
     @Override
+    public T getPayLoadWithHeader() {
+        return AbstractKaSecurityAuthUtil.super.getPayLoadWithHeader();
+    }
+
+    @Override
+    public T getPayLoadWithDubboRPC() {
+        return AbstractKaSecurityAuthUtil.super.getPayLoadWithDubboRPC();
+    }
+
+    @Override
+    public T getPayLoad() {
+        return AbstractKaSecurityAuthUtil.super.getPayLoad();
+    }
+
+    @Override
+    public String getTokenWithDubboRPC() {
+        return AbstractKaSecurityAuthUtil.super.getTokenWithDubboRPC();
+    }
+
+    @Override
     public HttpServletRequest getRequest() {
         return AbstractKaSecurityAuthUtil.super.getRequest();
     }

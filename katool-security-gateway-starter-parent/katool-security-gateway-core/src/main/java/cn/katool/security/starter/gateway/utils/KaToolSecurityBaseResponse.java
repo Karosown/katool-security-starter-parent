@@ -1,6 +1,6 @@
-package cn.katool.security.starter.gatway.utils;
+package cn.katool.security.starter.gateway.utils;
 
-import cn.katool.security.starter.gatway.core.constant.KaToolSecurityErrorCode;
+import cn.katool.security.starter.gateway.core.constant.KaToolSecurityErrorCode;
 import lombok.Data;
 
 import java.io.Serializable;

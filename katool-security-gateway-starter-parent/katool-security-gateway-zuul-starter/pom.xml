@@ -14,12 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>cn.katool.security</groupId>
-            <artifactId>katool-security-interface</artifactId>
-            <version>1.0.0.SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-gateway-core</artifactId>
             <version>1.0.0.SNAPSHOT</version>
             <scope>compile</scope>

@@ -16,6 +16,7 @@ public class AuthConfig extends KaSecurityAuthUtil<String> implements KaSecurity
         if (BooleanUtil.isFalse(checkLogin)){
             return KaSecurityValidMessage.success();
         }
+            String payLoad = this.getPayLoad();
         return KaSecurityValidMessage.unLogin();
     }
 

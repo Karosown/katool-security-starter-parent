@@ -1,4 +1,5 @@
-package cn.katool.security.core.utils; /**
+package cn.katool.security.core.utils;
+/**
  * Title
  *
  * @ClassName: utils.cn.yb.thinktank.common.JSONUtils

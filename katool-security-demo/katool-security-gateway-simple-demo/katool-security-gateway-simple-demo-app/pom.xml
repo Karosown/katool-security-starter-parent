@@ -30,6 +30,12 @@
             <groupId>cn.katool.security.demo.gateway</groupId>
             <artifactId>katool-security-gateway-simple-demo-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                        <groupId>cn.katool.security</groupId>
+                        <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 <!--        引入boot的包-->
         <dependency>

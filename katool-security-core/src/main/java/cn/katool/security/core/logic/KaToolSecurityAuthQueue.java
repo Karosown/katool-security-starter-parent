@@ -46,7 +46,7 @@ public class KaToolSecurityAuthQueue {
                 return runResult;
             }
         }
-        return new KaSecurityValidMessage(0,"success");
+        return KaSecurityValidMessage.success();
     }
 
 }

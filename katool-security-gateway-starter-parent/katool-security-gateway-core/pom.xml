@@ -14,6 +14,11 @@
     <dependencies>
         <dependency>
             <groupId>cn.katool.security</groupId>
+            <artifactId>katool-security-interceptor</artifactId>
+            <version>1.0.0.SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-interface</artifactId>
             <version>1.0.0.SNAPSHOT</version>
             <scope>compile</scope>

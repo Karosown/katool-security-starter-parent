@@ -43,6 +43,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <!--        引入SpringCloudGateWay对应的Starter-->
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-spring-boot-starter</artifactId>

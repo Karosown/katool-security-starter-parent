@@ -5,6 +5,30 @@ import reactor.core.publisher.Mono;
 
 
 public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface<T>{
+    @Override
+    public T getPayLoadWithHeader() {
+        return DefaultKaSecurityAuthUtilInterface.super.getPayLoadWithHeader();
+    }
+
+    @Override
+    public T getPayLoadWithDubboRPC() {
+        return DefaultKaSecurityAuthUtilInterface.super.getPayLoadWithDubboRPC();
+    }
+
+    @Override
+    public T getPayLoad() {
+        return DefaultKaSecurityAuthUtilInterface.super.getPayLoad();
+    }
+
+    @Override
+    public String getTokenWithDubboRPC() {
+        return DefaultKaSecurityAuthUtilInterface.super.getTokenWithDubboRPC();
+    }
+
+    @Override
+    public String getTokenWithHeader() {
+        return DefaultKaSecurityAuthUtilInterface.super.getTokenWithHeader();
+    }
 
     @Override
     public String getTokenWithHeader(String headerName){

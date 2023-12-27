@@ -1,4 +1,4 @@
-package cn.katool.security.starter.gatway.core.constant;
+package cn.katool.security.starter.gateway.core.constant;
 
 /**
  * 自定义错误码

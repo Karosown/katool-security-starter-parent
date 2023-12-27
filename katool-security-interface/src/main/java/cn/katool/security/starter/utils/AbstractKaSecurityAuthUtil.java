@@ -10,6 +10,26 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 
 public interface AbstractKaSecurityAuthUtil<T> extends  DefaultKaSecurityAuthUtilInterface<T> {
+    @Override
+    default T getPayLoadWithHeader() {
+        return DefaultKaSecurityAuthUtilInterface.super.getPayLoadWithHeader();
+    }
+
+    @Override
+    default T getPayLoadWithDubboRPC() {
+        return DefaultKaSecurityAuthUtilInterface.super.getPayLoadWithDubboRPC();
+    }
+
+    @Override
+    default T getPayLoad() {
+        return DefaultKaSecurityAuthUtilInterface.super.getPayLoad();
+    }
+
+    @Override
+    default String getTokenWithDubboRPC() {
+        return DefaultKaSecurityAuthUtilInterface.super.getTokenWithDubboRPC();
+    }
+
     default HttpServletRequest getRequest(){
         HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();;
         return request;

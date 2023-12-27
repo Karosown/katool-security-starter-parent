@@ -8,11 +8,11 @@
  * @Blog: https://www.wzl1.top/
  */
 
-package cn.katool.security.starter.gatway.core.job;
+package cn.katool.security.starter.gateway.core.job;
 
 
 import cn.katool.security.core.model.vo.AuthVO;
-import cn.katool.security.starter.gatway.core.constant.GlobalContainer;
+import cn.katool.security.starter.gateway.core.constant.GlobalContainer;
 import cn.katool.security.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboReference;

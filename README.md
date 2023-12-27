@@ -86,17 +86,31 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
 
 ## 3. 鉴权逻辑实现
 
-### 3.1 实现KaSecurityAuthLogic接口
+### 3.1 实现KaSecurityAuthLogic接口继承工具类
 
 ```java
 @Component
-public class MySecurityAuthLogic implements KaSecurityAuthLogic {
+public class AuthConfig extends KaSecurityAuthUtil<鉴权出来的类型> implements KaSecurityAuthLogic{
+    @Override
+    public KaSecurityValidMessage checkLogin(Boolean checkLogin) {
+       
+        return KaSecurityValidMessage.unKnow();
+    }
 
-   void doAuth(List<String> routeList){
-       // 你的业务逻辑
-   }
-    
+    @Override
+    public KaSecurityValidMessage doAuth(List<String> roleList) {
+        // 这里可以根据角色列表进行鉴权，返回鉴权失败或者鉴权成功的消息
+        System.out.println("进入鉴权，roleList:" + roleList);
+        return KaSecurityValidMessage.success();
+    }
+
+    @Bean
+    private void initAuth(){
+        // 加入鉴权
+        KaToolSecurityAuthQueue.add(this);
+    }
 }
+
 ```
 
 ### 3.2 将MySecurityAuthLogic加入鉴权执行队列

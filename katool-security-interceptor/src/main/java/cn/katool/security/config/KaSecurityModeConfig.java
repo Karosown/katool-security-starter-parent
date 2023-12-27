@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("katool.security")
 public class KaSecurityModeConfig {
     //默认采用单体架构
-    private KaSecurityMode mode= KaSecurityMode.SINGLE;
+    private KaSecurityMode mode = KaSecurityMode.SINGLE;
 
     public static KaSecurityMode currentMode=KaSecurityMode.SINGLE;
 

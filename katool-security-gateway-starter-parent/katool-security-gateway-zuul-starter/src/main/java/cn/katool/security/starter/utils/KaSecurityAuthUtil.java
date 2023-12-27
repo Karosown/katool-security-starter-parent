@@ -1,11 +1,13 @@
 package cn.katool.security.starter.utils;
 
 import com.netflix.zuul.context.RequestContext;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component
 public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public HttpServletResponse getResponse() {
@@ -15,6 +17,26 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public String login(T payload) {
         return AbstractKaSecurityAuthUtil.super.login(payload);
+    }
+
+    @Override
+    public T getPayLoadWithHeader() {
+        return AbstractKaSecurityAuthUtil.super.getPayLoadWithHeader();
+    }
+
+    @Override
+    public T getPayLoadWithDubboRPC() {
+        return AbstractKaSecurityAuthUtil.super.getPayLoadWithDubboRPC();
+    }
+
+    @Override
+    public T getPayLoad() {
+        return AbstractKaSecurityAuthUtil.super.getPayLoad();
+    }
+
+    @Override
+    public String getTokenWithDubboRPC() {
+        return AbstractKaSecurityAuthUtil.super.getTokenWithDubboRPC();
     }
 
     @Override

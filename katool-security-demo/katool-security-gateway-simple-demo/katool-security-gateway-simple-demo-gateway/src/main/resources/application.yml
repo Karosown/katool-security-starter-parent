@@ -34,7 +34,7 @@ spring:
   main:
     web-application-type: reactive
   application:
-    name: katool-security-simple-demo-boot
+    name: katool-security-simple-demo-gateway-gateway
   # DataSource Config
   mvc:
     pathmatch:

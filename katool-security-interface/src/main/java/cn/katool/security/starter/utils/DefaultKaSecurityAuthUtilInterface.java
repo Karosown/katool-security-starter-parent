@@ -5,6 +5,8 @@ import cn.katool.security.core.config.KaSecurityCoreConfig;
 import cn.katool.security.core.constant.KaSecurityMode;
 import cn.katool.util.auth.AuthUtil;
 import com.qiniu.util.Auth;
+import org.apache.dubbo.rpc.RpcContext;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.yaml.snakeyaml.introspector.PropertySubstitute;
@@ -24,6 +26,22 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
                 (Class)((ParameterizedType)
                         getClass().getGenericSuperclass()).getActualTypeArguments()[0]
                 );
+    }
+
+    default T getPayLoadWithDubboRPC(){
+        String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        return (T) AuthUtil.getPayLoadFromToken(token);
+    }
+    default T getPayLoad(){
+        T payLoad = getPayLoadWithHeader();
+        if (ObjectUtils.isEmpty(payLoad)){
+            payLoad = getPayLoadWithDubboRPC();
+        }
+        return payLoad;
+    }
+
+    default String getTokenWithDubboRPC(){
+        return RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
     }
 
     default String getTokenWithHeader(){

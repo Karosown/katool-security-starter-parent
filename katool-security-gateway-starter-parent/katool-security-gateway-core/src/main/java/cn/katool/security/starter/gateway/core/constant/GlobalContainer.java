@@ -8,12 +8,12 @@
  * @Blog: https://www.wzl1.top/
  */
 
-package cn.katool.security.starter.gatway.core.constant;
+package cn.katool.security.starter.gateway.core.constant;
 
 
 
 
-import cn.katool.security.starter.gatway.utils.NetUtils;
+import cn.katool.security.starter.gateway.utils.NetUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

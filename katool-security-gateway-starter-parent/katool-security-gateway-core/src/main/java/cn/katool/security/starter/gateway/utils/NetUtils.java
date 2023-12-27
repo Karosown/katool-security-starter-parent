@@ -1,4 +1,4 @@
-package cn.katool.security.starter.gatway.utils;
+package cn.katool.security.starter.gateway.utils;
 
 
 import javax.servlet.http.HttpServletRequest;

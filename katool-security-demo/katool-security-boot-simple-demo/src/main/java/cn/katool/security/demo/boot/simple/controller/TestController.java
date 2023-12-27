@@ -9,15 +9,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping
-@AuthControllerCheck(checkLogin = true)
+@AuthControllerCheck
 public class TestController {
     @GetMapping
     public String index() {
         return "1";
     }
 
-    @GetMapping("/needlogin")
-    public String needlogin() {
-        return "2";
-    }
+
 }

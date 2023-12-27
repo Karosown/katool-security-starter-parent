@@ -1,18 +1,24 @@
 package cn.katool.security.demo.gateway.simple.config;
 
+import cn.hutool.core.util.BooleanUtil;
 import cn.katool.security.core.logic.KaSecurityAuthLogic;
 import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
+import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+
 @Component
-public class AuthConfig implements KaSecurityAuthLogic {
+public class AuthConfig extends KaSecurityAuthUtil<String> implements KaSecurityAuthLogic{
     @Override
     public KaSecurityValidMessage checkLogin(Boolean checkLogin) {
-        System.out.println("检查登录中");
-        return KaSecurityValidMessage.success();
+        if (BooleanUtil.isFalse(checkLogin)){
+            return KaSecurityValidMessage.success();
+        }
+            String payLoad = this.getPayLoad();
+        return KaSecurityValidMessage.unLogin();
     }
 
     @Override
@@ -24,7 +30,8 @@ public class AuthConfig implements KaSecurityAuthLogic {
 
     @Bean
     private void initAuth(){
-        System.out.println("将当前对象放入鉴权队列");
+        System.out.println("初始化鉴权框架");
         KaToolSecurityAuthQueue.add(this);
     }
+
 }
