@@ -20,22 +20,35 @@ public interface KaSecurityAuthLogic {
 
    KaSecurityValidMessage doAuth(List<String> roleList);
 
-   default KaSecurityValidMessage checkLogin(Boolean checkLogin){
-      if (checkLogin){
-         return KaSecurityValidMessage.unKnow().setMessage("请检查您 KaSecurityAuthLogic 实现类是否实现了checkLogin方法");
+   default KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin){
+      if (onlyCheckLogin){
+         return KaSecurityValidMessage.unKnow().setMessage("请检查您 KaSecurityAuthLogic 实现类是否实现了onlyCheckLogin方法");
       }
       return KaSecurityValidMessage.success();
    }
 
    static KaSecurityValidMessage allValid(KaSecurityValidMessage[] messages){
       for (KaSecurityValidMessage message : messages) {
-         if (!KaSecurityValidMessage.success().equals(message)){
+         if (!KaSecurityValidMessage.success().equals(message)||KaSecurityValidMessage.onlyLogin().equals(message)){
             return message;
          }
       }
       return KaSecurityValidMessage.success();
    }
-
+   static KaSecurityValidMessage ValidFilter(KaSecurityAuthLogic kaSecurityAuthLogic,List<String> roleList,Boolean onlyCheckLogin){
+      KaSecurityValidMessage message = kaSecurityAuthLogic.doCheckLogin(onlyCheckLogin);
+      if (!KaSecurityValidMessage.success().equals(message)||KaSecurityValidMessage.onlyLogin().equals(message)){
+         return message;
+      }
+      message = kaSecurityAuthLogic.doAuth(roleList);
+      if (KaSecurityValidMessage.onlyLogin().equals(message)){
+         throw new RuntimeException("请勿在 KaSecurityAuthLogic 实现类中 doAuth 方法返回 onlyLogin 状态");
+      }
+      if (!KaSecurityValidMessage.success().equals(message)){
+         return message;
+      }
+      return KaSecurityValidMessage.success();
+   }
    default HttpServletRequest getRequest(){
       HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();;
       if (KaSecurityMode.GATEWAY.equals(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER)) {

@@ -36,7 +36,7 @@ public class AuthListSyncTask {
         List<AuthVO> list = authService.getlistByIsOpen();
         list.forEach(v->{
             GlobalContainer.Route e = new GlobalContainer.Route(v.getMethod(), v.getUri(), v.getRoute(), v.getAuthRoles())
-                    .setCheckLogin(v.getCheckLogin())
+                    .setCheckLogin(v.getOnlyCheckLogin())
                     .setOpen(v.getIsOpen())
                     .setDef(v.getIsDef())
                     .setRole(v.getAuthRoles())

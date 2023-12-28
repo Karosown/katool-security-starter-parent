@@ -12,7 +12,7 @@ package cn.katool.security.auth.aop;
 
 
 
-import cn.katool.security.auth.model.KaSecurityUser;
+import cn.katool.security.auth.model.entity.KaSecurityUser;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
 import cn.katool.security.core.config.KaSecurityCoreConfig;
@@ -37,11 +37,7 @@ public class ValidRole {
     @Around("execution(* cn.katool.security.auth.controller.*.*(..)) && !execution(* cn.katool.security.auth.controller.AuthController.uuid(..))")
     public Object Valid(ProceedingJoinPoint point) throws Throwable {
         HttpServletRequest request = ((ServletRequestAttributes) (RequestContextHolder.getRequestAttributes())).getRequest();
-        String authorization = request.getHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-        KaSecurityUser KaSecurityUser = (KaSecurityUser) AuthUtil.getPayLoadFromToken(authorization,KaSecurityUser.class);
-        if (ObjectUtils.isEmpty(KaSecurityUser)){
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-        }
+
         String ipAddr = IPUtils.getIpAddr(request);
         log.info("Begin => IP:{} {} 进行操作{}",ipAddr,request.getMethod(),request.getRequestURL());
         Object proceed = point.proceed();

@@ -15,6 +15,7 @@ public class KaSecurityValidMessage {
     private static final Integer UNLOGIN_CODE = 401;
     private static final Integer UNKNOW_CODE = 404;
     private static final KaSecurityValidMessage SUCCESS_MESSAGE = KaSecurityValidMessage.builder().code(SUNKNOW_CODE).message("success").build();
+    private static final KaSecurityValidMessage INLOGIN_MESSAGE = KaSecurityValidMessage.builder().code(SUNKNOW_CODE).message("only_check_login").build();
     private static final KaSecurityValidMessage NOAUTH_MESSAGE = KaSecurityValidMessage.builder().code(UNAUTH_CODE).message("NO AUTH").build();
     private static final KaSecurityValidMessage UNLOGIN_MESSAGE = KaSecurityValidMessage.builder().code(UNLOGIN_CODE).message("UN LOGIN").build();
     private static final KaSecurityValidMessage UNKNOW_MESSAGE = KaSecurityValidMessage.builder().code(UNKNOW_CODE).message("UNKNOW ERROR").build();
@@ -25,6 +26,9 @@ public class KaSecurityValidMessage {
 
     public static KaSecurityValidMessage success(){
         return  SUCCESS_MESSAGE;
+    }
+    public static KaSecurityValidMessage onlyLogin(){
+        return INLOGIN_MESSAGE;
     }
     public static KaSecurityValidMessage noAuth(){
         return  NOAUTH_MESSAGE;

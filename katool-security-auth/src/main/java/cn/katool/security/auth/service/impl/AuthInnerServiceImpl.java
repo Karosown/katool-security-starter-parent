@@ -47,7 +47,7 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         String route = addRequest.getRoute();
         List<String> authRole = addRequest.getAuthRole();
         String operUser = addRequest.getOperUser();
-        Boolean checkLogin = addRequest.getCheckLogin();
+        Boolean onlyCheckLogin = addRequest.getOnlyCheckLogin();
         Boolean isDef = addRequest.getIsDef();
         if (StringUtils.isAnyBlank(method,uri,route,operUser)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -76,7 +76,7 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         String route = authUpdateRequest.getRoute();
         List<String> authRole = authUpdateRequest.getAuthRole();
         String operUser = authUpdateRequest.getOperUser();
-        Boolean checkLogin = authUpdateRequest.getCheckLogin();
+        Boolean onlyCheckLogin = authUpdateRequest.getOnlyCheckLogin();
         Boolean isDef = authUpdateRequest.getIsDef();
         if (StringUtils.isAnyBlank(method,uri,route,operUser)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

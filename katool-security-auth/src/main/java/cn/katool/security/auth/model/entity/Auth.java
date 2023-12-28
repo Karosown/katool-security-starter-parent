@@ -64,8 +64,8 @@ public class Auth implements Serializable {
     /**
      *
      */
-    @TableField(value = "check_login")
-    private Boolean checkLogin;
+    @TableField(value = "only_check_login")
+    private Boolean onlyCheckLogin;
 
     @TableField(value = "is_open")
     private Boolean isOpen;
@@ -114,7 +114,7 @@ public class Auth implements Serializable {
         return this;
     }
 
-    public Auth setoperUser(String operUser) {
+    public Auth setOperUser(String operUser) {
         this.operUser = operUser;
         return this;
     }
@@ -124,8 +124,8 @@ public class Auth implements Serializable {
         return this;
     }
 
-    public Auth setCheckLogin(Boolean checkLogin) {
-        this.checkLogin = checkLogin;
+    public Auth setCheckLogin(Boolean onlyCheckLogin) {
+        this.onlyCheckLogin = onlyCheckLogin;
         return this;
     }
 

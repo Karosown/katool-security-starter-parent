@@ -40,7 +40,7 @@ public class AuthAddRequest implements Serializable {
     /**
      * 
      */
-    private Boolean checkLogin;
+    private Boolean onlyCheckLogin;
 
 
     private Boolean isDef;

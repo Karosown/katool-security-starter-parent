@@ -12,7 +12,7 @@
         <result property="route" column="route" jdbcType="VARCHAR"/>
         <result property="authRole" column="auth_role" jdbcType="VARCHAR"/>
         <result property="operUser" column="oper_user" jdbcType="VARCHAR"/>
-        <result property="checkLogin" column="check_login" jdbcType="BOOLEAN"/>
+        <result property="onlyCheckLogin" column="only_check_login" jdbcType="BOOLEAN"/>
         <result property="isOpen" column="is_open" jdbcType="BOOLEAN"/>
         <result property="isDef" column="is_def" jdbcType="BOOLEAN"/>
         <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>

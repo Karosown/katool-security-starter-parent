@@ -24,7 +24,7 @@ public @interface AuthControllerCheck {
     /**
      * 检查登录，不会检查权限
      */
-    boolean checkLogin() default false;
+    boolean onlyCheckLogin() default false;
 
     /**
      * 排除的方法

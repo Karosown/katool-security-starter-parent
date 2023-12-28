@@ -37,6 +37,9 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         if (ObjectUtils.isEmpty(payLoad)){
             payLoad = getPayLoadWithDubboRPC();
         }
+        if (ObjectUtils.isEmpty(payLoad)){
+            payLoad = getPayLoadWithDubboRPC();
+        }
         return payLoad;
     }
 

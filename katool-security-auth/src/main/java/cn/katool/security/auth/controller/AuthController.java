@@ -26,6 +26,7 @@ import cn.katool.security.service.AuthService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiSupport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
@@ -42,20 +43,22 @@ import java.util.List;
 
 @Slf4j
 @Tag(name = "鉴权服务")
+@ApiSupport
 @RestController
 @RequestMapping
 public class AuthController {
     @Resource
     AuthInnerService authInnerService;
 
-    @Operation(description = "权限刷新总接口")
+    @Operation(summary = "权限刷新总接口",
+            description = "用于权限刷新")
     @GetMapping("/reload")
     @Transactional
     public BaseResponse<Boolean> reload(){
         return ResultUtils.success(authInnerService.reload());
     }
 
-    @Operation(description = "路由权限列表分页查询获取")
+    @Operation(summary = "路由分页查询",description = "路由权限列表分页查询获取")
     @GetMapping("/page")
     public BaseResponse<IPage<AuthVO>> getPage(AuthQueryRequest authQueryRequest){
      String fid = authQueryRequest.getFid();
@@ -64,7 +67,7 @@ public class AuthController {
      String route = authQueryRequest.getRoute();
      List<String> authRole = authQueryRequest.getAuthRole();
      String operUser = authQueryRequest.getOperUser();
-     Boolean checkLogin = authQueryRequest.getCheckLogin();
+     Boolean onlyCheckLogin = authQueryRequest.getOnlyCheckLogin();
      Boolean isDef = authQueryRequest.getIsDef();
      long current = authQueryRequest.getCurrent();
      long pageSize = authQueryRequest.getPageSize();
@@ -100,7 +103,7 @@ public class AuthController {
                 queryWrapper.like("oper_user",operUser);
         }
         queryWrapper.orderBy(true, KaSecurityConstant.SORT_ORDER_ASC.equals(sortOrder),sortField)
-                .eq(BooleanUtils.isTrue(checkLogin),"check_login",checkLogin)
+                .eq(BooleanUtils.isTrue(onlyCheckLogin),"check_login",onlyCheckLogin)
                 .eq(BooleanUtils.isTrue(isDef),"is_def",isDef);
         authInnerService.page(authPage, queryWrapper);
         IPage<AuthVO> convert = authPage.convert(v -> {
@@ -112,7 +115,7 @@ public class AuthController {
     }
 
 
-    @Operation(description = "路由权限列表分页查询获取")
+    @Operation(summary = "路由分页获取",description = "路由权限列表分页查询获取")
     @GetMapping("/list")
     public BaseResponse<IPage<AuthVO>> getlist(AuthQueryRequest authQueryRequest){
 
@@ -127,7 +130,7 @@ public class AuthController {
         log.info("{}",convert.getRecords());
         return ResultUtils.success(convert);
     }
-    @Operation(description = "开启接口鉴权")
+    @Operation(summary = "开启接口鉴权",description = "开启接口鉴权")
     @PutMapping("/open")
     public BaseResponse<Boolean> open(@RequestBody AuthOperRequest authOperRequest){
         if (ObjectUtils.isEmpty(authOperRequest)) {
@@ -145,7 +148,7 @@ public class AuthController {
         return ResultUtils.success(BooleanUtils.isTrue(open));
     }
 
-    @Operation(description = "关闭接口鉴权")
+    @Operation(summary = "关闭接口鉴权",description = "关闭接口鉴权")
     @PutMapping("/close")
     public BaseResponse<Boolean> close(@RequestBody AuthOperRequest authOperRequest){
         if (ObjectUtils.isEmpty(authOperRequest)) {
@@ -163,7 +166,7 @@ public class AuthController {
         return ResultUtils.success(BooleanUtils.isTrue(close));
     }
 
-    @Operation(description = "修改鉴权接口")
+    @Operation(summary = "新增鉴权路由",description = "新增鉴权接口")
     @PostMapping("/")
     public BaseResponse<AuthVO> insert(@RequestBody AuthAddRequest authAddRequest){
         Boolean insert = authInnerService.insert(authAddRequest);
@@ -183,7 +186,7 @@ public class AuthController {
         return ResultUtils.error(ErrorCode.OPERATION_ERROR);
     }
 
-    @Operation(description = "删除鉴权接口")
+    @Operation(summary = "删除路由",description = "删除鉴权接口")
     @DeleteMapping("/")
     @AuthCheck(anyRole = "admin")
     public BaseResponse<Boolean> delete(@RequestBody AuthDeleteRequest deleteRequest) {
@@ -205,7 +208,7 @@ public class AuthController {
         return ResultUtils.success(delete);
     }
 
-    @Operation(description = "批量删除鉴权接口")
+    @Operation(summary = "批量删除路由",description = "批量删除鉴权接口")
     @DeleteMapping("/batch")
     @AuthCheck(anyRole = "admin")
     public BaseResponse<Boolean> deleteBatch(@RequestBody AuthDeleteRequest deleteRequest) {
@@ -227,7 +230,7 @@ public class AuthController {
         return ResultUtils.success(delete);
     }
 
-    @Operation(description = "修改鉴权接口")
+    @Operation(summary = "修改路由",description = "修改鉴权接口")
     @PutMapping("/")
     public BaseResponse<AuthVO> update(@RequestBody AuthUpdateRequest updateRequest){
         Auth auth = new Auth();

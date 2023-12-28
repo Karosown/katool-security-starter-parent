@@ -59,7 +59,7 @@ public class AuthVO implements Serializable {
      *
      */
     
-    private Boolean checkLogin;
+    private Boolean onlyCheckLogin;
 
     
     private Boolean isOpen;
@@ -113,8 +113,8 @@ public class AuthVO implements Serializable {
         return this;
     }
 
-    public AuthVO setCheckLogin(Boolean checkLogin) {
-        this.checkLogin = checkLogin;
+    public AuthVO setCheckLogin(Boolean onlyCheckLogin) {
+        this.onlyCheckLogin = onlyCheckLogin;
         return this;
     }
 

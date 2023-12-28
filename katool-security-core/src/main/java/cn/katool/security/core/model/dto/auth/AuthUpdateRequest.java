@@ -45,7 +45,7 @@ public class AuthUpdateRequest implements Serializable {
     /**
      *
      */
-    private Boolean checkLogin;
+    private Boolean onlyCheckLogin;
 
     /**
      *

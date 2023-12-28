@@ -29,14 +29,20 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -72,14 +78,15 @@ public class AuthInterceptor {
         List<String> anyRole = Arrays.stream(authCheck.anyRole())
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());
-        Boolean checkLogin = authCheck.checkLogin();
-        if (RequestContextHolder.getRequestAttributes()==null ) {
-            if (StringUtils.isNotBlank(mustRole)) {
-                if (!anyRole.contains(mustRole)) {
-                    anyRole.add(mustRole);
-                }
+        Boolean onlyCheckLogin = authCheck.onlyCheckLogin();
+        if (StringUtils.isNotBlank(mustRole)) {
+            if (!anyRole.contains(mustRole)) {
+                anyRole.add(mustRole);
             }
-            return doInterceptorAuthService(joinPoint,anyRole,null,checkLogin);
+        }
+        if (RequestContextHolder.getRequestAttributes()==null ) {
+
+            return doInterceptorAuthService(joinPoint,anyRole,null,onlyCheckLogin);
         }
         // 获取请求信息
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -116,14 +123,14 @@ public class AuthInterceptor {
                         anyRole.add(mustRole);
                     }
                 }
-                one.setOpen(true).setIsDef(true).setAuthRoles(anyRole).setCheckLogin(checkLogin).setIsDef(true);    //设置成真值，一样的交给网关执行
+                one.setOpen(true).setIsDef(true).setAuthRoles(anyRole).setCheckLogin(onlyCheckLogin).setIsDef(true);    //设置成真值，一样的交给网关执行
                 boolean state = authService.saveOrUpdate(one);
                 log.info("[KaTool-Security-AOP-@AuthCheck-Store]认证中心保存更新状态state: {}",state);
                 // 网关没有鉴权，那么在这里鉴权
                 log.info("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行开始");
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,checkLogin);
+                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
                 if (!KaSecurityValidMessage.success().equals(run)) {
-                    return JSONUtils.getJSON(run);
+                    return responseHandler(JSONUtils.getJSON(run));
                 }
                 log.info("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行完毕");
             }
@@ -137,15 +144,18 @@ public class AuthInterceptor {
         }
         else {
             log.info("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行开始");
-            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,checkLogin);
+            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
             log.info("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行完毕");
             if (!KaSecurityValidMessage.success().equals(run)) {
-                return JSONUtils.getJSON(run);
+                return responseHandler(JSONUtils.getJSON(run));
             }
         }
         // 进行响应日志记录
         return handelResponse(joinPoint);
     }
+
+
+
     @Around("@within(authControllerCheck)")
     public Object doInterceptorAuthCheckController(ProceedingJoinPoint joinPoint, AuthControllerCheck authControllerCheck) throws Throwable {
         // 获取管理信息
@@ -153,6 +163,12 @@ public class AuthInterceptor {
         List<String> anyRole = Arrays.stream(authControllerCheck.anyRole())
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());
+        // 必须有该权限才通过
+        if (StringUtils.isNotBlank(mustRole)) {
+            if (!anyRole.contains(mustRole)) {
+                anyRole.add(mustRole);
+            }
+        }
         List<String> excludeList = Arrays.stream(authControllerCheck.excludeMethods()).collect(Collectors.toList());
         log.info("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>ExcludeList: {}",excludeList);
         String methodName = getFormatCurrentMethodName(joinPoint);
@@ -160,7 +176,7 @@ public class AuthInterceptor {
         if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName.toString())){
             return joinPoint.proceed();
         }
-        Boolean checkLogin = authControllerCheck.checkLogin();
+        Boolean onlyCheckLogin = authControllerCheck.onlyCheckLogin();
         // 获取请求信息
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         // 获取路由信息
@@ -190,20 +206,14 @@ public class AuthInterceptor {
                             .setIsDef(true)
                             .setOpen(true);
                 }
-                // 必须有该权限才通过
-                if (StringUtils.isNotBlank(mustRole)) {
-                    if (!anyRole.contains(mustRole)) {
-                        anyRole.add(mustRole);
-                    }
-                }
-                one.setOpen(true).setIsDef(true).setAuthRoles(anyRole).setCheckLogin(checkLogin).setIsDef(true);    //设置成真值，一样的交给网关执行
+                one.setOpen(true).setIsDef(true).setAuthRoles(anyRole).setCheckLogin(onlyCheckLogin).setIsDef(true);    //设置成真值，一样的交给网关执行
                 boolean state = authService.saveOrUpdate(one);
                 log.info("[KaTool-Security-AOP-@AuthControllerCheck-Store]认证中心保存更新状态state: {}",state);
                 // 网关没有鉴权，那么在这里鉴权
                 log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,checkLogin);
+                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
                 if (!KaSecurityValidMessage.success().equals(run)) {
-                    return JSONUtils.getJSON(run);
+                    return responseHandler(JSONUtils.getJSON(run));
                 }
                 log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
             }
@@ -217,10 +227,10 @@ public class AuthInterceptor {
         }
         else {
             log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
-            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,checkLogin);
+            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
             log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
             if (!KaSecurityValidMessage.success().equals(run)) {
-                return JSONUtils.getJSON(run);
+                return responseHandler(JSONUtils.getJSON(run));
             }
         }
         // 进行响应日志记录
@@ -239,10 +249,10 @@ public class AuthInterceptor {
             }
         }
         List<String> excludeList = Arrays.stream(authServiceCheck.excludeMethods()).collect(Collectors.toList());
-        return doInterceptorAuthService(joinPoint,anyRole,excludeList,authServiceCheck.checkLogin());
+        return doInterceptorAuthService(joinPoint,anyRole,excludeList,authServiceCheck.onlyCheckLogin());
     }
 
-    public Object doInterceptorAuthService(ProceedingJoinPoint joinPoint,List<String> anyRole,List<String> excludeList,boolean checkLogin) throws Throwable {
+    public Object doInterceptorAuthService(ProceedingJoinPoint joinPoint,List<String> anyRole,List<String> excludeList,boolean onlyCheckLogin) throws Throwable {
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config]@AuthServiceCheck=>ExcludeList: {}",excludeList);
         String methodName = getFormatCurrentMethodName(joinPoint);
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config]@AuthServiceCheck=>CurrentMethod: {}",excludeList);
@@ -254,13 +264,31 @@ public class AuthInterceptor {
             return joinPoint.proceed();
         }
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行开始");
-        KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,checkLogin);
+        KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
         if (!KaSecurityValidMessage.success().equals(run)) {
-            return JSONUtils.getJSON(run);
+            return responseHandler(JSONUtils.getJSON(run));
         }
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行结束");
         // 进行响应日志记录
         return handelResponse(joinPoint);
+    }
+
+    private Object responseHandler(String json) {
+        // 获取Response
+        HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        // 将json写入Response
+        try {
+            response.setContentType("application/json;charset=UTF-8");
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            // 将响应体修改为json;
+            response.getOutputStream()
+                    .write(json.getBytes(StandardCharsets.UTF_8));
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
     private String getFormatCurrentMethodName(JoinPoint joinPoint) {
         StringBuffer methodName = new StringBuffer(joinPoint.getSignature().getName()+"(");

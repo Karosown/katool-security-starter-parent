@@ -22,11 +22,7 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mp.version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.xiaoymin</groupId>
-            <artifactId>knife4j-gateway-spring-boot-starter</artifactId>
-            <version>${knife4j.version}</version>
-        </dependency>
+
         <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-spring-boot-starter</artifactId>
@@ -40,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
-            <artifactId>katool-security-interface</artifactId>
+            <artifactId>katool-security-spring-boot-starter</artifactId>
             <version>1.0.0.SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -29,12 +29,12 @@ public interface GlobalContainer {
         String method;
         String url;
         String route;
-        Boolean checkLogin;
+        Boolean onlyCheckLogin;
         Boolean isDef;
         Boolean isOpen;
         List<String> role;
-        public Route setCheckLogin(Boolean checkLogin) {
-            this.checkLogin = checkLogin;
+        public Route setCheckLogin(Boolean onlyCheckLogin) {
+            this.onlyCheckLogin = onlyCheckLogin;
             return this;
         }
 
@@ -48,8 +48,8 @@ public interface GlobalContainer {
             return this;
         }
 
-        public Boolean getCheckLogin() {
-            return checkLogin;
+        public Boolean getOnlyCheckLogin() {
+            return onlyCheckLogin;
         }
 
         public Boolean getDef() {

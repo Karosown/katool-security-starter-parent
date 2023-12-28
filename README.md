@@ -92,7 +92,7 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
 @Component
 public class AuthConfig extends KaSecurityAuthUtil<鉴权出来的类型> implements KaSecurityAuthLogic{
     @Override
-    public KaSecurityValidMessage checkLogin(Boolean checkLogin) {
+    public KaSecurityValidMessage onlyCheckLogin(Boolean onlyCheckLogin) {
        
         return KaSecurityValidMessage.unKnow();
     }

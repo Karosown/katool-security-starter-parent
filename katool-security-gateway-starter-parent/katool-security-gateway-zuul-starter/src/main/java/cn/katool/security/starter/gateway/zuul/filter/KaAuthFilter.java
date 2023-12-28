@@ -10,6 +10,7 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,11 +47,11 @@ public class KaAuthFilter extends ZuulFilter {
                 if (path.equals(url)&& requestMethod.equals(method)){
                     log.info("url:{} path:{}",url,path);
                     log.info("method:{} name:{}",method,requestMethod);
-                    Boolean checkLogin = v.getCheckLogin();
-                    KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),checkLogin);
+                    Boolean onlyCheckLogin = v.getOnlyCheckLogin();
+                    KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),onlyCheckLogin);
                     if(!KaSecurityValidMessage.success().equals(run)){
                         RequestContext.getCurrentContext().setSendZuulResponse(false);
-                        RequestContext.getCurrentContext().setResponseStatusCode(401);
+                        RequestContext.getCurrentContext().setResponseStatusCode(HttpStatus.FORBIDDEN.value());
                         RequestContext.getCurrentContext().setResponseBody(JSONUtils.getJSON(run));
                     }
                     else{

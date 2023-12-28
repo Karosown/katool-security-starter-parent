@@ -1,7 +1,7 @@
 package cn.katool.security.core.model.dto.auth; /**
  * Title
  *
- * @ClassName: auditor.dto.model.cn.katool.security.common.AuditorQueryRequest
+ * @ClassName: auditor.dto.model.cn.katool.security.auth.AuditorQueryRequest
  * @Description:
  * @author: 巫宗霖
  * @date: 2023/4/6 23:06
@@ -44,7 +44,7 @@ public class AuthQueryRequest extends AuthPageRequest implements Serializable {
     /**
      *
      */
-    private Boolean checkLogin;
+    private Boolean onlyCheckLogin;
 
     /**
      *

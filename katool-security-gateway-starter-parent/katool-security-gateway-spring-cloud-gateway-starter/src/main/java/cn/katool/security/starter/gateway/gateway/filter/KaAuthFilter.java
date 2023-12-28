@@ -47,8 +47,8 @@ public class KaAuthFilter implements GlobalFilter, Ordered {
             log.info("url:{} path:{}",url,path);
             log.info("method:{} name:{}",method,requestMethod);
             if (url.equals(path.value())&&method.equals(requestMethod)){
-                Boolean checkLogin = v.getCheckLogin();
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),checkLogin);
+                Boolean onlyCheckLogin = v.getOnlyCheckLogin();
+                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),onlyCheckLogin);
                 if(!KaSecurityValidMessage.success().equals(run)){
                     return handleNoAuth(response);
                 }

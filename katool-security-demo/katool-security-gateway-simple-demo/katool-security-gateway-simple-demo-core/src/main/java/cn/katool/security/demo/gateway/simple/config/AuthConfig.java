@@ -13,8 +13,8 @@ import java.util.List;
 @Component
 public class AuthConfig extends KaSecurityAuthUtil<String> implements KaSecurityAuthLogic{
     @Override
-    public KaSecurityValidMessage checkLogin(Boolean checkLogin) {
-        if (BooleanUtil.isFalse(checkLogin)){
+    public KaSecurityValidMessage onlyCheckLogin(Boolean onlyCheckLogin) {
+        if (BooleanUtil.isFalse(onlyCheckLogin)){
             return KaSecurityValidMessage.success();
         }
             String payLoad = this.getPayLoad();

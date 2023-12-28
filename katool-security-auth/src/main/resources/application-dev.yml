@@ -14,7 +14,7 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/katool_security
-    KaSecurityUsername: root
+    username: root
     password: wzl20030211
   # Redis 配置
 
