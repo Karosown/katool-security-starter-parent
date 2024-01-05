@@ -4,7 +4,7 @@ package cn.katool.security.core.utils;
  *
  * @ClassName: utils.cn.yb.thinktank.common.JSONUtils
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/4/9 22:19
  * @Blog: https://www.wzl1.top/
  */

@@ -6,7 +6,7 @@
 
     <resultMap id="BaseResultMap" type="cn.katool.security.auth.model.entity.Auth">
         <result property="id" column="id" jdbcType="VARCHAR"/>
-        <result property="fid" column="fid" jdbcType="VARCHAR"/>
+        <result property="serviceName" column="service_name" jdbcType="VARCHAR"/>
         <result property="method" column="method" jdbcType="VARCHAR"/>
         <result property="uri" column="uri" jdbcType="VARCHAR"/>
         <result property="route" column="route" jdbcType="VARCHAR"/>
@@ -19,8 +19,28 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,fid,uri,
-        route,auth_role,oper_user,
-        check_login,is_open,is_def,is_delete
+        id,user_name,pass_word,
+        user_role,is_delete,created_time,
+        update_time
     </sql>
+    <sql id="swtich">
+        <choose>
+            <when test="dateUnit == 'day'">
+                DATE_FORMAT(created_time,'%m-%d')
+            </when>
+            <when test="dateUnit == 'month'">
+                DATE_FORMAT(created_time,'%y-%m')
+            </when>
+            <when test="dateUnit == 'year'">
+                DATE_FORMAT(created_time,'%y')
+            </when>
+        </choose>
+    </sql>
+    <select id="getAllByCreateTimeIncGraphs" resultType="cn.katool.security.auth.model.graph.IncGraphNode">
+        select
+        <include refid="swtich"></include>
+        as 'column',count(*) as 'value'
+        from ka_security_user where DATE_SUB(now(),INTERVAL  #{num} ${dateUnit})
+        group by <include refid="swtich"></include>
+    </select>
 </mapper>

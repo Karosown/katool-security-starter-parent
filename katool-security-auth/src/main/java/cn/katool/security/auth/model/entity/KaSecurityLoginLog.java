@@ -16,7 +16,7 @@ import java.util.Date;
  * 登录日志表
  * @TableName login_log
  */
-@TableName(value ="login_log")
+@TableName(value ="ka_security_login_log")
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString

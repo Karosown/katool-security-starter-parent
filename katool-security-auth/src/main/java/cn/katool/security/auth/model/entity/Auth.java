@@ -10,13 +10,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
  * 
  * @TableName auth
  */
-@TableName(value ="auth")
+@TableName(value ="ka_security_auth")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,11 +28,7 @@ public class Auth implements Serializable {
     @TableId
     private String id;
 
-    /**
-     *
-     */
-    @TableField(value = "fid")
-    private String fid;
+
 
     @TableField(value = "method")
     private String method;
@@ -61,6 +58,9 @@ public class Auth implements Serializable {
     @TableField(value = "oper_user")
     private String operUser;
 
+    @TableField(value = "service_name")
+    private Boolean serviceName;
+
     /**
      *
      */
@@ -77,9 +77,22 @@ public class Auth implements Serializable {
     @TableField(value = "is_def")
     private Boolean isDef;
 
+    /**
+     *
+     */
+    @TableField(value = "created_time")
+    private Date createdTime;
+
+    /**
+     *
+     */
+    @TableField(value = "update_time")
+    private Date updateTime;
+
     @TableLogic
     @TableField(value = "is_delete")
     private Integer isDelete;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 
@@ -91,11 +104,6 @@ public class Auth implements Serializable {
 
     public Auth setMethod(String method) {
         this.method = method;
-        return this;
-    }
-
-    public Auth setFid(String fid) {
-        this.fid = fid;
         return this;
     }
 

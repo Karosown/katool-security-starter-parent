@@ -1,7 +1,11 @@
 package cn.katool.security.auth.mapper;
 
 import cn.katool.security.auth.model.entity.KaSecurityUser;
+import cn.katool.security.auth.model.graph.IncGraphNode;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author 30398
@@ -11,6 +15,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface KaSecurityUserMapper extends BaseMapper<KaSecurityUser> {
 
+    List<IncGraphNode> getAllByCreateTimeIncGraphs(@Param("num") Integer num, @Param("dateUnit") String dateUnit);
 }
 
 

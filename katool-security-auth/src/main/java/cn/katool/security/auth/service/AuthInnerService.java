@@ -1,6 +1,8 @@
 package cn.katool.security.auth.service;
 
+import cn.katool.security.auth.constant.DateUnit;
 import cn.katool.security.auth.model.entity.Auth;
+import cn.katool.security.auth.model.graph.IncGraphNode;
 import cn.katool.security.core.model.dto.auth.AuthAddRequest;
 import cn.katool.security.core.model.dto.auth.AuthUpdateRequest;
 import cn.katool.security.core.model.vo.AuthVO;
@@ -33,4 +35,6 @@ public interface AuthInnerService extends IService<Auth>  {
     Auth getOne(String method, String requestURI, String contextPath);
 
     List<Auth> getlistByIsOpen();
+
+        List<IncGraphNode> getGraphIncData(Integer num, DateUnit dateUnit);
 }

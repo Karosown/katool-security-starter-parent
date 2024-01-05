@@ -1,7 +1,9 @@
 package cn.katool.security.auth.service;
 
-import cn.katool.security.auth.model.dto.KaSecurityUserQueryRequest;
+import cn.katool.security.auth.constant.DateUnit;
+import cn.katool.security.auth.model.dto.user.KaSecurityUserQueryRequest;
 import cn.katool.security.auth.model.entity.KaSecurityUser;
+import cn.katool.security.auth.model.graph.IncGraphNode;
 import cn.katool.security.auth.model.vo.kauser.KaSecurityLoginUserVO;
 import cn.katool.security.auth.model.vo.kauser.KaSecurityUserVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -27,7 +29,7 @@ public interface KaSecurityUserService extends IService<KaSecurityUser> {
 
     String getUUID(String pub, String hexMsg);
 
-    KaSecurityLoginUserVO doLogin(String kaSecurityUserName, String kaSecurityUserPassWord, HttpServletRequest request, HttpServletResponse response);
+    KaSecurityUserVO doLogin(String kaSecurityUserName, String kaSecurityUserPassWord, HttpServletRequest request, HttpServletResponse response);
 
     String getEntryPassWord(String kaSecurityUserPassWord);
 
@@ -39,4 +41,5 @@ public interface KaSecurityUserService extends IService<KaSecurityUser> {
     QueryWrapper<KaSecurityUser> getQueryWrapper(KaSecurityUserQueryRequest kaSecurityUserQueryRequest);
 
     KaSecurityUser querryGetKaSecurityUser(KaSecurityUser kaSecurityUser);
+    List<IncGraphNode> getGraphIncData(Integer num, DateUnit dateUnit);
 }

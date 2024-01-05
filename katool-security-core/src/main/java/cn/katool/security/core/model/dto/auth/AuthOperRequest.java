@@ -3,7 +3,7 @@
  *
  * @ClassName: AuthOperRequest
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/5/28 18:07
  * @Blog: https://www.wzl1.top/
  */

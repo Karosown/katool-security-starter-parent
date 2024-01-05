@@ -19,9 +19,9 @@ spring:
             # 跨域允许的有效期
             allow-credentials: true
             allowed-originPatterns: '*'
-            allowed-headers: Content-Type,Content-Length, Authorization, Accept,X-Requested-With,Uuid,Authorization,X-Ca-Timestamp,X-Ca-Nonce,X-Ca-Sign,ngrok-skip-browser-warning,User-Agent,x-forwarded-for
+            allowed-headers: Content-Type,Content-Length, Authorization, Accept,X-Requested-With,uuid,Authorization,X-Ca-Timestamp,X-Ca-Nonce,X-Ca-Sign,ngrok-skip-browser-warning,User-Agent,x-forwarded-for
             allowed-methods: '*'
-            exposed-headers: Content-Type,Content-Length, Authorization, Accept,X-Requested-With,Uuid,Token
+            exposed-headers: Content-Type,Content-Length, Authorization, Accept,X-Requested-With,uuid,Token
             max-age: 3600
       default-filters:
         - AddResponseHeader=source, @projectName@

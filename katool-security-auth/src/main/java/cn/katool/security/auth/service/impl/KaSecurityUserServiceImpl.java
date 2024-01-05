@@ -2,11 +2,13 @@ package cn.katool.security.auth.service.impl;
 
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
+import cn.katool.security.auth.constant.DateUnit;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
-import cn.katool.security.auth.model.dto.KaSecurityUserQueryRequest;
+import cn.katool.security.auth.model.dto.user.KaSecurityUserQueryRequest;
 import cn.katool.security.auth.model.entity.KaSecurityLoginLog;
 import cn.katool.security.auth.model.entity.KaSecurityUser;
+import cn.katool.security.auth.model.graph.IncGraphNode;
 import cn.katool.security.auth.model.vo.kauser.KaSecurityLoginUserVO;
 import cn.katool.security.auth.model.vo.kauser.KaSecurityUserVO;
 import cn.katool.security.auth.service.KaSecurityLoginLogService;
@@ -55,7 +57,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
 
     @Resource
     KaSecurityLoginLogService kaSecurityLoginLogService;
-    public static final String SALT = "KA_SECURITY_USER_SALT";
+    public static final String SALT = "KA_SECURITY_USER_SALT:";
 
     @Override
     public String getUUID(HttpServletRequest request) {
@@ -63,6 +65,9 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
             throw new BusinessException(ErrorCode.FORBIDDEN_ERROR);
         }
         String uuid = request.getHeader("uuid").trim();
+        if (StringUtils.isBlank(uuid)){
+            uuid = request.getHeader("Uuid").trim();
+        }
         return uuid;
     }
 
@@ -70,7 +75,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
     RedisUtils redisUtils;
     @Override
     public String decrypt(String kaSecurityEntryPassWord, String uuid) {
-        String secret = (String) redisUtils.getMap("LOGIN:RSAPAIR", uuid);
+        String secret = (String) redisUtils.getMap("LOGIN:SECRETPAIR", uuid);
         String decrypt = AesUtils.decrypt(kaSecurityEntryPassWord, secret);
         return decrypt;
     }
@@ -79,7 +84,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
     public String generateKeyPairAndReturnPublicKey() {
         RSA rsa = new RSA();
         String publicKey = rsa.getPublicKeyBase64();
-        PrivateKey privateKey = rsa.getPrivateKey();
+        String privateKey = rsa.getPrivateKeyBase64();
         redisUtils.pushMap("LOGIN:RSAPAIR",publicKey,privateKey);
         return publicKey;
     }
@@ -91,7 +96,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         PrivateKey pvb = null;
         try {
             byte[] keyBytes = (new BASE64Decoder()).decodeBuffer(pvbBase64);
-            PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
+                PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
             pvb = keyFactory.generatePrivate(keySpec);
         } catch (IOException e) {
@@ -102,7 +107,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
             throw new RuntimeException(e);
         }
         rsa.setPrivateKey(pvb);
-        byte[] decrypt = rsa.decrypt(hexMsg.getBytes(StandardCharsets.UTF_8), KeyType.PrivateKey);
+        byte[] decrypt = rsa.decrypt(hexMsg, KeyType.PrivateKey);
         String secret = new String(decrypt);
         String res = AesUtils.touchUUid(pub);
         redisUtils.pushMap("LOGIN:SECRETPAIR", res,secret);
@@ -110,7 +115,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
     }
 
     @Override
-    public KaSecurityLoginUserVO doLogin(String kaSecurityUserName, String kaSecurityUserPassWord, HttpServletRequest request, HttpServletResponse response) {
+    public KaSecurityUserVO doLogin(String kaSecurityUserName, String kaSecurityUserPassWord, HttpServletRequest request, HttpServletResponse response) {
         // 1. 校验
         if (StringUtils.isAnyBlank(kaSecurityUserName, kaSecurityUserPassWord)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -119,8 +124,8 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         String encryptPassWord = getEntryPassWord(kaSecurityUserPassWord);
         // 查询用户是否存在
         QueryWrapper<KaSecurityUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("kaSecurityUserName", kaSecurityUserName);
-        queryWrapper.eq("kaSecurityUserPassWord", encryptPassWord);
+        queryWrapper.eq("user_name", kaSecurityUserName);
+        queryWrapper.eq("pass_word", encryptPassWord);
         KaSecurityUser user = this.baseMapper.selectOne(queryWrapper);
         // 用户不存在
         if (user == null) {
@@ -133,9 +138,8 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         log.info("user:{} jsonwebToken:{}",user,token);
         // 将产生的jwt令牌放入响应头，返回给前端
         response.setHeader("token",token);
-        redisUtils.remove("loginCount:"+request.getSession().getId());
-        kaSecurityLoginLogService.save(new KaSecurityLoginLog(null, IPUtils.getIpAddr(request)+":"+kaSecurityUserName,user.getUserName(),null));
-        return this.getLoginKaSecurityUserVO(user);
+        kaSecurityLoginLogService.save(new KaSecurityLoginLog(null, IPUtils.getIpAddr(request),user.getUserName(),null));
+        return this.getKaSecurityUserVO(user);
     }
 
     @Override
@@ -197,6 +201,12 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         queryWrapper.eq("userAccount",kaSecurityUser.getUserName());
         KaSecurityUser one = this.getOne(queryWrapper);
         return one;
+    }
+
+    @Override
+    public List<IncGraphNode> getGraphIncData(Integer num, DateUnit dateUnit) {
+        List<IncGraphNode> allByCreateTimeIncGraphs = this.baseMapper.getAllByCreateTimeIncGraphs(num, dateUnit.getValue());
+        return allByCreateTimeIncGraphs;
     }
 
     @Override

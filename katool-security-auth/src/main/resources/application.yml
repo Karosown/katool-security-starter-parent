@@ -1,4 +1,7 @@
 spring:
+  web:
+    resources:
+      static-locations: [ classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/ ]
   main:
     allow-bean-definition-overriding: true
   application:
@@ -67,7 +70,6 @@ server:
   address: 0.0.0.0
   port: 7777
   servlet:
-    context-path: /api/auth
     # cookie 30 天过期
     session:
       cookie:

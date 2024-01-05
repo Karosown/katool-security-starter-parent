@@ -12,7 +12,7 @@ import java.util.List;
 @Component
 public class AuthConfig extends KaSecurityAuthUtil<String> implements KaSecurityAuthLogic{
     @Override
-    public KaSecurityValidMessage onlyCheckLogin(Boolean onlyCheckLogin) {
+    public KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin) {
         if (BooleanUtil.isFalse(onlyCheckLogin)){
             return KaSecurityValidMessage.success();
         }

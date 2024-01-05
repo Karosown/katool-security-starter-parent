@@ -3,7 +3,7 @@
  *
  * @ClassName: AuthTableSyncTask
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/8/3 4:05
  * @Blog: https://www.wzl1.top/
  */

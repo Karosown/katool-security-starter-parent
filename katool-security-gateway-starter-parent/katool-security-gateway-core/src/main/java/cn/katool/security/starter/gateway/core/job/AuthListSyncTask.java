@@ -3,7 +3,7 @@
  *
  * @ClassName: AuthListSyncTask
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/5/27 21:01
  * @Blog: https://www.wzl1.top/
  */
@@ -19,12 +19,13 @@ import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Slf4j
 @Component
 public class AuthListSyncTask {
-    @DubboReference(check = false)
+    @Resource
     AuthService authService;
 
 

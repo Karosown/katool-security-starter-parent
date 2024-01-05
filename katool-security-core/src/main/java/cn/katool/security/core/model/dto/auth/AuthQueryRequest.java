@@ -3,7 +3,7 @@ package cn.katool.security.core.model.dto.auth; /**
  *
  * @ClassName: auditor.dto.model.cn.katool.security.auth.AuditorQueryRequest
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/4/6 23:06
  * @Blog: https://www.wzl1.top/
  */
@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 public class AuthQueryRequest extends AuthPageRequest implements Serializable {
 
-    private String fid;
+
 
     private String method;
     /**
@@ -41,6 +41,7 @@ public class AuthQueryRequest extends AuthPageRequest implements Serializable {
      */
     private String operUser;
 
+    private String serviceName;
     /**
      *
      */

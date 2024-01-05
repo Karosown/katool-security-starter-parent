@@ -1,8 +1,10 @@
 package cn.katool.security.auth.service.impl;
 
+import cn.katool.security.auth.constant.DateUnit;
 import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
 import cn.katool.security.auth.mapper.AuthMapper;
+import cn.katool.security.auth.model.graph.IncGraphNode;
 import cn.katool.security.auth.service.AuthInnerService;
 import cn.katool.security.core.annotation.AuthServiceCheck;
 import cn.katool.security.core.model.dto.auth.AuthAddRequest;
@@ -15,7 +17,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -30,7 +31,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 */
 @Service
 @AuthServiceCheck(
-        excludeMethods = {"reload","getlistByIsOpen"})
+        anyRole =  {"admin"},
+        excludeMethods = {"getlistByIsOpen()"})
 public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
     implements AuthInnerService {
     @Override
@@ -41,7 +43,6 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         addRequest.setMethod(addRequest.getMethod().toUpperCase(Locale.ROOT));
         addRequest.setUri(addRequest.getUri().toLowerCase(Locale.ROOT));
         addRequest.setRoute(addRequest.getRoute().toLowerCase(Locale.ROOT));
-        String fid = addRequest.getFid();
         String method = addRequest.getMethod();
         String uri = addRequest.getUri();
         String route = addRequest.getRoute();
@@ -71,7 +72,6 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         }
         String id = authUpdateRequest.getId();
         String method = authUpdateRequest.getMethod();
-        String fid = authUpdateRequest.getFid();
         String uri = authUpdateRequest.getUri();
         String route = authUpdateRequest.getRoute();
         List<String> authRole = authUpdateRequest.getAuthRole();
@@ -227,5 +227,11 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         });
         voidCompletableFuture.join();
        return res.get();
+    }
+
+    @Override
+    public List<IncGraphNode> getGraphIncData(Integer num, DateUnit dateUnit) {
+        List<IncGraphNode> allByCreateTimeIncGraphs = this.baseMapper.getAllByCreateTimeIncGraphs(num, dateUnit.getValue());
+        return allByCreateTimeIncGraphs;
     }
 }

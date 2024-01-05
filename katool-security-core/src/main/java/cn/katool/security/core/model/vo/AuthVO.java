@@ -5,8 +5,10 @@ import cn.katool.security.core.utils.JSONUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,6 +18,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Accessors(chain = true)
 public class AuthVO implements Serializable {
     /**
      *
@@ -26,7 +29,7 @@ public class AuthVO implements Serializable {
      *
      */
     
-    private String fid;
+
 
     
     private String method;
@@ -58,6 +61,12 @@ public class AuthVO implements Serializable {
     /**
      *
      */
+
+    private String serviceName;
+
+    /**
+     *
+     */
     
     private Boolean onlyCheckLogin;
 
@@ -73,6 +82,15 @@ public class AuthVO implements Serializable {
 
     
     private Integer isDelete;
+    /**
+     *
+     */
+    private Date createdTime;
+
+    /**
+     *
+     */
+    private Date updateTime;
     
     private static final long serialVersionUID = 1L;
 
@@ -87,10 +105,7 @@ public class AuthVO implements Serializable {
         return this;
     }
 
-    public AuthVO setFid(String fid) {
-        this.fid = fid;
-        return this;
-    }
+
 
     public AuthVO setUri(String uri) {
         this.uri = uri;

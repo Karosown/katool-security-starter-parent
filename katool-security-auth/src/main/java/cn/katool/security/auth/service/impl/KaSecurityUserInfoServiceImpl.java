@@ -3,7 +3,7 @@
  *
  * @ClassName: KaSecurityUserInfoServiceImpl
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/5/29 17:48
  * @Blog: https://www.wzl1.top/
  */

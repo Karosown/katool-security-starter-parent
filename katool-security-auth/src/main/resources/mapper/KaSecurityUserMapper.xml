@@ -19,4 +19,24 @@
         user_role,is_delete,created_time,
         update_time
     </sql>
+    <sql id="swtich">
+        <choose>
+            <when test="dateUnit == 'day'">
+                DATE_FORMAT(created_time,'%m-%d')
+            </when>
+            <when test="dateUnit == 'month'">
+                DATE_FORMAT(created_time,'%y-%m')
+            </when>
+            <when test="dateUnit == 'year'">
+                DATE_FORMAT(created_time,'%y')
+            </when>
+        </choose>
+    </sql>
+    <select id="getAllByCreateTimeIncGraphs" resultType="cn.katool.security.auth.model.graph.IncGraphNode">
+        select
+        <include refid="swtich"></include>
+        as 'column',count(*) as 'value'
+        from ka_security_user where DATE_SUB(now(),INTERVAL  #{num} ${dateUnit})
+        group by <include refid="swtich"></include>
+    </select>
 </mapper>

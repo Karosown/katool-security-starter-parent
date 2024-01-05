@@ -29,6 +29,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -36,6 +37,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -60,10 +62,11 @@ public class AuthInterceptor {
 
 
 
-    @DubboReference(check = false)
+ @Resource
     private AuthService authService;
     
-
+    @Resource
+    Environment environment;
     /**
      * 执行拦截
      *
@@ -115,7 +118,8 @@ public class AuthInterceptor {
                             .setUri(requestURI)
                             .setRoute(contextPath)
                             .setIsDef(true)
-                            .setOpen(true);
+                            .setOpen(true)
+                            .setServiceName(environment.getProperty("spring.application.name"));
                 }
                 // 必须有该权限才通过
                 if (StringUtils.isNotBlank(mustRole)) {

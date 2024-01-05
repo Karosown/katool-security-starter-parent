@@ -22,7 +22,7 @@ public class AuthUpdateRequest implements Serializable {
     /**
      *
      */
-    private String fid;
+
 
     /**
      *
@@ -41,6 +41,7 @@ public class AuthUpdateRequest implements Serializable {
      *
      */
     private String operUser;
+    private String serviceName;
 
     /**
      *

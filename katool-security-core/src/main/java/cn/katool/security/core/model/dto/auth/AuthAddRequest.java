@@ -17,7 +17,7 @@ public class AuthAddRequest implements Serializable {
     /**
      * 
      */
-    private String fid;
+
     private String method;
     /**
      * 
@@ -36,6 +36,7 @@ public class AuthAddRequest implements Serializable {
      * 
      */
     private String operUser;
+    private String serviceName;
 
     /**
      * 

@@ -3,7 +3,7 @@ package cn.katool.security.auth.utils; /**
  *
  * @ClassName: utils.cn.yb.thinktank.common.AesUtils
  * @Description:
- * @author: 巫宗霖
+ * @author: Karos
  * @date: 2023/3/26 23:26
  * @Blog: https://www.wzl1.top/
  */
