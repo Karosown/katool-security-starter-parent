@@ -1,0 +1,49 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+  application:
+    name: katool-security-simple-demo-gateway-zuul
+  # DataSource Config
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+  jackson:
+    #  格式化返回时间 yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  # session 失效时间（分钟）
+  session:
+    timeout: 86400
+    store-type: redis
+  redis:
+    port: 6379
+    host: localhost
+    database: 0
+zuul:
+  routes:
+    keys:
+      path: /api/**
+      url: http://localhost:8682/api
+dubbo:
+  application:
+    name: dubbo-katool-security-simple-demo-gateway-zuul
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://localhost:8848
+
+server:
+  port: 8681
+
+katool:
+  security:
+    mode: single
+    core:
+      token-header: "Authorization"
