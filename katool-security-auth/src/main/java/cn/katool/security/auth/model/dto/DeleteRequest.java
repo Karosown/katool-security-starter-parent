@@ -11,10 +11,10 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 public class DeleteRequest {
-    private String id;
+    private Long id;
 
 
-    private List<String> ids;
+    private List<Long> ids;
 
     private static final long serialVersionUID = 1L;
 }

@@ -34,5 +34,12 @@ build/
 ### VS Code ###
 .vscode/
 
+# application properties
+katool-security-auth/src/main/resources/application.yml
+katool-security-auth/src/main/resources/application-dev.yml
+katool-security-auth/src/main/resources/application-prod.yml
+katool-security-auth/src/main/resources/application-test.yml
+katool-security-auth/src/main/resources/bootstrap.yml
+
 ### Mac OS ###
 .DS_Store

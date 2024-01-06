@@ -161,7 +161,8 @@ public class KaSecurityUserController {
     @PostMapping("/delete")
     @AuthCheck(mustRole = KaSecurityUserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteKaSecurityUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        if (deleteRequest == null ||StringUtils.isBlank(deleteRequest.getId())||Long.getLong( deleteRequest.getId() )<=0) {
+        if (ObjectUtils.isEmpty(deleteRequest) ||
+                deleteRequest.getId()<=0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         boolean b = kaSecurityUserService.removeById(deleteRequest.getId());
