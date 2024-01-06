@@ -38,11 +38,11 @@ spring:
   # Redis 配置
     # todo
   redis:
-    database: 2
-    host: 47.108.49.84
-    port: 3345
+    database: 0
+    host:
+    port:
     timeout: 5000
-    password: wzl20030211
+    password:
   servlet:
     multipart:
       location: /data/upload_tmp
