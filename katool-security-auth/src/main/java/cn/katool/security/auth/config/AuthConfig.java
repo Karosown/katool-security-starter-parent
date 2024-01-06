@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-@Component
 @Slf4j
+@Component
 public class AuthConfig extends KaSecurityAuthUtil<KaSecurityUser> implements KaSecurityAuthLogic {
     @Override
     public KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin) {

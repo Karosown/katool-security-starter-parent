@@ -62,7 +62,7 @@ public class AuthInterceptor {
 
 
 
- @Resource
+    @DubboReference(check = false)
     private AuthService authService;
     
     @Resource

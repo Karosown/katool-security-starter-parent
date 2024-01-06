@@ -4,6 +4,7 @@ package cn.katool.security.core.model.vo;
 import cn.katool.security.core.utils.JSONUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
@@ -19,6 +20,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
+@EqualsAndHashCode
 public class AuthVO implements Serializable {
     /**
      *

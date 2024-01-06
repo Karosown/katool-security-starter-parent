@@ -27,6 +27,7 @@ public interface KaSecurityAuthLogic {
       return KaSecurityValidMessage.success();
    }
 
+   @Deprecated
    static KaSecurityValidMessage allValid(KaSecurityValidMessage[] messages){
       for (KaSecurityValidMessage message : messages) {
          if (!KaSecurityValidMessage.success().equals(message)||KaSecurityValidMessage.onlyLogin().equals(message)){
@@ -53,7 +54,7 @@ public interface KaSecurityAuthLogic {
       HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();;
       if (KaSecurityMode.GATEWAY.equals(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER)) {
          Logger logger = Logger.getLogger(PropertySubstitute.class.getPackage().getName());
-         logger.log(Level.WARNING, "KaSecurityMode.GATEWAY 模式下，网关层请使用TokenUtil来获取Token，我们不建议使用Request来获取");
+         logger.log(Level.WARNING, "KaSecurityMode.GATEWAY 模式下，网关层请使用KaSecurityAuthUtil来获取Token，我们不建议使用Request来获取");
       }
       return request;
    }
