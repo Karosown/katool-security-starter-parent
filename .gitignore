@@ -43,3 +43,4 @@ katool-security-auth/src/main/resources/bootstrap.yml
 
 ### Mac OS ###
 .DS_Store
+/.idea/
