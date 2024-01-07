@@ -455,7 +455,7 @@ katool:
 
 同时每个服务的主函数上面打一个注解`@EnableKaSecurityAuthCenter`即可
 
-```
+```java
 @ConfigurationPropertiesScan(basePackages = "cn.katool.security")
 @SpringBootApplication
 @EnableKaSecurityAuthCenter
@@ -511,7 +511,7 @@ katool:
       token-header: "Authorization"
 ```
 
-#### 2.2.1 适配SpringCloudGateWay
+#### 2.2.1 适配Zuul
 
 具体的demo，可以看看git
 
