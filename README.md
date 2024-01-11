@@ -4,6 +4,9 @@
 
 ![SpringBoot-2.7.0](https://img.shields.io/badge/SpringBoot-2.7.2-green)![SpringCloudGateWay-2.7.0](https://img.shields.io/badge/SpringCloudGateWay-2.2.10.RELEASE-orange)![SpringCloudZuul-2.7.0](https://img.shields.io/badge/SpringCloudZuul-2.2.10.RELEASE-orange)![KaTool-1.9.5.GAMA](https://img.shields.io/badge/KaTool-1.9.5.GAMA-blue)
 
+- 官网：[KaTool-Security](https://security.katool.cn/)
+- GetStart：[KaTool Security鉴权框架文档 | KaTool-Security](https://doc.security.katool.cn/)
+
 ## 1. 简介
 
 KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring Boot和Dubbo实现，可以针对SpringCloudGateWay和Zuul等流行网关框架进行自定义鉴权逻辑适配，使开发者更注重逻辑开发，而不被项目架构所影响，使用TokenUtil也能够快速进行框架转换而不用改编原本的代码逻辑。
