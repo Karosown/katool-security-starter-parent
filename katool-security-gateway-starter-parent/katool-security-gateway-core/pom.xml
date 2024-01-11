@@ -10,7 +10,7 @@
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-core</artifactId>
     <name>katool-security-gateway-core</name>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <dependencies>
         <dependency>
             <groupId>cn.katool.security</groupId>

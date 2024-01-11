@@ -10,7 +10,7 @@
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-core</artifactId>
     <name>katool-security-core</name>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <build>
         <plugins>
             <plugin>

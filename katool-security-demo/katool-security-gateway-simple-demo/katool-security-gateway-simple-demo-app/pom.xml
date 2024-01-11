@@ -10,7 +10,7 @@
     <groupId>cn.katool.security.demo.gateway</groupId>
     <artifactId>katool-security-gateway-simple-demo-app</artifactId>
     <name>katool-security-gateway-simple-demo-app</name>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <dependencies>
         <dependency>
             <groupId>org.apache.dubbo</groupId>

@@ -17,7 +17,7 @@
     <groupId>cn.katool.security.demo</groupId>
     <artifactId>katool-security-zuul-simple-demo</artifactId>
     <name>katool-security-zuul-simple-demo</name>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <dependencies>
         <dependency>
             <groupId>org.apache.dubbo</groupId>

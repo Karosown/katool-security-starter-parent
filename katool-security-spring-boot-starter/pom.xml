@@ -9,8 +9,11 @@
     </parent>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-spring-boot-starter</artifactId>
+    <description>
+        KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring Boot和Dubbo实现，可以针对SpringCloudGateWay和Zuul等流行网关框架进行自定义鉴权逻辑适配，使开发者更注重逻辑开发，而不被项目架构所影响，使用TokenUtil也能够快速进行框架转换而不用改编原本的代码逻辑。
+    </description>
     <name>katool-security-spring-boot-starter</name>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <dependencies>
         <dependency>
             <groupId>cn.katool.security</groupId>
@@ -31,4 +34,94 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+    <!--开发者信息-->
+    <developers>
+        <developer>
+            <id>Karos</id>
+            <name>Karos</name>
+            <email>mail@wzl1.top</email>
+            <roles>
+                <role>Developer</role>
+            </roles>
+            <timezone>+8</timezone>
+        </developer>
+    </developers>
+
+    <!--开源协议...-->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+            <comments>A business-friendly OSS license</comments>
+        </license>
+    </licenses>
+    <!--项目在github或其它托管平台的地址-->
+    <scm>
+        <connection>https://gitee.com/karosown/katool-security.git</connection>
+        <developerConnection>scm:git:ssh://git@gitee.com:karosown/katool-security.git</developerConnection>
+        <url>https://gitee.com/karosown/katool-security/tree/master</url>
+    </scm>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <additionalJOptions>
+                        <additionalJOption>-Xdoclint:none</additionalJOption>
+                    </additionalJOptions>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 </project>

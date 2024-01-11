@@ -11,7 +11,7 @@
     <artifactId>katool-security-auth</artifactId>
     <name>katool-security-auth</name>
 
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <dependencies>
         <dependency>
             <groupId>mysql</groupId>

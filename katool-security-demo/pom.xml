@@ -6,7 +6,7 @@
     <packaging>pom</packaging>
     <name>katool-security-demo</name>
     <version>1.0.0-SNAPSHOT</version>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <modules>
         <module>katool-security-boot-simple-demo</module>
         <module>katool-security-gateway-simple-demo</module>

@@ -17,7 +17,7 @@
     <version>1.0.0-SNAPSHOT</version>
     <name>katool-security-gateway-simple-demo</name>
     <packaging>pom</packaging>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
     <dependencies>
         <dependency>
             <groupId>org.apache.dubbo</groupId>

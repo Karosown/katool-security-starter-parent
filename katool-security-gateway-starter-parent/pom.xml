@@ -16,5 +16,5 @@
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-starter-parent</artifactId>
     <name>katool-security-gateway-starter-parent</name>
-    <url>http://maven.apache.org</url>
+    <url>https://security.katool.cn</url>
 </project>
