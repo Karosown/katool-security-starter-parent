@@ -32,7 +32,7 @@ public class AuthListSyncTask {
     //通过定时任务
     @Scheduled(fixedRate = 60 * 1000)
     public void run() {
-        log.info("[网关鉴权名单同步任务开始执行]AuthListSyncTask run");;
+        log.info("[网关鉴权名单同步任务开始执行]AuthListSyncTask run");
         GlobalContainer.authRouteList.removeAllElements(); // 删除所有元素，保证数据一致性
         List<AuthVO> list = authService.getlistByIsOpen();
         list.forEach(v->{

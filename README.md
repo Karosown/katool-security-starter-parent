@@ -223,7 +223,7 @@ Git提交规范要求的格式通常如下：
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-spring-boot-starter</artifactId>
-    <version>1.0.0.SNAPSHOT</version>
+    <version>1.0.0.ALPHA</version>
 </dependency>
 ```
 
@@ -498,7 +498,7 @@ public class ZuulSimpleDemoApplication {
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
-    <version>1.0.0.SNAPSHOT</version>
+    <version>1.0.0.ALPHA</version>
 </dependency>
 ```
 
@@ -543,7 +543,7 @@ katool:
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-zuul-starter</artifactId>
-    <version>1.0.0.SNAPSHOT</version>
+    <version>1.0.0.ALPHA</version>
 </dependency>
 ```
 
@@ -808,27 +808,27 @@ public interface KaSecurityAuthLogic {
 ```java
 public class KaToolSecurityAuthQueue {
 
-    private static LinkedBlockingQueue<KaSecurityAuthLogic> list = new LinkedBlockingQueue<>();
+  private static final LinkedBlockingQueue<KaSecurityAuthLogic> list = new LinkedBlockingQueue<>();
 
-    public static void add(KaSecurityAuthLogic logic) {
-        // ...（添加逻辑到队列的方法）
-    }
+  public static void add(KaSecurityAuthLogic logic) {
+    // ...（添加逻辑到队列的方法）
+  }
 
-    public static KaSecurityAuthLogic get() {
-        // ...（从队列获取逻辑的方法）
-    }
+  public static KaSecurityAuthLogic get() {
+    // ...（从队列获取逻辑的方法）
+  }
 
-    public static void clear() {
-        // ...（清空队列的方法）
-    }
+  public static void clear() {
+    // ...（清空队列的方法）
+  }
 
-    public static int size() {
-        // ...（获取队列大小的方法）
-    }
+  public static int size() {
+    // ...（获取队列大小的方法）
+  }
 
-    public static boolean isEmpty() {
-        // ...（检查队列是否为空的方法）
-    }
+  public static boolean isEmpty() {
+    // ...（检查队列是否为空的方法）
+  }
 }
 ```
 

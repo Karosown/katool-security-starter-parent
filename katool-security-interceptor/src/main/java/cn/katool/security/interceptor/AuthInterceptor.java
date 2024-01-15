@@ -177,7 +177,7 @@ public class AuthInterceptor {
         log.info("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>ExcludeList: {}",excludeList);
         String methodName = getFormatCurrentMethodName(joinPoint);
         log.info("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>CurrentMethod: {}",methodName);
-        if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName.toString())){
+        if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName)){
             return joinPoint.proceed();
         }
         Boolean onlyCheckLogin = authControllerCheck.onlyCheckLogin();
@@ -260,7 +260,7 @@ public class AuthInterceptor {
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config]@AuthServiceCheck=>ExcludeList: {}",excludeList);
         String methodName = getFormatCurrentMethodName(joinPoint);
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config]@AuthServiceCheck=>CurrentMethod: {}",excludeList);
-        if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName.toString())){
+        if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName)){
             return joinPoint.proceed();
         }
         // 获取请求信息

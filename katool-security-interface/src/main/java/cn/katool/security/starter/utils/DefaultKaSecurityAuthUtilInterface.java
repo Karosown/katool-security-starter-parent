@@ -30,7 +30,7 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
     default T getPayLoadWithDubboRPC(){
         String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-        return (T) AuthUtil.getPayLoadFromToken(token);
+        return AuthUtil.getPayLoadFromToken(token);
     }
     default T getPayLoad(){
         T payLoad = getPayLoadWithHeader();
@@ -51,8 +51,8 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         return getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
     }
 
-    public  String getTokenWithHeader(String headerName);
-    public  String getTokenWithParameter(String parameterName);
-    public  String getTokenWithCookie(String cookieName);
-    public  String getTokenWithHeaderOrParameter(String headerName,String parameterName);
+    String getTokenWithHeader(String headerName);
+    String getTokenWithParameter(String parameterName);
+    String getTokenWithCookie(String cookieName);
+    String getTokenWithHeaderOrParameter(String headerName,String parameterName);
 }

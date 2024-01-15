@@ -51,7 +51,7 @@ public interface KaSecurityAuthLogic {
       return KaSecurityValidMessage.success();
    }
    default HttpServletRequest getRequest(){
-      HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();;
+      HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
       if (KaSecurityMode.GATEWAY.equals(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER)) {
          Logger logger = Logger.getLogger(PropertySubstitute.class.getPackage().getName());
          logger.log(Level.WARNING, "KaSecurityMode.GATEWAY 模式下，网关层请使用KaSecurityAuthUtil来获取Token，我们不建议使用Request来获取");

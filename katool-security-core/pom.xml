@@ -4,12 +4,13 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-starter-parent</artifactId>
-        <version>1.0.0.SNAPSHOT</version>
+        <version>1.0.0.ALPHA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-core</artifactId>
     <name>katool-security-core</name>
+    <version>1.0.0.ALPHA</version>
     <url>https://security.katool.cn</url>
     <build>
         <plugins>

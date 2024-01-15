@@ -4,9 +4,10 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-gateway-starter-parent</artifactId>
-        <version>1.0.0.SNAPSHOT</version>
+        <version>1.0.0.ALPHA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <version>1.0.0.ALPHA</version>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-core</artifactId>
     <name>katool-security-gateway-core</name>
@@ -15,12 +16,12 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-interceptor</artifactId>
-            <version>1.0.0.SNAPSHOT</version>
+            <version>1.0.0.ALPHA</version>
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-interface</artifactId>
-            <version>1.0.0.SNAPSHOT</version>
+            <version>1.0.0.ALPHA</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

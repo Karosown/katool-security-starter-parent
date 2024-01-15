@@ -79,7 +79,7 @@ public class KaSecurityCountController {
             result.getValues().add(v.getValue());
      });
         return ResultUtils.success(result);
-    };
+    }
 
     @Operation(description =  "获取用户增长统计 -- Echarts")
     @GetMapping("/userinc")
@@ -110,5 +110,5 @@ public class KaSecurityCountController {
             result.getValues().add(v.getValue());
         });
         return ResultUtils.success(result);
-    };
+    }
 }

@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class KaToolSecurityAuthQueue {
 
-    private static LinkedBlockingQueue<KaSecurityAuthLogic> list=new LinkedBlockingQueue<>();
+    private static final LinkedBlockingQueue<KaSecurityAuthLogic> list=new LinkedBlockingQueue<>();
 
     public static void add(KaSecurityAuthLogic logic){
         if (ObjectUtils.isEmpty(logic)){

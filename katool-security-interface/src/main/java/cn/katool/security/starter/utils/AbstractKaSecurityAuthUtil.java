@@ -31,7 +31,7 @@ public interface AbstractKaSecurityAuthUtil<T> extends  DefaultKaSecurityAuthUti
     }
 
     default HttpServletRequest getRequest(){
-        HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();;
+        HttpServletRequest request=((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         return request;
     }
 
