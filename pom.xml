@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>cn.katool.security</groupId>
   <artifactId>katool-security-starter-parent</artifactId>
-  <version>1.0.0.ALPHA</version>
+  <version>1.1.0.SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>katool-security-starter-parent</name>
   <url>https://security.katool.cn</url>
@@ -20,10 +20,12 @@
     <module>katool-security-interceptor</module>
     <module>katool-security-spring-boot-starter</module>
     <module>katool-security-gateway-starter-parent</module>
+    <module>katool-security-auth/katool-security-auth-common</module>
+    <module>katool-security-auth/katool-security-auth-start</module>
   </modules>
   <properties>
     <java.version>1.8</java.version>
-    <Katool.version>1.9.5.RELEASE</Katool.version>
+    <Katool.version>1.9.6.ALPHA</Katool.version>
     <mybatis.version>2.2.2</mybatis.version>
     <mp.version>3.5.2</mp.version>
     <seata.version>1.7.0</seata.version>

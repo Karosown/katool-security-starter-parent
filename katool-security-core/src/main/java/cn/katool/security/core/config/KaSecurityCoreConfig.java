@@ -20,6 +20,7 @@ public class KaSecurityCoreConfig {
 
     public static String CURRENT_TOKEN_HEADER="Authorization";
 
+
     @Bean
     @DependsOn("KaSecurityConfig-CORE")
     private void KaSecurityCoreConfigInit(){

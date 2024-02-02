@@ -15,5 +15,9 @@ public interface KaSecurityConstant {
      */
     String SORT_ORDER_DESC = " descend";
 
+    public static String CACHE_LOGIN_TOKEN="KaSecurity:Login:token";
+
+    public static Integer USER_ONLINE = 1;
+    public static Integer USER_OFFLINE = 0;
     
 }

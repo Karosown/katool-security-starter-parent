@@ -223,7 +223,7 @@ Git提交规范要求的格式通常如下：
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-spring-boot-starter</artifactId>
-    <version>1.0.0.ALPHA</version>
+    <version>1.1.0.SNAPSHOT</version>
 </dependency>
 ```
 
@@ -498,7 +498,7 @@ public class ZuulSimpleDemoApplication {
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
-    <version>1.0.0.ALPHA</version>
+    <version>1.1.0.SNAPSHOT</version>
 </dependency>
 ```
 
@@ -543,7 +543,7 @@ katool:
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-zuul-starter</artifactId>
-    <version>1.0.0.ALPHA</version>
+    <version>1.1.0.SNAPSHOT</version>
 </dependency>
 ```
 
@@ -562,6 +562,19 @@ katool:
 ### 2.3 网关组件更换
 
 直接修改依赖就行了，严格来说各个服务还要修改下katool.security.mode
+
+# 更新历程
+
+- V1.0.0
+  - SNAPSHOT
+    - 基本功能实现、网关组件快速切换
+  - RELEASE
+    - 新增@AuthPayLoad注解进行登录用户快速注入
+- V1.1.0
+  - todo:SNAPSHOT
+    - 新增登录状态管理
+    - 踢人下线
+    - 多端登录管理
 
 # API接口文档
 
