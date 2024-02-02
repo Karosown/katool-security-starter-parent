@@ -1,4 +1,7 @@
 package cn.katool.security.starter.utils;
+import cn.katool.security.core.model.entity.TokenStatus;
+import cn.katool.security.core.model.entity.UserAgentInfo;
+import eu.bitwalker.useragentutils.*;
 
 import cn.katool.security.core.config.KaSecurityCoreConfig;
 import cn.katool.security.core.constant.KaSecurityConstant;
@@ -8,10 +11,8 @@ import cn.katool.util.database.nosql.RedisUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
 
 public interface AbstractKaSecurityAuthUtil<T> extends  DefaultKaSecurityAuthUtilInterface<T> {
     @Override
@@ -44,16 +45,18 @@ public interface AbstractKaSecurityAuthUtil<T> extends  DefaultKaSecurityAuthUti
         return response;
     }
 
+    @Override
     default String login(T payload){
         // 生成Token
         String token = AuthUtil.createToken(payload);
         HttpServletResponse response = getResponse();
         response.setHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER, token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN,token,KaSecurityConstant.USER_ONLINE);
+        redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN,token,new TokenStatus(getUserAgent(),KaSecurityConstant.USER_ONLINE));
         return token;
     }
 
+    @Override
     default Boolean logout(){
         // 生成Token
         String token = getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
@@ -67,8 +70,16 @@ public interface AbstractKaSecurityAuthUtil<T> extends  DefaultKaSecurityAuthUti
             }
         }
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN,token,KaSecurityConstant.USER_OFFLINE);
-        return true;
+        TokenStatus tokenStatus = (TokenStatus) redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        tokenStatus.setStatus(KaSecurityConstant.USER_OFFLINE);
+        Boolean isLogout = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus);
+        return isLogout;
     }
 
+    @Override
+    default UserAgentInfo getUserAgent(){
+        UserAgent userAgent = UserAgent.parseUserAgentString(getRequest().getHeader("User-Agent"));
+        UserAgentInfo convert = UserAgentInfo.convert(userAgent);
+        return  convert;
+    }
 }

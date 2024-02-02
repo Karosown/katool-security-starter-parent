@@ -15,11 +15,6 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     }
 
     @Override
-    public String login(T payload) {
-        return AbstractKaSecurityAuthUtil.super.login(payload);
-    }
-
-    @Override
     public T getPayLoadWithHeader() {
         return AbstractKaSecurityAuthUtil.super.getPayLoadWithHeader();
     }
@@ -69,4 +64,5 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     public String getTokenWithHeaderOrParameter(String headerName, String parameterName) {
         return getTokenWithHeader(headerName) == null ? getTokenWithParameter(parameterName) : getTokenWithHeader(headerName);
     }
+
 }

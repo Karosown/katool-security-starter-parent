@@ -12,6 +12,13 @@
     <name>katool-security-core</name>
     <version>1.1.0.SNAPSHOT</version>
     <url>https://security.katool.cn</url>
+    <dependencies>
+        <dependency>
+            <groupId>eu.bitwalker</groupId>
+            <artifactId>UserAgentUtils</artifactId>
+            <version>1.21</version>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>

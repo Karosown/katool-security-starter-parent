@@ -3,6 +3,7 @@ package cn.katool.security.starter.utils;
 import cn.katool.security.core.config.KaSecurityCoreConfig;
 
 import cn.katool.security.core.constant.KaSecurityMode;
+import cn.katool.security.core.model.entity.UserAgentInfo;
 import cn.katool.util.auth.AuthUtil;
 import com.qiniu.util.Auth;
 import org.apache.dubbo.rpc.RpcContext;
@@ -55,4 +56,10 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
     String getTokenWithParameter(String parameterName);
     String getTokenWithCookie(String cookieName);
     String getTokenWithHeaderOrParameter(String headerName,String parameterName);
+
+    String login(T payload);
+
+    Boolean logout();
+
+    UserAgentInfo getUserAgent();
 }
