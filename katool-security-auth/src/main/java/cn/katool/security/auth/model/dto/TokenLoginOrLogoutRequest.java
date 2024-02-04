@@ -1,18 +1,20 @@
-package cn.katool.security.core.model.entity;
+package cn.katool.security.auth.model.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class TokenStatus {
-
+public class TokenLoginOrLogoutRequest {
+    @NotNull
+    String token;
+    @NotNull
     String primary;
-    UserAgentInfo ua_info;
-
-    Integer status;
 }

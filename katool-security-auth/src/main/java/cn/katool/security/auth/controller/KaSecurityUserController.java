@@ -18,6 +18,7 @@ import cn.katool.security.auth.utils.ResultUtils;
 import cn.katool.security.auth.utils.ThrowUtils;
 import cn.katool.security.core.annotation.AuthCheck;
 import cn.katool.security.core.utils.JSONUtils;
+import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.database.nosql.RedisUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -42,7 +43,7 @@ import java.util.List;
 @Tag(name = "中间件用户管理")
 @RestController
 @RequestMapping("/api/user")
-public class KaSecurityUserController {
+public class KaSecurityUserController extends KaSecurityAuthUtil<KaSecurityUser> {
 
     @Resource
     KaSecurityUserService kaSecurityUserService;
@@ -103,6 +104,10 @@ public class KaSecurityUserController {
         return ResultUtils.success(kaSecurityUserVO);
     }
 
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> logout(HttpServletRequest request) {
+        return ResultUtils.success(kaSecurityUserService.userLogout(this.getTokenAllInDefineHeader()));
+    }
 
     /**
      * 获取当前登录用户

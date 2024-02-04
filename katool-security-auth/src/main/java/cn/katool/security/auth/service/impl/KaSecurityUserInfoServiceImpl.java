@@ -15,6 +15,7 @@ import cn.katool.security.auth.exception.BusinessException;
 import cn.katool.security.auth.exception.ErrorCode;
 import cn.katool.security.auth.model.entity.KaSecurityUser;
 import cn.katool.security.auth.service.KaSecurityUserInfoService;
+import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.database.nosql.RedisUtils;
 import org.apache.dubbo.config.annotation.DubboService;
@@ -24,7 +25,7 @@ import javax.annotation.Resource;
 
 // 别放到 thinktank-user 中去，这是两个不同的服务，认证中心的userinfo未来可以对接第三方登录
 @DubboService
-public class KaSecurityUserInfoServiceImpl implements KaSecurityUserInfoService {
+public class KaSecurityUserInfoServiceImpl extends KaSecurityAuthUtil<KaSecurityUser> implements KaSecurityUserInfoService {
     /**
      * 获取当前登录用户
      *
@@ -96,24 +97,7 @@ public class KaSecurityUserInfoServiceImpl implements KaSecurityUserInfoService 
 
     @Resource
     RedisUtils redisUtils;
-    /**
-     * 用户注销
-     *
-     * @param token
-     */
-    @Override
-    public boolean userLogout(String token) {
-        if (AuthUtil.getPayLoadFromToken(token) == null) {
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-        }
-        String tokenStatus = (String) redisUtils.getMap("KaSecurityUser:Login" , token);
-        if (Integer.parseInt(tokenStatus) >0){
-            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
-        }
-        // 移除登录态
-        redisUtils.pushMap("KaSecurityUser:Login",token,1);
-        return true;
-    }
+
 
     @Override
     public KaSecurityUser getLoginKaSecurityUser(String token) {

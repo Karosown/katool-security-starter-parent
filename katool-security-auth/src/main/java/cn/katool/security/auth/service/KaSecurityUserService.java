@@ -42,4 +42,6 @@ public interface KaSecurityUserService extends IService<KaSecurityUser> {
 
     KaSecurityUser querryGetKaSecurityUser(KaSecurityUser kaSecurityUser);
     List<IncGraphNode> getGraphIncData(Integer num, DateUnit dateUnit);
+
+    boolean userLogout(String token);
 }

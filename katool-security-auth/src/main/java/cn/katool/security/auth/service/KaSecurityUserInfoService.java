@@ -11,7 +11,6 @@ public interface KaSecurityUserInfoService {
 
     boolean isAdmin(KaSecurityUser user);
 
-    boolean userLogout(String token);
 
     KaSecurityUser getLoginKaSecurityUser(String token);
 }

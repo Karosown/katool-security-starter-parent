@@ -52,29 +52,14 @@ public interface AbstractKaSecurityAuthUtil<T> extends  DefaultKaSecurityAuthUti
         HttpServletResponse response = getResponse();
         response.setHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER, token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN,token,new TokenStatus(getUserAgent(),KaSecurityConstant.USER_ONLINE));
-        return token;
+        TokenStatus tokenStatus = new TokenStatus(getPayLoadPrimary(), getUserAgent(), KaSecurityConstant.USER_ONLINE);
+        boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
+                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(payload),token, tokenStatus);
+        return res?token:null;
     }
 
-    @Override
-    default Boolean logout(){
-        // 生成Token
-        String token = getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-        if ((null) == token || "".equals(token)){
-            token = getTokenWithParameter(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-            if ((null) == token || "".equals(token)){
-                token = getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-                if ((null) == token || "".equals(token)){
-                    return false;
-                }
-            }
-        }
-        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        TokenStatus tokenStatus = (TokenStatus) redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        tokenStatus.setStatus(KaSecurityConstant.USER_OFFLINE);
-        Boolean isLogout = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus);
-        return isLogout;
-    }
+
+
 
     @Override
     default UserAgentInfo getUserAgent(){

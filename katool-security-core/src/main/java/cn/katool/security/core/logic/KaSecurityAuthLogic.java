@@ -1,11 +1,8 @@
 package cn.katool.security.core.logic;
 
-import cn.katool.Exception.ErrorCode;
-import cn.katool.Exception.KaToolException;
 import cn.katool.security.core.config.KaSecurityCoreConfig;
 import cn.katool.security.core.constant.KaSecurityMode;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.yaml.snakeyaml.introspector.PropertySubstitute;
@@ -16,7 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @FunctionalInterface
-public interface KaSecurityAuthLogic {
+public interface KaSecurityAuthLogic{
 
    KaSecurityValidMessage doAuth(List<String> roleList);
 

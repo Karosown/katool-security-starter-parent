@@ -223,7 +223,7 @@ Git提交规范要求的格式通常如下：
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-spring-boot-starter</artifactId>
-    <version>1.1.0.SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -498,7 +498,7 @@ public class ZuulSimpleDemoApplication {
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
-    <version>1.1.0.SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -543,7 +543,7 @@ katool:
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-zuul-starter</artifactId>
-    <version>1.1.0.SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -579,6 +579,10 @@ katool:
 # API接口文档
 
 ## 注解文档
+
+### @AuthPrimary
+
+在1.1.0中新出的注解，标记负载中的主要字段，在KaSecurityAuthUtil中可以通过判断哪个字段存在该注解来获取该字段的值，用于控制上下线显示，建议使用唯一字段来进行表示
 
 ### @AuthCheck
 
@@ -974,6 +978,14 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T> {
 ##### `login(T payLoad)`
 
 一个登录函数，用于返回一个jwt，并放入请求头里面，这个方法SpringCloudGateWay没有实现
+
+##### `logout()`
+
+用于登出，登出后，该token会从redis中删除
+
+##### `kickout()`
+
+用于强制下线
 
 #### 使用示例
 

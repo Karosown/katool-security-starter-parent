@@ -1,11 +1,8 @@
 package cn.katool.security.core.logic;
 
-import cn.hutool.core.util.ObjectUtil;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 

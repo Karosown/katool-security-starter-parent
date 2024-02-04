@@ -17,8 +17,8 @@ import java.util.List;
 public class AuthConfig extends KaSecurityAuthUtil<KaSecurityUser> implements KaSecurityAuthLogic {
     @Override
     public KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin) {
-        KaSecurityUser payLoad = this.getPayLoad();
-        if (ObjectUtils.isEmpty(payLoad)){
+        Boolean login = this.isLogin();
+        if (!login){
             return KaSecurityValidMessage.unLogin();
         }
         if (BooleanUtils.isFalse(onlyCheckLogin)){

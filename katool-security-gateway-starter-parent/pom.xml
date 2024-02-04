@@ -4,11 +4,11 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-starter-parent</artifactId>
-        <version>1.1.0.SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <packaging>pom</packaging>
-    <version>1.1.0.SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <modules>
         <module>katool-security-gateway-core</module>
         <module>katool-security-gateway-spring-cloud-gateway-starter</module>

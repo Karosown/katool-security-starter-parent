@@ -1,18 +1,19 @@
-package cn.katool.security.core.model.entity;
+package cn.katool.security.auth.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class TokenStatus {
-
+public class TokenDeleteRequest {
+    @NotBlank
     String primary;
-    UserAgentInfo ua_info;
-
-    Integer status;
+    @NotBlank
+    String token;
 }

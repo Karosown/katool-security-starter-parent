@@ -15,6 +15,7 @@ import cn.katool.security.auth.service.KaSecurityLoginLogService;
 import cn.katool.security.auth.utils.AesUtils;
 import cn.katool.security.auth.utils.SqlUtils;
 import cn.katool.security.core.constant.KaSecurityConstant;
+import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.database.nosql.RedisUtils;
 import cn.katool.util.verify.IPUtils;
@@ -57,6 +58,9 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
 
     @Resource
     KaSecurityLoginLogService kaSecurityLoginLogService;
+
+    @Resource
+    KaSecurityAuthUtil<KaSecurityUser> authUtil;
     public static final String SALT = "KA_SECURITY_USER_SALT:";
 
     @Override
@@ -89,6 +93,19 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         return publicKey;
     }
 
+    /**
+     * 用户注销
+     *
+     * @param token
+     */
+    @Override
+    public boolean userLogout(String token) {
+        if (AuthUtil.getPayLoadFromToken(token) == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        authUtil.logout();
+        return true;
+    }
     @Override
     public String getUUID(String pub, String hexMsg) {
         RSA rsa = new RSA();
@@ -134,7 +151,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         }
         // 3. 记录用户的登录态
         log.info("jwt creating ...");
-        String token = AuthUtil.createToken(user);
+        String token = authUtil.login(user);
         log.info("user:{} jsonwebToken:{}",user,token);
         // 将产生的jwt令牌放入响应头，返回给前端
         response.setHeader("token",token);
