@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.katool.security.auth.mapper.KaSecurityRoleMapper">
+
+    <resultMap id="BaseResultMap" type="cn.katool.security.auth.model.KaSecurityRole">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="fId" column="f_id" jdbcType="INTEGER"/>
+            <result property="userRole" column="user_role" jdbcType="VARCHAR"/>
+            <result property="isDelete" column="is_delete" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,f_id,user_role,
+        is_delete
+    </sql>
+</mapper>
