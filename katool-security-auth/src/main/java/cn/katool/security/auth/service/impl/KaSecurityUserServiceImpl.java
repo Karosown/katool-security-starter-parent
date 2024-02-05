@@ -59,8 +59,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
     @Resource
     KaSecurityLoginLogService kaSecurityLoginLogService;
 
-    @Resource
-    KaSecurityAuthUtil<KaSecurityUser> authUtil;
+    KaSecurityAuthUtil<KaSecurityUser> authUtil = new KaSecurityAuthUtil<KaSecurityUser>();
     public static final String SALT = "KA_SECURITY_USER_SALT:";
 
     @Override
@@ -100,11 +99,12 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
      */
     @Override
     public boolean userLogout(String token) {
-        if (AuthUtil.getPayLoadFromToken(token) == null) {
+        if (AuthUtil.getPayLoadFromToken(token,KaSecurityUser.class) == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
-        authUtil.logout();
-        return true;
+        String primary = authUtil.getPayLoadPrimary(token,KaSecurityUser.class);
+        Boolean logout = authUtil.logout(primary, token);
+        return logout;
     }
     @Override
     public String getUUID(String pub, String hexMsg) {
@@ -151,7 +151,7 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         }
         // 3. 记录用户的登录态
         log.info("jwt creating ...");
-        String token = authUtil.login(user);
+        String token = authUtil.login(user, KaSecurityUser.class);
         log.info("user:{} jsonwebToken:{}",user,token);
         // 将产生的jwt令牌放入响应头，返回给前端
         response.setHeader("token",token);

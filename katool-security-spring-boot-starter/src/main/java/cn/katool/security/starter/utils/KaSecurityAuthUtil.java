@@ -1,9 +1,12 @@
 package cn.katool.security.starter.utils;
 
+import org.springframework.stereotype.Component;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+@Component("KaSecurityAuthUtil")
 public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public HttpServletResponse getResponse() {
@@ -13,6 +16,11 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public String login(T payload) {
         return AbstractKaSecurityAuthUtil.super.login(payload);
+    }
+
+    @Override
+    public String login(T payload, Class clazz) {
+        return AbstractKaSecurityAuthUtil.super.login(payload,clazz);
     }
 
     @Override

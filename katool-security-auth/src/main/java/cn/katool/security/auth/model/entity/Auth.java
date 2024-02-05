@@ -89,7 +89,7 @@ public class Auth implements Serializable {
     @TableField(value = "update_time")
     private Date updateTime;
 
-    @TableLogic
+    @TableLogic(value = "0",delval = "1")
     @TableField(value = "is_delete")
     private Integer isDelete;
 

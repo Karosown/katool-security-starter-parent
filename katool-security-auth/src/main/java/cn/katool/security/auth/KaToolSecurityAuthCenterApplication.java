@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
 @EnableKnife4j
-@SpringBootApplication(scanBasePackages = {"cn.katool.security.auth", "cn.katool.security.core"})
+@SpringBootApplication(scanBasePackages = {"cn.katool.security.auth", "cn.katool.security.core","cn.katool.security.starter.utils"})
 @MapperScan("cn.katool.security.auth.mapper")
 @EnableDubbo
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)

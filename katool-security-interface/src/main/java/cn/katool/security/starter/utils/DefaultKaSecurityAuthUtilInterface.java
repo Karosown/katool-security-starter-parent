@@ -1,5 +1,6 @@
 package cn.katool.security.starter.utils;
 
+import cn.hutool.json.JSONObject;
 import cn.katool.security.core.annotation.AuthPrimary;
 import cn.katool.security.core.config.KaSecurityCoreConfig;
 
@@ -21,8 +22,7 @@ import reactor.core.publisher.Mono;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,69 +32,26 @@ import java.util.stream.Collectors;
 
 public interface DefaultKaSecurityAuthUtilInterface<T> {
 
-    default String getPayLoadPrimary(){
-        T payLoad = getPayLoad();
-        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
-        Object primary = null;
-        for (Field field : declaredFields) {
-            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
-            if (annotationPresent){
-                field.setAccessible(true);
-                try {
-                    primary = field.get(payLoad);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+    default Class getPayLoadClass(){
+
+        Type genericSuperclass = this.getClass().getGenericSuperclass();
+        if (genericSuperclass instanceof ParameterizedType){
+            Type actualTypeArgument = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[0];
+            return (Class<T>) actualTypeArgument;
         }
-        return primary.toString();
-    }
-
-    default String getPayLoadPrimary(T payLoad){
-        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
-        Object primary = null;
-        for (Field field : declaredFields) {
-            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
-            if (annotationPresent){
-                field.setAccessible(true);
-                try {
-                    primary = field.get(payLoad);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+        try {
+            Constructor<?>[] declaredConstructors = Class.forName(genericSuperclass.getTypeName()).getDeclaredConstructors();
+            Class<?> aClass = declaredConstructors[0].newInstance().getClass();
+            return aClass;
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
-        return primary.toString();
-    }
-
-    default String getPayLoadPrimaryWithToken(String token){
-        T payLoad = AuthUtil.getPayLoadFromToken(token);
-        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
-        Object primary = null;
-        for (Field field : declaredFields) {
-            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
-            if (annotationPresent){
-                field.setAccessible(true);
-                try {
-                    primary = field.get(payLoad);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
-        return primary.toString();
-    }
-
-    default T getPayLoadWithHeader(){
-        return (T) AuthUtil.getPayLoadFromToken(getTokenWithHeader(),
-                (Class)((ParameterizedType)
-                        getClass().getGenericSuperclass()).getActualTypeArguments()[0]
-                );
-    }
-
-    default T getPayLoadWithDubboRPC(){
-        String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
-        return AuthUtil.getPayLoadFromToken(token);
     }
     default T getPayLoad(){
         T payLoad = getPayLoadWithHeader();
@@ -106,6 +63,139 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         }
         return payLoad;
     }
+
+    default T getPayLoad(Class clazz){
+        T payLoad = getPayLoadWithHeader(clazz);
+        if (ObjectUtils.isEmpty(payLoad)){
+            payLoad = getPayLoadWithDubboRPC(clazz);
+        }
+        return payLoad;
+    }
+
+    default String getCurrentPayLoadPrimary(){
+        T payLoad = getPayLoad();
+        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
+        Object primary = null;
+        for (Field field : declaredFields) {
+            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
+            if (annotationPresent){
+                field.setAccessible(true);
+                try {
+                    primary = field.get(payLoad);
+                    break;
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        if (null == primary){
+            // 如果没有设置主键，则默认取第一个字段作为主键
+            JSONObject payLoad1 = (JSONObject) payLoad;
+            primary = payLoad1.get(KaSecurityCoreConfig.defautPrimaryKeyName);
+        }
+        return primary.toString();
+    }
+    default String getCurrentPayLoadPrimary(Class clazz){
+        T payLoad = getPayLoad(clazz);
+        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
+        Object primary = null;
+        for (Field field : declaredFields) {
+            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
+            if (annotationPresent){
+                field.setAccessible(true);
+                try {
+                    primary = field.get(payLoad);
+                    break;
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return primary.toString();
+    }
+    default String getPayLoadPrimary(T payLoad){
+        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
+        Object primary = null;
+        for (Field field : declaredFields) {
+            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
+            if (annotationPresent){
+                field.setAccessible(true);
+                try {
+                    primary = field.get(payLoad);
+                    break;
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        if (primary == null){
+            JSONObject payLoad1 = (JSONObject) payLoad;
+            primary = payLoad1.get(KaSecurityCoreConfig.defautPrimaryKeyName);
+        }
+        return primary.toString();
+    }
+    default String getPayLoadPrimary(String token){
+        T payLoad = (T) AuthUtil.getPayLoadFromToken(token,getPayLoadClass());
+        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
+        Object primary = null;
+        for (Field field : declaredFields)  {
+            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
+            if (annotationPresent){
+                field.setAccessible(true);
+                try {
+                    primary = field.get(payLoad);
+                    break;
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        if (primary == null){
+            JSONObject payLoad1 = (JSONObject) payLoad;
+            primary = payLoad1.get("id");
+        }
+        return primary.toString();
+    }
+    
+    default String getPayLoadPrimary(String token,Class clazz){
+        T payLoad = (T) AuthUtil.getPayLoadFromToken(token,clazz);
+        Field[] declaredFields = payLoad.getClass().getDeclaredFields();
+        Object primary = null;
+        for (Field field : declaredFields) {
+            boolean annotationPresent = field.isAnnotationPresent(AuthPrimary.class);
+            if (annotationPresent){
+                field.setAccessible(true);
+                try {
+                    primary = field.get(payLoad);
+                    break;
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return primary.toString();
+    }
+
+    default T getPayLoadWithHeader(){
+        return (T) AuthUtil.getPayLoadFromToken(getTokenWithHeader(),getPayLoadClass());
+    }
+
+    default T getPayLoadWithHeader(Class clazz){
+        return (T) AuthUtil.getPayLoadFromToken(getTokenWithHeader(),clazz);
+    }
+
+    default T getPayLoadWithDubboRPC(){
+        String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        return (T) AuthUtil.getPayLoadFromToken(token,getPayLoadClass());
+    }
+
+    default T getPayLoadWithDubboRPC(Class clazz){
+        String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        return (T) AuthUtil.getPayLoadFromToken(token,clazz);
+    }
+
+
+
 
     default String getTokenWithDubboRPC(){
         return RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
@@ -136,22 +226,32 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
     default List<Map.Entry<String,TokenStatus>> getTokenStatusAllList(){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        redisUtils.onfCacheInThread(false);
         Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN);
+        List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
+        return tokenList;
+    }
+    default List<Map.Entry<String,TokenStatus>> getTokenStatusListWithCurrentPayLoad(Class clazz){
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        redisUtils.onfCacheInThread(false);
+        String payLoadPrimary = getCurrentPayLoadPrimary(clazz);
+        Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+payLoadPrimary);
         List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
         return tokenList;
     }
     default List<Map.Entry<String,TokenStatus>> getTokenStatusListWithCurrentPayLoad(){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        String payLoadPrimary = getPayLoadPrimary();
+        redisUtils.onfCacheInThread(false);
+        String payLoadPrimary = getCurrentPayLoadPrimary();
         Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+payLoadPrimary);
         List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
         return tokenList;
     }
-
     default TokenStatus getCurrentTokenStatus(){
         String token = getTokenAllInDefineHeader();
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        TokenStatus tokenStatus = (TokenStatus) redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        Object map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        TokenStatus tokenStatus = (TokenStatus) map;
         return tokenStatus;
     }
 
@@ -164,13 +264,11 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         if (null == currentTokenStatus){
             return false;
         }
-        if (KaSecurityConstant.USER_OFFLINE.equals(currentTokenStatus.getStatus())){
-            return false;
-        }
-        return true;
+        return KaSecurityConstant.USER_ONLINE.equals(currentTokenStatus.getStatus());
     }
 
     String login(T payload);
+    String login(T payload,Class clazz);
 
     default Boolean login(String token, TokenStatus tokenStatus){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
@@ -182,16 +280,8 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         return login(token,new TokenStatus(primary,getUserAgent(),KaSecurityConstant.USER_ONLINE));
     }
 
-    default Boolean logout(String primary,String token){
-        return delToken(primary,token);
-    }
 
-    default Boolean delToken(String primary, String token){
-        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);;
-        return isDel;
-    }
+
 
     default Boolean logout(){
         String token = getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
@@ -207,12 +297,29 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         return delToken(token);
     }
 
+    default Boolean logout(String primary,String token){
+        return delToken(primary,token);
+    }
+
+    default Boolean logout(String token,Class clazz){
+            return delToken(token,clazz);
+    }
+
     default Boolean kickout(String token){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
         TokenStatus tokenStatus = (TokenStatus) redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
         tokenStatus.setStatus(KaSecurityConstant.USER_OFFLINE);
-        String primary=getPayLoadPrimary();
+        String primary=getPayLoadPrimary(token);
         Boolean isLogout = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+primary, token, tokenStatus)
+                && redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token,tokenStatus);
+        return isLogout;
+    }
+    default Boolean kickout(String token,Class clazz){
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        TokenStatus tokenStatus = (TokenStatus) redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        tokenStatus.setStatus(KaSecurityConstant.USER_OFFLINE);
+        String primary=getPayLoadPrimary(token);
+        Boolean isLogout = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+getPayLoadPrimary(token,clazz), token, tokenStatus)
                 && redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token,tokenStatus);
         return isLogout;
     }
@@ -228,13 +335,39 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
     default Boolean delToken(String token){
         // 获取该token的用户主要标志
-        String primary = getPayLoadPrimaryWithToken(token);
+        String primary = getPayLoadPrimary(token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
         Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);;
+                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
         return isDel;
     }
 
+    default Boolean delToken(String primary,String token){
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
+                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        return isDel;
+    }
+    default Boolean delToken(String token,Class clazz){
+        String primary = getPayLoadPrimary(token,clazz);
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
+                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        return isDel;
+    }
+
+    default Boolean expireToken(String primary,String token){
+        if (!AuthUtil.verifyToken(token)){
+            return false;
+        }
+        if (!AuthUtil.isExpired(token)){
+            return false;
+        }
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        boolean isExipire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary,token) &
+                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        return isExipire;
+    }
     default Boolean expireToken(String token){
         if (!AuthUtil.verifyToken(token)){
             return false;
@@ -242,7 +375,21 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         if (!AuthUtil.isExpired(token)){
             return false;
         }
-        String tokenPrimary = getPayLoadPrimaryWithToken(token);
+        String tokenPrimary = getPayLoadPrimary(token);
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        boolean isExipire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenPrimary, token) &
+                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+        return isExipire;
+    }
+
+    default Boolean expireToken(String token,Class clazz){
+        if (!AuthUtil.verifyToken(token)){
+            return false;
+        }
+        if (!AuthUtil.isExpired(token)){
+            return false;
+        }
+        String tokenPrimary = getPayLoadPrimary(token,clazz);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
         boolean isExipire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenPrimary, token) &
                 redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
@@ -262,7 +409,8 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
                 return;
             }
             String token = v.getKey();
-            if (expireToken(token)) {
+            String primary = v.getValue().getPrimary();
+            if (expireToken(primary,token)) {
                 if (++cnt  >= count ){
                     return ;
                 }

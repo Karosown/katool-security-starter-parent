@@ -218,6 +218,9 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         AtomicBoolean res= new AtomicBoolean(true);
         CompletableFuture<Void> voidCompletableFuture =     CompletableFuture.runAsync(() -> {
             int end = index.get() + list.size() / 3 + 1;
+            if (end>list.size()){
+                end=list.size();
+            }
             List<Auth> auths = list.subList(index.get(), end);
             auths.stream().forEach(v -> {
                 v.setIsOpen(false);

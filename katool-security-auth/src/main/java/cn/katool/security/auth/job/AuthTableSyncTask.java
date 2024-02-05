@@ -37,4 +37,17 @@ public class AuthTableSyncTask {
         }
 
     }
+
+    @Scheduled(fixedRate = 10 * 60 * 1000)
+    public void runn() {
+
+//         移动到鉴权中心进行定时任务
+        if (this.runConst%10==0){
+            // 每过10分钟进行一次全局清零，至少走一次本地服务
+            // 这里解释一下
+            // 有一种情况，针对某一类型的用户，进行某些特定接口的不定时开放和关闭
+            authService.reload();
+        }
+
+    }
 }

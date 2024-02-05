@@ -12,6 +12,7 @@ import cn.katool.security.core.model.entity.TokenStatus;
 import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import cn.katool.util.database.nosql.RedisUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import javafx.util.Pair;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,19 +23,24 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/token")
+@RequestMapping("/api/token")
 public class KaSecurityTokenController extends KaSecurityAuthUtil<KaSecurityUser>{
 
     // 查询
     @GetMapping("/list")
     public BaseResponse list(){
-        List<Map.Entry<String, TokenStatus>> tokenStatusList = this.getTokenStatusListWithCurrentPayLoad();
-        return ResultUtils.success(tokenStatusList);
+        List<Map.Entry<String, TokenStatus>> tokenStatusList = this.getTokenStatusAllList();
+        List<Pair> collect = tokenStatusList.stream().map(v -> {
+            String token = v.getKey();
+            TokenStatus tokenStatus = v.getValue();
+            return new Pair(token, tokenStatus);
+        }).collect(Collectors.toList());
+        return ResultUtils.success(collect);
     }
 
     @GetMapping("/page")
-    public BaseResponse<Page<Map.Entry<String, TokenStatus>>> page(TokenQueryRequest queryRequest){
-        List<Map.Entry<String, TokenStatus>> tokenStatusList = this.getTokenStatusListWithCurrentPayLoad();
+    public BaseResponse<Page<Pair>> page(TokenQueryRequest queryRequest){
+        List<Map.Entry<String, TokenStatus>> tokenStatusList = this.getTokenStatusAllList();
         String token = queryRequest.getToken();
         Integer status = queryRequest.getStatus();
         String primary = queryRequest.getPrimary();
@@ -60,9 +66,14 @@ public class KaSecurityTokenController extends KaSecurityAuthUtil<KaSecurityUser
         res.sort(Comparator.comparing(o -> o.getValue().getPrimary()));
         long current = queryRequest.getCurrent();
         long pageSize = queryRequest.getPageSize();
-        List<Map.Entry<String, TokenStatus>> child = res.subList((int) ((int) (current - 1) * pageSize), (int) (current * pageSize));
-        Page<Map.Entry<String,TokenStatus>> ress = new Page<>(current, pageSize, res.size());
-        ress.setRecords(child);
+        List<Map.Entry<String, TokenStatus>> child = res.subList((int) ((int) (current - 1) * pageSize), (int) (current * pageSize<res.size()?current*pageSize:res.size()));
+        List<Pair> collect = child.stream().map(v -> {
+            String tokene = v.getKey();
+            TokenStatus tokenStatus = v.getValue();
+            return new Pair(tokene, tokenStatus);
+        }).collect(Collectors.toList());
+        Page<Pair> ress = new Page<>(current, pageSize, res.size());
+        ress.setRecords(collect);
         return ResultUtils.success(ress);
     }
 
@@ -118,7 +129,7 @@ public class KaSecurityTokenController extends KaSecurityAuthUtil<KaSecurityUser
     }
     // 强制下线
     @PostMapping("/kickout")
-    public BaseResponse<Boolean> logout(@RequestBody TokenLoginOrLogoutRequest queryRequest) {
+    public BaseResponse<Boolean> kickout(@RequestBody TokenLoginOrLogoutRequest queryRequest) {
         String token = queryRequest.getToken();
         String primary = queryRequest.getPrimary();
         Boolean logout = this.kickout(primary, token);

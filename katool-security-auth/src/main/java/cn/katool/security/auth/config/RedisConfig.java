@@ -1,5 +1,6 @@
 package cn.katool.security.auth.config;
 
+import cn.hutool.json.JSONUtil;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -8,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializer;
+import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 
@@ -30,10 +33,34 @@ public class RedisConfig {
         jackson2JsonRedisSerializer.setObjectMapper(objectMapper);
 
         // 设置value的序列化规则和 key的序列化规则
+
+        RedisSerializer<Object> minxSerializer = new RedisSerializer<Object>() {
+            @Override
+            public byte[] serialize(Object o) throws SerializationException {
+                if (o instanceof String) {
+                    return ((String) o).getBytes();
+                } else {
+                    return jackson2JsonRedisSerializer.serialize(o);
+                }
+            }
+
+            @Override
+            public Object deserialize(byte[] bytes) throws SerializationException {
+                if (bytes == null || bytes.length <= 0) {
+                    return null;
+                }
+                String deserialize = new StringRedisSerializer().deserialize(bytes);
+                if (JSONUtil.isTypeJSON(deserialize)) {
+                    return jackson2JsonRedisSerializer.deserialize(bytes);
+
+                }
+                return deserialize;
+            }
+        };
         redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
-        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
-        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(minxSerializer);
+        redisTemplate.setHashKeySerializer(minxSerializer);
+        redisTemplate.setHashValueSerializer(minxSerializer);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }

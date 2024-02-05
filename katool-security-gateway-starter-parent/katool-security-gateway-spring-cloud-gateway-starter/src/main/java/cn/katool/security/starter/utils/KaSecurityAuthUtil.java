@@ -13,12 +13,14 @@ import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import javax.servlet.http.HttpServletResponse;
 
 
+@Component("KaSecurityAuthUtil")
 public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface<T>{
     @Override
     public T getPayLoadWithHeader() {
@@ -71,11 +73,26 @@ public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface
         ServerHttpResponse response = RequestContextUtil.getResponse();
         response.getHeaders().add(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER,token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        TokenStatus tokenStatus = new TokenStatus(getPayLoadPrimary(), getUserAgent(), KaSecurityConstant.USER_ONLINE);
+        TokenStatus tokenStatus = new TokenStatus(getPayLoadPrimary(payload), getUserAgent(), KaSecurityConstant.USER_ONLINE);
         boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
                 redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(payload),token, tokenStatus);
         return res?token:null;
     }
+    @Override
+    public String login(T payload,Class clazz){
+        // 生成Token
+        String token = AuthUtil.createToken(payload);
+        ServerHttpResponse response = RequestContextUtil.getResponse();
+        response.getHeaders().add(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER,token);
+        RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
+        TokenStatus tokenStatus = new TokenStatus(getPayLoadPrimary(token,clazz), getUserAgent(), KaSecurityConstant.USER_ONLINE);
+        boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
+                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(token,clazz),token, tokenStatus);
+        return res?token:null;
+    }
+
+
+
 
     @Override
     public UserAgentInfo getUserAgent(){

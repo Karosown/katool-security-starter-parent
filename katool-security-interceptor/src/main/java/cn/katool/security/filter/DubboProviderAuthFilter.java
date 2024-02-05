@@ -15,7 +15,7 @@ public class DubboProviderAuthFilter implements Filter {
     @Override
     public Result invoke(Invoker<?> invoker, Invocation invocation) throws RpcException {
         ServletRequestAttributes requestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        String token = AuthUtil.getToken(requestAttributes.getRequest());
+        String token = new AuthUtil<Object>().getToken(requestAttributes.getRequest());
         RpcContext.getContext().setAttachment(AuthConstant.TOKEN_HEADER, token);
         return invoker.invoke(invocation);
     }

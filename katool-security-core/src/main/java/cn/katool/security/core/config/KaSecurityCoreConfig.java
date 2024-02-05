@@ -18,12 +18,17 @@ public class KaSecurityCoreConfig {
     // TOKEN放在哪个请求头中
     String TOKEN_HEADER="Authorization";
 
+    public String defautPrimaryKey="id";
+
     public static String CURRENT_TOKEN_HEADER="Authorization";
+
+    public static String defautPrimaryKeyName="id";
 
 
     @Bean
     @DependsOn("KaSecurityConfig-CORE")
     private void KaSecurityCoreConfigInit(){
         KaSecurityCoreConfig.CURRENT_TOKEN_HEADER=TOKEN_HEADER;
+        KaSecurityCoreConfig.defautPrimaryKeyName=defautPrimaryKey;
     }
 }

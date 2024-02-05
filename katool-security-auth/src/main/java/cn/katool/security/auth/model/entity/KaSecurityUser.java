@@ -1,5 +1,7 @@
 package cn.katool.security.auth.model.entity;
 
+import cn.katool.security.core.annotation.AuthCheck;
+import cn.katool.security.core.annotation.AuthPrimary;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -22,16 +24,17 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class KaSecurityUser implements Serializable {
     /**
-     * 
+     *
      */
     @TableField(value = "id")
     private Integer id;
+    @TableField(value = "user_name")
+    @AuthPrimary
+    private String userName;
 
     /**
-     * 
+     *
      */
-    @TableField(value = "user_name")
-    private String userName;
 
     /**
      * 

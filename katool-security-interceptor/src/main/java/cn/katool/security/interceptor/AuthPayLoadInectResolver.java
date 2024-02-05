@@ -40,7 +40,7 @@ public class AuthPayLoadInectResolver extends WebMvcConfigurerAdapter implements
         if (StringUtils.isBlank(token)) {
             throw new RuntimeException("未登录");
         }
-        Object payLoad = AuthUtil.getPayLoadFromToken(token);
+        Object payLoad = new AuthUtil<Object>().getPayLoadFromToken(token);
         if (null == payLoad){
             throw new RuntimeException("未登录");
         }

@@ -38,7 +38,7 @@ public class KaSecurityUserInfoServiceImpl extends KaSecurityAuthUtil<KaSecurity
         // session-cookie模式从session中拿
 //        Object userObj = token.getSession().getAttribute(KaSecurityUserConstant.USER_LOGIN_STATE);
         //校验登录状态
-        Object userObj= AuthUtil.getPayLoadFromToken(token);
+        Object userObj= AuthUtil.getPayLoadFromToken(token,getPayLoadClass());
         KaSecurityUser currentPayLoad = (KaSecurityUser) userObj;
         if (currentPayLoad == null || currentPayLoad.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
@@ -58,7 +58,7 @@ public class KaSecurityUserInfoServiceImpl extends KaSecurityAuthUtil<KaSecurity
         // session-cookie模式从session中拿
 //        Object userObj = token.getSession().getAttribute(KaSecurityUserConstant.USER_LOGIN_STATE);
         // jwt模式从token里面去取
-        Object userObj= AuthUtil.getPayLoadFromToken(token);
+        Object userObj= AuthUtil.getPayLoadFromToken(token,getPayLoadClass());
         KaSecurityUser currentPayLoad = (KaSecurityUser) userObj;
         if (currentPayLoad == null || currentPayLoad.getId() == null) {
             return null;
@@ -84,7 +84,7 @@ public class KaSecurityUserInfoServiceImpl extends KaSecurityAuthUtil<KaSecurity
 //        if (Integer.parseInt(tokenStatus) >0){
 //            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
 //        }
-        Object userObj= AuthUtil.getPayLoadFromToken(token);
+        Object userObj= AuthUtil.getPayLoadFromToken(token,getPayLoadClass());
         KaSecurityUser currentPayLoad = (KaSecurityUser) userObj;
         KaSecurityUser user = (KaSecurityUser) userObj;
         return isAdmin(user);
@@ -105,7 +105,7 @@ public class KaSecurityUserInfoServiceImpl extends KaSecurityAuthUtil<KaSecurity
         // session-cookie模式从session中拿
 //        Object userObj = token.getSession().getAttribute(UserConstant.USER_LOGIN_STATE);
         //校验登录状态
-        Object userObj= AuthUtil.getPayLoadFromToken(token);
+        Object userObj= AuthUtil.getPayLoadFromToken(token,getPayLoadClass());
         KaSecurityUser currentUser = (KaSecurityUser) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);

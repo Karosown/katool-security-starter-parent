@@ -7,7 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Component
+@Component("KaSecurityAuthUtil")
 public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public HttpServletResponse getResponse() {

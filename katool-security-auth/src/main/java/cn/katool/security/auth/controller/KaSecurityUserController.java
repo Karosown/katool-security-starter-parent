@@ -105,7 +105,7 @@ public class KaSecurityUserController extends KaSecurityAuthUtil<KaSecurityUser>
     }
 
     @PostMapping("/logout")
-    public BaseResponse<Boolean> logout(HttpServletRequest request) {
+    public BaseResponse<Boolean> dologout() {
         return ResultUtils.success(kaSecurityUserService.userLogout(this.getTokenAllInDefineHeader()));
     }
 
