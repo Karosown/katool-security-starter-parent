@@ -2,7 +2,7 @@
 
 ![template](http://gd.7n.cdn.wzl1.top/typora/img/template.png)
 
-![SpringBoot-2.7.0](https://img.shields.io/badge/SpringBoot-2.7.2-green)![SpringCloudGateWay-2.7.0](https://img.shields.io/badge/SpringCloudGateWay-2.2.10.RELEASE-orange)![SpringCloudZuul-2.7.0](https://img.shields.io/badge/SpringCloudZuul-2.2.10.RELEASE-orange)![KaTool-1.9.5.GAMA](https://img.shields.io/badge/KaTool-1.9.5.GAMA-blue)
+![SpringBoot-2.7.0](https://img.shields.io/badge/SpringBoot-2.7.2-green)![SpringCloudGateWay-2.7.0](https://img.shields.io/badge/SpringCloudGateWay-2.2.10.RELEASE-orange)![SpringCloudZuul-2.7.0](https://img.shields.io/badge/SpringCloudZuul-2.2.10.RELEASE-orange)![KaTool-1.9.6.BETA](https://img.shields.io/badge/KaTool-1.9.6.BETA-blue)
 
 - 官网：[KaTool-Security](https://security.katool.cn/)
 - GetStart：[KaTool Security鉴权框架文档 | KaTool-Security](https://doc.security.katool.cn/)
@@ -21,6 +21,7 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
   - katool-security-spring-boot-starter                 给外部项目引用的Starter包
   - katool-security-interface                                   微服务模式 - Dubbo远程调用Interface层
   - katool-security-auth                                           微服务模式 - 鉴权中心服务
+  - katool-security-task											定时任务模块-Token-LRU过期删除
   - katool-security-gateway-starter-parent          微服务 - 网关层面鉴权starter父模块
     - katool-security-gateway-core                                              
     - katool-security-gateway-spring-cloud-gateway-starter	      Spring Cloud GateWay 网关鉴权Starter
@@ -584,6 +585,8 @@ katool:
 
 在1.1.0中新出的注解，标记负载中的主要字段，在KaSecurityAuthUtil中可以通过判断哪个字段存在该注解来获取该字段的值，用于控制上下线显示，建议使用唯一字段来进行表示
 
+**注意，在使用KaSecurityAuthUtil工具类时，尽量带上Class对象，否则可能会导致泛型擦除，最终转换为JsonObject对象**
+
 ### @AuthCheck
 
 用于对某一特定的方法进行拦截，通常标记在接口函数上
@@ -986,6 +989,8 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T> {
 ##### `kickout()`
 
 用于强制下线
+
+>在1.1.0之后，我们引入了TokenStatus，对token的状态进行查看，同时支持上下线管理，**注意，在使用KaSecurityAuthUtil工具类时，尽量带上Class对象，否则可能会导致泛型擦除，最终转换为JsonObject对象**
 
 #### 使用示例
 

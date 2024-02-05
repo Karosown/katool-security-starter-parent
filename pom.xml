@@ -24,7 +24,7 @@
   </modules>
   <properties>
     <java.version>1.8</java.version>
-    <Katool.version>1.9.6.ALPHA</Katool.version>
+    <Katool.version>1.9.6.BETA</Katool.version>
     <mybatis.version>2.2.2</mybatis.version>
     <mp.version>3.5.2</mp.version>
     <seata.version>1.7.0</seata.version>
