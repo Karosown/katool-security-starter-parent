@@ -82,9 +82,9 @@ katool:
       policy: caffeine
       time-unit: days
       exp-time: 7
-  lock:
-    internal-lock-lease-time: 30
-    time-unit: minutes
+    lock:
+      internal-lock-lease-time: 30
+      time-unit: minutes
 dubbo:
   application:
     name: dubbo-KaTool-Security-Auth
