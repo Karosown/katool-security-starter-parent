@@ -1,6 +1,6 @@
 # KaTool Security鉴权框架文档
 
-![template](http://gd.7n.cdn.wzl1.top/typora/img/template.png)
+![template](./img/template.png)
 
 ![SpringBoot-2.7.0](https://img.shields.io/badge/SpringBoot-2.7.2-green)![SpringCloudGateWay-2.7.0](https://img.shields.io/badge/SpringCloudGateWay-2.2.10.RELEASE-orange)![SpringCloudZuul-2.7.0](https://img.shields.io/badge/SpringCloudZuul-2.2.10.RELEASE-orange)![KaTool-1.9.6.BETA](https://img.shields.io/badge/KaTool-1.9.6.BETA-blue)
 
