@@ -24,7 +24,7 @@
   </modules>
   <properties>
     <java.version>1.8</java.version>
-    <Katool.version>1.9.6.BETA</Katool.version>
+    <Katool.version>1.9.6.GAMA</Katool.version>
     <mybatis.version>2.2.2</mybatis.version>
     <mp.version>3.5.2</mp.version>
     <seata.version>1.7.0</seata.version>
@@ -41,7 +41,7 @@
   <dependencies>
     <dependency>
       <groupId>cn.katool</groupId>
-      <artifactId>katool</artifactId>
+      <artifactId>KaTool</artifactId>
       <version>${Katool.version}</version>
     </dependency>
     <dependency>
