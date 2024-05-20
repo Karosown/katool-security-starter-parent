@@ -10,7 +10,6 @@ import cn.katool.security.auth.utils.BaseResponse;
 import cn.katool.security.auth.utils.ResultUtils;
 import cn.katool.security.core.model.entity.TokenStatus;
 import cn.katool.security.starter.utils.KaSecurityAuthUtil;
-import cn.katool.util.database.nosql.RedisUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import javafx.util.Pair;
 import org.springframework.util.ObjectUtils;
