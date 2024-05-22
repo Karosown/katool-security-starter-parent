@@ -1,11 +1,13 @@
 package cn.katool.security.auth.model.dto.role;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
-public class KaSecurityRoleQueryRequest implements Serializable {
+public class KaSecurityRoleUpdateRequest implements Serializable {
 
     private Integer id;
 

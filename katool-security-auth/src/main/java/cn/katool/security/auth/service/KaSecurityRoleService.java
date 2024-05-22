@@ -1,9 +1,9 @@
 package cn.katool.security.auth.service;
 
 import cn.katool.security.auth.model.KaSecurityRole;
+import cn.katool.security.auth.model.dto.role.KaSecurityRoleAddRequest;
+import cn.katool.security.auth.model.dto.role.KaSecurityRoleUpdateRequest;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
 * @author 30398
@@ -20,4 +20,8 @@ public interface KaSecurityRoleService extends IService<KaSecurityRole> {
     String getParentRole(String role);
 
     Boolean instanceOf(String role, String parentRole);
+
+    boolean save(KaSecurityRoleAddRequest dto);
+
+    boolean update(KaSecurityRoleUpdateRequest dto);
 }

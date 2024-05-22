@@ -1,4 +1,4 @@
-package cn.katool.security.auth.model.dto;
+package cn.katool.security.auth.model.dto.token;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

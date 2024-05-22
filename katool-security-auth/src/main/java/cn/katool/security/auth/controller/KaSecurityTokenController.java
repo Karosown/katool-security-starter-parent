@@ -1,6 +1,6 @@
 package cn.katool.security.auth.controller;
-import cn.katool.security.auth.model.dto.TokenDeleteRequest;
-import cn.katool.security.auth.model.dto.TokenLoginOrLogoutRequest;
+import cn.katool.security.auth.model.dto.token.TokenDeleteRequest;
+import cn.katool.security.auth.model.dto.token.TokenLoginOrLogoutRequest;
 import cn.katool.security.auth.model.dto.token.TokenAddOrUpdRequest;
 import cn.katool.security.core.model.entity.UserAgentInfo;
 
@@ -15,7 +15,6 @@ import javafx.util.Pair;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

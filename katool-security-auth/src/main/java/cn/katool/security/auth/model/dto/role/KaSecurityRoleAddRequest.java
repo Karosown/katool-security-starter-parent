@@ -5,9 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class KaSecurityRoleQueryRequest implements Serializable {
-
-    private Integer id;
+public class KaSecurityRoleAddRequest implements Serializable {
 
 
     private Integer fId;
