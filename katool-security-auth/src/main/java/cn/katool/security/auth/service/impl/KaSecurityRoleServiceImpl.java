@@ -1,8 +1,11 @@
 package cn.katool.security.auth.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.katool.Exception.ErrorCode;
 import cn.katool.Exception.KaToolException;
 import cn.katool.security.auth.mapper.KaSecurityRoleMapper;
+import cn.katool.security.auth.model.dto.role.KaSecurityRoleAddRequest;
+import cn.katool.security.auth.model.dto.role.KaSecurityRoleUpdateRequest;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.katool.security.auth.model.KaSecurityRole;
 import cn.katool.security.auth.service.KaSecurityRoleService;
@@ -71,6 +74,20 @@ public class KaSecurityRoleServiceImpl extends ServiceImpl<KaSecurityRoleMapper,
             return true;
         }
         return instanceOf(getParentRole(role),parentRole);
+    }
+
+    @Override
+    public boolean save(KaSecurityRoleAddRequest dto) {
+        KaSecurityRole entity = new KaSecurityRole();
+        BeanUtil.copyProperties(dto,entity);
+        return this.save(entity);
+    }
+
+    @Override
+    public boolean update(KaSecurityRoleUpdateRequest dto) {
+        KaSecurityRole entity = new KaSecurityRole();
+        BeanUtil.copyProperties(dto,entity);
+        return this.updateById(entity);
     }
 
 }
