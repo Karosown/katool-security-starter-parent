@@ -21,6 +21,7 @@
     <module>katool-security-spring-boot-starter</module>
     <module>katool-security-gateway-starter-parent</module>
       <module>katool-security-task</module>
+      <module>katool-security-plugin-genrous-demo</module>
   </modules>
   <properties>
     <java.version>1.8</java.version>
