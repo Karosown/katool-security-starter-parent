@@ -1,20 +1,47 @@
 package cn.katool.security.core.logic;
 
+import cn.katool.security.core.config.KaSecurityCoreConfig;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.stream.Collectors;
 
 public class KaToolSecurityAuthQueue {
 
     private static final LinkedBlockingQueue<KaSecurityAuthLogic> list=new LinkedBlockingQueue<>();
 
+    /**
+     * 添加到末尾
+     * @param logic
+     */
     public static void add(KaSecurityAuthLogic logic){
         if (ObjectUtils.isEmpty(logic)){
             throw new IllegalArgumentException("logic is null");
         }
         list.add(logic);
+    }
+
+    /**
+     * 便于修改逻辑顺序
+     * @param posation
+     * @param logic
+     */
+    public static void insert(Integer posation, KaSecurityAuthLogic logic){
+        if (ObjectUtils.isEmpty(logic)){
+            throw new IllegalArgumentException("logic is null.");
+        }
+        if (posation> list.size()){
+            posation = list.size();
+        }
+        if (posation<1){
+            throw new IllegalArgumentException(posation+"is out range.");
+        }
+        List<KaSecurityAuthLogic> collect = list.stream().collect(Collectors.toList());
+        collect.add(posation,logic);
+        list.clear();
+        list.addAll(collect);
     }
 
     public static KaSecurityAuthLogic get(){
