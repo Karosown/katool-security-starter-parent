@@ -35,7 +35,7 @@ public class KaToolSecurityAuthQueue {
         if (posation> list.size()){
             posation = list.size();
         }
-        if (posation<1){
+        if (posation<0){
             throw new IllegalArgumentException(posation+"is out range.");
         }
         List<KaSecurityAuthLogic> collect = list.stream().collect(Collectors.toList());
