@@ -74,4 +74,8 @@ public class KaToolSecurityAuthQueue {
         return KaSecurityValidMessage.success();
     }
 
+    public static void setQueue(LinkedBlockingQueue<KaSecurityAuthLogic> queue){
+        KaToolSecurityAuthQueue.clear();
+        list.addAll(queue);
+    }
 }
