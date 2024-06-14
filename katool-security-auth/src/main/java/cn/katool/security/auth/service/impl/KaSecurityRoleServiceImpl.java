@@ -6,12 +6,14 @@ import cn.katool.Exception.KaToolException;
 import cn.katool.security.auth.mapper.KaSecurityRoleMapper;
 import cn.katool.security.auth.model.dto.role.KaSecurityRoleAddRequest;
 import cn.katool.security.auth.model.dto.role.KaSecurityRoleUpdateRequest;
+import cn.katool.security.auth.model.graph.AntVNode;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.katool.security.auth.model.KaSecurityRole;
 import cn.katool.security.auth.service.KaSecurityRoleService;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -34,9 +36,16 @@ public class KaSecurityRoleServiceImpl extends ServiceImpl<KaSecurityRoleMapper,
 
     @Override
     public void reload(){
+        ROLES.clear();
+        UNION_FIND_SETS.clear();
+        ROLES_MAP.clear();
         List<KaSecurityRole> roleList = this.list();
         roleList.sort(Comparator.comparing(KaSecurityRole::getId));
         for (KaSecurityRole role : roleList){
+            while(ROLES.size()!=role.getId()) {
+                ROLES.add(null);
+                UNION_FIND_SETS.add(null);
+            }
             ROLES.add(role.getUserRole());
             if (!ROLES.get(role.getId()).equals(role.getUserRole())){
                 ROLES.remove(role.getUserRole());
