@@ -79,7 +79,7 @@ public class KaSecurityRoleController {
     public void updateRole(KaSecurityRoleUpdateRequest dto){
         kaSecurityRoleService.update(dto);
     }
-    @DeleteMapping("/${id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable("id")Integer id){
         kaSecurityRoleService.removeById(id);
     }
