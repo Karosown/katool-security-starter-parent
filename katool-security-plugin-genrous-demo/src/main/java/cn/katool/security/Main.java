@@ -1,14 +1,20 @@
 package cn.katool.security;
 
 import cn.katool.util.classes.ClassUtil;
+import org.apache.catalina.loader.WebappClassLoader;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+
 
 public class Main {
     public static void main(String[] args) {
+        AuthLogicPluginDemo authLogicPluginDemo = new AuthLogicPluginDemo();
         ClassUtil classUtil = new ClassUtil();
         classUtil.complieClass(
-                "G:/KaTool/katool-security-starter-parent/katool-security-plugin-genrous-demo/src/main/java/cn/katool/security",
-                "AuthLogicPluginDemo.java"
+                System.getProperty ("user.dir")+"\\katool-security-plugin-genrous-demo\\src\\main\\java\\cn\\katool\\security",
+                "AuthLogicPluginDemo"
         );
-        // 将类文件填写后，可以直接生成class文件，生成后将放于target目录下
     }
+
 }
