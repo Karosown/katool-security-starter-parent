@@ -126,7 +126,24 @@ public class KaSecurityCorePluginConfig {
                 logicList.add(logic);
                 SpringContextUtils.regBeanNotAutoWire(className,logic);
             });
+            List<String> innerList = this.getClassUrls().stream().filter(v -> oldClassUrls.contains(v)).collect(Collectors.toList());
+            innerList.forEach(classUrl->{
+                try {
+                    classUrl = URLDecoder.decode(classUrl, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String className=classUrl.substring(classUrl.lastIndexOf('/') + 1, classUrl.lastIndexOf(".class"));
+                if (StringUtils.isBlank(className)){
+                    throw new KaToolException(ErrorCode.PARAMS_ERROR,"Class文件名不符法，请使用.class最为后缀，同时保证文件名是类名");
+                }
+                KaSecurityAuthLogic logic = (KaSecurityAuthLogic) SpringContextUtils.getBean(className);
+                logic.loadPlugin();
+            });
+            clearOldBean();
             // 统一处理，避免异常。
+            log.info("正在对鉴权逻辑进行替换");
             KaToolSecurityAuthQueue.clear();
             logicList.forEach(KaSecurityAuthLogic::loadPlugin);
 
@@ -135,6 +152,24 @@ public class KaSecurityCorePluginConfig {
         flagBook.put("enable",this.getEnable()!=null? this.getEnable():false);
         flagBook.put("packageName",this.getPackageName()!=null?this.getPackageName():"");
         flagBook.put("classUrls",this.getClassUrls()!=null?this.getClassUrls():new ArrayList<String>());
+    }
+
+    private void clearOldBean() {
+        String oldClassUrls = (String) flagBook.getIfNotExist("classUrls", new ArrayList<String>());
+        List<String> reduceList = this.getClassUrls().stream().filter(v -> !oldClassUrls.contains(v)).collect(Collectors.toList());
+        reduceList.forEach(classUrl -> {
+            try {
+                classUrl = URLDecoder.decode(classUrl, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+
+            String className=classUrl.substring(classUrl.lastIndexOf('/') + 1, classUrl.lastIndexOf(".class"));
+            if (StringUtils.isBlank(className)){
+                throw new KaToolException(ErrorCode.PARAMS_ERROR,"Class文件名不符法，请使用.class最为后缀，同时保证文件名是类名");
+            }
+            SpringContextUtils.unregBean(className);
+        });
     }
 
 }

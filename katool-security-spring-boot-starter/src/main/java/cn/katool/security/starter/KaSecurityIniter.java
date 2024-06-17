@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
 public class KaSecurityIniter {
 
-    private final String version = "V1.1.0-SNAPSHOT";
+    private final String version = "V1.1.0.ALPHA";
 
     @Bean
     public void init(){
