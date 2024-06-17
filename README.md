@@ -91,7 +91,7 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring B
    ├─katool-security-gateway-simple-demo
    └─katool-security-zuul-simple-demo
 ```
-
+  katool-security-plugin-genrous-demo 鉴权插件生成demo
 ## 3. 鉴权逻辑实现
 
 ### 3.1 实现KaSecurityAuthLogic接口继承工具类
@@ -1238,3 +1238,9 @@ Boolean saveOrUpdateResult = authService.saveOrUpdate(authVO);
 ```
 
 以上示例展示了如何在服务中使用 `AuthService` 接口的各个方法进行权限数据的增、删、改、查等操作。用户可以根据实际需求调用相应的方法。
+
+## 鉴权插件使用说明：
+
+可以参考生成器的demo进行class文件生成，注意插件的pacakge最好和本体鉴权逻辑的package一样，classUrl的规范：`http/https/file:*/***.class`
+
+建议插件配合nacos配置中心使用，可以做到线上热拔插。

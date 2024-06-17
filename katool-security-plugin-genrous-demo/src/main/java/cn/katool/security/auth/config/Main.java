@@ -1,4 +1,4 @@
-package cn.katool.security;
+package cn.katool.security.auth.config;
 
 import cn.katool.util.classes.ClassUtil;
 import org.apache.catalina.loader.WebappClassLoader;
@@ -9,10 +9,9 @@ import org.springframework.context.annotation.Bean;
 
 public class Main {
     public static void main(String[] args) {
-        AuthLogicPluginDemo authLogicPluginDemo = new AuthLogicPluginDemo();
         ClassUtil classUtil = new ClassUtil();
         classUtil.complieClass(
-                System.getProperty ("user.dir")+"\\katool-security-plugin-genrous-demo\\src\\main\\java\\cn\\katool\\security",
+                System.getProperty ("user.dir")+"/katool-security-plugin-genrous-demo/src/main/java/cn/katool/security/auth/config",
                 "AuthLogicPluginDemo"
         );
     }

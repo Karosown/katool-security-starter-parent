@@ -1,4 +1,5 @@
-package cn.katool.security;
+package cn.katool.security.auth.config;
+
 
 import cn.katool.security.core.logic.KaSecurityAuthLogic;
 import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
@@ -22,6 +23,7 @@ public class AuthLogicPluginDemo implements KaSecurityAuthLogic {
         return KaSecurityValidMessage.success();
     }
     @Bean
+    @Override
     public void loadPlugin(){
         KaToolSecurityAuthQueue.insert(0,this);
     }
