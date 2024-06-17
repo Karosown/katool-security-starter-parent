@@ -56,4 +56,8 @@ public interface KaSecurityAuthLogic{
       return request;
    }
 
+   default void loadPlugin(){
+      return ;
+   }
+
 }

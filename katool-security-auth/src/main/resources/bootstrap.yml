@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ServerConfig # 服务名称
+    name: KaTool-Security-Auth # 服务名称
   profiles:
     active: dev #开发环境，这里是dev
   cloud:
