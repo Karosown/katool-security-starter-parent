@@ -4,10 +4,10 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-gateway-starter-parent</artifactId>
-        <version>1.1.0-SNAPSHOT</version>
+        <version>1.1.0.ALPHA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0.ALPHA</version>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
     <name>katool-security-gateway-spring-cloud-gateway-starter</name>
@@ -21,7 +21,7 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-core</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <version>1.1.0.ALPHA</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-core</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <version>1.1.0.ALPHA</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -53,7 +53,7 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-interface</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <version>1.1.0.ALPHA</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-gateway-core</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+            <version>1.1.0.ALPHA</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
