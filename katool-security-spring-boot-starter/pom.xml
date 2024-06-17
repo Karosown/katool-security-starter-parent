@@ -4,10 +4,10 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-starter-parent</artifactId>
-        <version>1.1.0.ALPHA</version>
+        <version>1.1.0.BETA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <version>1.1.0.ALPHA</version>
+    <version>1.1.0.BETA</version>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-spring-boot-starter</artifactId>
     <description>
@@ -19,25 +19,25 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-core</artifactId>
-            <version>1.1.0.ALPHA</version>
+            <version>1.1.0.BETA</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-interface</artifactId>
-            <version>1.1.0.ALPHA</version>
+            <version>1.1.0.BETA</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-interceptor</artifactId>
-            <version>1.1.0.ALPHA</version>
+            <version>1.1.0.BETA</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-task</artifactId>
-            <version>1.1.0.ALPHA</version>
+            <version>1.1.0.BETA</version>
         </dependency>
     </dependencies>
     <!--开发者信息-->

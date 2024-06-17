@@ -224,7 +224,7 @@ Git提交规范要求的格式通常如下：
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-spring-boot-starter</artifactId>
-    <version>1.1.0.ALPHA</version>
+    <version>1.1.0.BETA</version>
 </dependency>
 ```
 
@@ -499,7 +499,7 @@ public class ZuulSimpleDemoApplication {
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-spring-cloud-gateway-starter</artifactId>
-    <version>1.1.0.ALPHA</version>
+    <version>1.1.0.BETA</version>
 </dependency>
 ```
 
@@ -544,7 +544,7 @@ katool:
 <dependency>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-zuul-starter</artifactId>
-    <version>1.1.0.ALPHA</version>
+    <version>1.1.0.BETA</version>
 </dependency>
 ```
 

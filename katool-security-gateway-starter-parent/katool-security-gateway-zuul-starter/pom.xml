@@ -4,14 +4,14 @@
     <parent>
         <groupId>cn.katool.security</groupId>
         <artifactId>katool-security-gateway-starter-parent</artifactId>
-        <version>1.1.0.ALPHA</version>
+        <version>1.1.0.BETA</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>cn.katool.security</groupId>
     <artifactId>katool-security-gateway-zuul-starter</artifactId>
     <name>katool-security-gateway-zuul-starter</name>
     <url>https://security.katool.cn</url>
-    <version>1.1.0.ALPHA</version>
+    <version>1.1.0.BETA</version>
     <description>
         KaTool Security鉴权框架是KaTool提供的权限管理工具，基于Spring Boot和Dubbo实现，可以针对SpringCloudGateWay和Zuul等流行网关框架进行自定义鉴权逻辑适配，使开发者更注重逻辑开发，而不被项目架构所影响，使用TokenUtil也能够快速进行框架转换而不用改编原本的代码逻辑。
     </description>
@@ -19,7 +19,7 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-gateway-core</artifactId>
-            <version>1.1.0.ALPHA</version>
+            <version>1.1.0.BETA</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
