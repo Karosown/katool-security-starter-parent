@@ -205,8 +205,8 @@ public class KaSecurityUserServiceImpl extends ServiceImpl<KaSecurityUserMapper,
         queryWrapper.eq(id != null, "id", id);
 //        queryWrapper.eq(StringUtils.isNotBlank(unionId), "unionId", unionId);
 //        queryWrapper.eq(StringUtils.isNotBlank(mpOpenId), "mpOpenId", mpOpenId);
-        queryWrapper.eq(StringUtils.isNotBlank(userRole), "userRole", userRole);
-        queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
+        queryWrapper.eq(StringUtils.isNotBlank(userRole), "user_role", userRole);
+        queryWrapper.like(StringUtils.isNotBlank(userName), "user_name", userName);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(KaSecurityConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;

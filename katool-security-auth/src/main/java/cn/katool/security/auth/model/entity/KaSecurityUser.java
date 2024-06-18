@@ -2,9 +2,8 @@ package cn.katool.security.auth.model.entity;
 
 import cn.katool.security.core.annotation.AuthCheck;
 import cn.katool.security.core.annotation.AuthPrimary;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,7 +25,7 @@ public class KaSecurityUser implements Serializable {
     /**
      *
      */
-    @TableField(value = "id")
+    @TableId(value = "id",type = IdType.AUTO)
     private Integer id;
     @TableField(value = "user_name")
     @AuthPrimary
