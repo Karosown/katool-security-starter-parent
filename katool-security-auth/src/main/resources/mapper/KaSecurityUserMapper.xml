@@ -36,7 +36,8 @@
         select
         <include refid="swtich"></include>
         as 'column',count(*) as 'value'
-        from ka_security_user where DATE_SUB(now(),INTERVAL  #{num} ${dateUnit})
+        from ka_security_user where created_time > DATE_SUB(now(),INTERVAL  #{num} ${dateUnit})
         group by <include refid="swtich"></include>
+        order by  `column`
     </select>
 </mapper>

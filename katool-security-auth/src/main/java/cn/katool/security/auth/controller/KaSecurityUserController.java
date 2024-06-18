@@ -21,6 +21,7 @@ import cn.katool.security.core.utils.JSONUtils;
 import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.database.nosql.RedisUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
@@ -143,6 +144,12 @@ public class KaSecurityUserController extends KaSecurityAuthUtil<KaSecurityUser>
         if (kaSecurityUserAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        LambdaQueryWrapper<KaSecurityUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(KaSecurityUser::getUserName,kaSecurityUserAddRequest.getUserName());
+        long count = kaSecurityUserService.count(queryWrapper);
+        if (count>0){
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"用户名已存在");
+        }
         KaSecurityUser kaSecurityUser = new KaSecurityUser();
         BeanUtils.copyProperties(kaSecurityUserAddRequest, kaSecurityUser);
         String kaSecurityUserPassWord = kaSecurityUser.getPassWord();
@@ -167,10 +174,17 @@ public class KaSecurityUserController extends KaSecurityAuthUtil<KaSecurityUser>
     @AuthCheck(mustRole = KaSecurityUserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteKaSecurityUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (ObjectUtils.isEmpty(deleteRequest) ||
-                deleteRequest.getId()<=0) {
+                (null != deleteRequest.getId() && deleteRequest.getId()<=0)
+        || (null != deleteRequest.getIds() && !deleteRequest.getIds().isEmpty() && deleteRequest.getIds().stream().filter(i->i<0).count()>0)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean b = kaSecurityUserService.removeById(deleteRequest.getId());
+        Boolean b = null;
+        if (null != deleteRequest.getId()){
+            b = kaSecurityUserService.removeById(deleteRequest.getId());
+        }
+        if (null != deleteRequest.getIds() && !deleteRequest.getIds().isEmpty()){
+            b = kaSecurityUserService.removeBatchByIds(deleteRequest.getIds());
+        }
         return ResultUtils.success(b);
     }
 
@@ -260,7 +274,7 @@ public class KaSecurityUserController extends KaSecurityAuthUtil<KaSecurityUser>
         long current = kaSecurityUserQueryRequest.getCurrent();
         long size = kaSecurityUserQueryRequest.getPageSize();
         Page<KaSecurityUser> kaSecurityUserPage = kaSecurityUserService.page(new Page<>(current, size),
-                kaSecurityUserService.getQueryWrapper(kaSecurityUserQueryRequest));
+        kaSecurityUserService.getQueryWrapper(kaSecurityUserQueryRequest));
         return ResultUtils.success(kaSecurityUserPage);
     }
 
