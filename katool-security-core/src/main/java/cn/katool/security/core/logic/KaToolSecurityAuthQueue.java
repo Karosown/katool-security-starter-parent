@@ -44,7 +44,7 @@ public class KaToolSecurityAuthQueue {
         list.addAll(collect);
     }
 
-    public static KaSecurityAuthLogic get(){
+    public static KaSecurityAuthLogic poll(){
         return list.poll();
     }
 
@@ -77,5 +77,9 @@ public class KaToolSecurityAuthQueue {
     public static void setQueue(LinkedBlockingQueue<KaSecurityAuthLogic> queue){
         KaToolSecurityAuthQueue.clear();
         list.addAll(queue);
+    }
+
+    public static LinkedBlockingQueue<KaSecurityAuthLogic> getList(){
+        return list;
     }
 }

@@ -25,6 +25,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -224,35 +226,50 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
     }
     UserAgentInfo getUserAgent();
 
+    default Object redisOper(RedisUtils redisUtils, Supplier supplier){
+        boolean status = false;
+        if (redisUtils.getOnfCacheInThread().equals(true)){
+            redisUtils.onfCacheInThread(false);
+            status = true;
+        }
+        Object res = supplier.get();
+        if (status){
+            redisUtils.onfCacheInThread(true);
+        }
+        return res;
+    }
+
     default List<Map.Entry<String,TokenStatus>> getTokenStatusAllList(){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        redisUtils.onfCacheInThread(false);
-        Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN);
-        List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
+        List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String, TokenStatus>>) redisOper(redisUtils, () -> {
+            Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN);
+            return (List<Map.Entry<String, TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
+        });
         return tokenList;
     }
     default List<Map.Entry<String,TokenStatus>> getTokenStatusListWithCurrentPayLoad(Class clazz){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        redisUtils.onfCacheInThread(false);
         String payLoadPrimary = getCurrentPayLoadPrimary(clazz);
-        Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+payLoadPrimary);
-        List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
-        return tokenList;
+        return (List<Map.Entry<String, TokenStatus>>) redisOper(redisUtils,()->{
+            Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+payLoadPrimary);
+            return (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
+        });
     }
     default List<Map.Entry<String,TokenStatus>> getTokenStatusListWithCurrentPayLoad(){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        redisUtils.onfCacheInThread(false);
-        String payLoadPrimary = getCurrentPayLoadPrimary();
-        Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+payLoadPrimary);
-        List<Map.Entry<String,TokenStatus>> tokenList = (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
-        return tokenList;
+        return (List<Map.Entry<String, TokenStatus>>) redisOper(redisUtils,()->{
+            String payLoadPrimary = getCurrentPayLoadPrimary();
+            Map map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN+":"+payLoadPrimary);
+            return (List<Map.Entry<String,TokenStatus>>) map.entrySet().stream().collect(Collectors.toList());
+        });
     }
     default TokenStatus getCurrentTokenStatus(){
         String token = getTokenAllInDefineHeader();
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        Object map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        TokenStatus tokenStatus = (TokenStatus) map;
-        return tokenStatus;
+        return (TokenStatus) redisOper(redisUtils,()->{
+            Object map = redisUtils.getMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return map;
+        });
     }
 
     default Boolean isLogin(){
@@ -272,9 +289,12 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
     default Boolean login(String token, TokenStatus tokenStatus){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
-                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenStatus.getPrimary(), token, tokenStatus);
-        return res;
+
+        return (Boolean) redisOper(redisUtils,()->{
+            boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
+                    redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenStatus.getPrimary(), token, tokenStatus);
+            return res;
+        });
     }
     default Boolean login(String primary,String token){
         return login(token,new TokenStatus(primary,getUserAgent(),KaSecurityConstant.USER_ONLINE));
@@ -337,23 +357,30 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         // 获取该token的用户主要标志
         String primary = getPayLoadPrimary(token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        return isDel;
+
+        return (Boolean) redisOper(redisUtils,()->{
+            Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
+                    redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return isDel;
+        });
     }
 
     default Boolean delToken(String primary,String token){
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        return isDel;
+        return (Boolean) redisOper(redisUtils,()->{
+            Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
+                    redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return isDel;
+        });
     }
     default Boolean delToken(String token,Class clazz){
         String primary = getPayLoadPrimary(token,clazz);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        return isDel;
+        return (Boolean) redisOper(redisUtils,()->{
+            Boolean isDel = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
+                    redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return isDel;
+        });
     }
 
     default Boolean expireToken(String primary,String token){
@@ -364,9 +391,11 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
             return false;
         }
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        boolean isExipire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary,token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        return isExipire;
+        return (Boolean) redisOper(redisUtils,()->{
+            Boolean isExpire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + primary, token) &
+                    redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return isExpire;
+        });
     }
     default Boolean expireToken(String token){
         if (!AuthUtil.verifyToken(token)){
@@ -377,9 +406,11 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         }
         String tokenPrimary = getPayLoadPrimary(token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        boolean isExipire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenPrimary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        return isExipire;
+        return (Boolean) redisOper(redisUtils,()->{
+            Boolean isExpire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenPrimary, token) &
+                    redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return isExpire;
+        });
     }
 
     default Boolean expireToken(String token,Class clazz){
@@ -391,9 +422,11 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
         }
         String tokenPrimary = getPayLoadPrimary(token,clazz);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
-        boolean isExipire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenPrimary, token) &
-                redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
-        return isExipire;
+        return (Boolean) redisOper(redisUtils,()->{
+            Boolean isExpire = redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + tokenPrimary, token) &
+                    redisUtils.delMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token);
+            return isExpire;
+        });
     }
 
     default void doCleanExpireToken(Integer effort){

@@ -28,6 +28,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.context.support.UiApplicationContextUtils;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
@@ -92,12 +94,20 @@ public class KaSecurityCorePluginConfig {
         }
         return true;
     }
+    public static volatile Boolean backup = true;
+
     @Scheduled(fixedRate = 3 * 60 * 1000)
     public void initLoad(){
         if (!valid()){
             return ;
         }
-
+        if (backup){
+            backup=false;
+            LinkedBlockingQueue<KaSecurityAuthLogic> list = KaToolSecurityAuthQueue.getList();
+            LinkedBlockingQueue<KaSecurityAuthLogic> backup = new LinkedBlockingQueue<>();
+            backup.addAll(list);
+            flagBook.put("backUplist", backup);
+        }
         if (BooleanUtils.isTrue(this.getEnable()) && ObjectUtils.isNotEmpty(this.getClassUrls())){
             List<String> oldClassUrls = (List<String>) flagBook.getIfNotExist("classUrls", new ArrayList<String>());
             // 取出差集，避免加载短时间内已经加载过的类
@@ -143,10 +153,15 @@ public class KaSecurityCorePluginConfig {
             });
             clearOldBean();
             // 统一处理，避免异常。
-            log.info("正在对鉴权逻辑进行替换");
+            log.info("[katool-security-auth-plugn-instead]:正在对鉴权逻辑进行替换");
             KaToolSecurityAuthQueue.clear();
             logicList.forEach(KaSecurityAuthLogic::loadPlugin);
-
+        }
+        else {
+            if (BooleanUtils.isFalse(this.getEnable())){
+                LinkedBlockingQueue<KaSecurityAuthLogic> backUplist = (LinkedBlockingQueue<KaSecurityAuthLogic>) flagBook.getIfNotExist("backUplist", new LinkedBlockingQueue<KaSecurityAuthLogic>());
+                KaToolSecurityAuthQueue.setQueue(backUplist);
+            }
         }
         // 处理完之后，我们重新更新缓存
         flagBook.put("enable",this.getEnable()!=null? this.getEnable():false);
@@ -155,7 +170,7 @@ public class KaSecurityCorePluginConfig {
     }
 
     private void clearOldBean() {
-        String oldClassUrls = (String) flagBook.getIfNotExist("classUrls", new ArrayList<String>());
+        List<String> oldClassUrls = (List<String>)  flagBook.getIfNotExist("classUrls", new ArrayList<String>());
         List<String> reduceList = this.getClassUrls().stream().filter(v -> !oldClassUrls.contains(v)).collect(Collectors.toList());
         reduceList.forEach(classUrl -> {
             try {
