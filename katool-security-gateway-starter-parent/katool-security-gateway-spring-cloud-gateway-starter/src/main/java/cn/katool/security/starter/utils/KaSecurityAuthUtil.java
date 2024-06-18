@@ -74,8 +74,8 @@ public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface
         response.getHeaders().add(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER,token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
         TokenStatus tokenStatus = new TokenStatus(getPayLoadPrimary(payload), getUserAgent(), KaSecurityConstant.USER_ONLINE);
-        boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
-                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(payload),token, tokenStatus);
+        Boolean res = (Boolean) redisOper(redisUtils,()-> redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
+                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(payload),token, tokenStatus));
         return res?token:null;
     }
     @Override
@@ -86,8 +86,8 @@ public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface
         response.getHeaders().add(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER,token);
         RedisUtils redisUtils = (RedisUtils) SpringContextUtils.getBean("RedisUtils");
         TokenStatus tokenStatus = new TokenStatus(getPayLoadPrimary(token,clazz), getUserAgent(), KaSecurityConstant.USER_ONLINE);
-        boolean res = redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
-                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(token,clazz),token, tokenStatus);
+        Boolean res = (Boolean) redisOper(redisUtils,()->redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN, token, tokenStatus) &
+                redisUtils.pushMap(KaSecurityConstant.CACHE_LOGIN_TOKEN + ":" + getPayLoadPrimary(token,clazz),token, tokenStatus));
         return res?token:null;
     }
 

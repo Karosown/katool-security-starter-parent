@@ -13,10 +13,12 @@ import cn.katool.security.auth.utils.ResultUtils;
 import cn.katool.util.cache.utils.CaffeineUtils;
 import com.alibaba.excel.util.ListUtils;
 import com.alibaba.nacos.shaded.com.google.common.collect.Lists;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @RestController
@@ -25,8 +27,11 @@ public class KaSecurityRoleController {
     @Resource
     KaSecurityRoleService kaSecurityRoleService;
 
-    @Resource
-    CaffeineUtils<Integer,AntVNode> vNodeMap;
+
+    static CaffeineUtils<Integer,AntVNode> vNodeMap= new CaffeineUtils<Integer,AntVNode>(Caffeine.newBuilder()
+            .expireAfterAccess(30, TimeUnit.SECONDS)
+            .maximumSize(10)
+            .build());
 
     @GetMapping("/tree")
     public BaseResponse<AntVVO> tree(){

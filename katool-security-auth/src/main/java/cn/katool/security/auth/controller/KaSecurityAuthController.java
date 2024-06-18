@@ -72,7 +72,7 @@ public class KaSecurityAuthController {
      String sortField = authQueryRequest.getSortField();
      String sortOrder = authQueryRequest.getSortOrder();
      Page<Auth> authPage = new Page<>(current,pageSize);
-        QueryWrapper<Auth> queryWrapper = new QueryWrapper<>();
+    QueryWrapper<Auth> queryWrapper = new QueryWrapper<>();
         if (StringUtils.isNotBlank(method)) {
             queryWrapper.eq("method",method);
         }
@@ -82,7 +82,7 @@ public class KaSecurityAuthController {
         if (StringUtils.isNotBlank(route)) {
             queryWrapper.eq("route",route);
         }
-        if (authRole!=null && StringUtils.isNoneEmpty((String[])authRole.stream().toArray())) {
+        if (authRole!=null && !authRole.isEmpty() && StringUtils.isNoneEmpty((String[])authRole.stream().toArray())) {
 
             final Integer[] flag = {0};
 
@@ -97,7 +97,7 @@ public class KaSecurityAuthController {
         if (StringUtils.isNotBlank(operUser)) {
                 queryWrapper.like("oper_user",operUser);
         }
-        queryWrapper.orderBy(true, KaSecurityConstant.SORT_ORDER_ASC.equals(sortOrder),sortField)
+        queryWrapper.orderBy(StringUtils.isNotBlank(sortField), KaSecurityConstant.SORT_ORDER_ASC.equals(sortOrder),sortField)
                 .eq(BooleanUtils.isTrue(onlyCheckLogin),"check_login",onlyCheckLogin)
                 .eq(BooleanUtils.isTrue(isDef),"is_def",isDef);
         authInnerService.page(authPage, queryWrapper);
