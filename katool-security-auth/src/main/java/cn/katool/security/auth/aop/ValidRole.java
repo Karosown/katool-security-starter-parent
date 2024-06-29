@@ -41,6 +41,9 @@ public class ValidRole {
 
         String ipAddr = IPUtils.getIpAddr(request);
         log.info("Begin => IP:{} {} 进行操作{}",ipAddr,request.getMethod(),request.getRequestURL());
+        /**
+         * todo: 限流操作
+         */
         Object proceed = point.proceed();
         log.info("End   => IP:{} {} 进行操作{} \n res:{}",ipAddr,request.getMethod(),request.getRequestURL(), JSONUtils.getJSON(proceed));
         return proceed;

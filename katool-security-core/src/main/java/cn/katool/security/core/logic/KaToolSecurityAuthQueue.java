@@ -60,9 +60,9 @@ public class KaToolSecurityAuthQueue {
         return list.isEmpty();
     }
 
-    public static KaSecurityValidMessage run(List<String> roleList,Boolean onlyCheckLogin){
+    public static KaSecurityValidMessage run(List<String> roleList,List<String> permissionCodeList,Boolean onlyCheckLogin){
         for (KaSecurityAuthLogic logic : list) {
-            KaSecurityValidMessage runResult = KaSecurityAuthLogic.ValidFilter(logic, roleList, onlyCheckLogin);
+            KaSecurityValidMessage runResult = KaSecurityAuthLogic.ValidFilter(logic, roleList,permissionCodeList, onlyCheckLogin);
             // 如果返回结果是null，那么就是未知错误
             if (ObjectUtils.isEmpty(runResult)){
                 runResult = KaSecurityValidMessage.unKnow();

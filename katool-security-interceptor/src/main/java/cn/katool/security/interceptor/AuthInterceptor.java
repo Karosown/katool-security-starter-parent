@@ -81,6 +81,9 @@ public class AuthInterceptor {
         List<String> anyRole = Arrays.stream(authCheck.anyRole())
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());
+        List<String> permissionCodes = Arrays.stream(authCheck.permissionCodes())
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
         Boolean onlyCheckLogin = authCheck.onlyCheckLogin();
         if (StringUtils.isNotBlank(mustRole)) {
             if (!anyRole.contains(mustRole)) {
@@ -89,7 +92,7 @@ public class AuthInterceptor {
         }
         if (RequestContextHolder.getRequestAttributes()==null ) {
 
-            return doInterceptorAuthService(joinPoint,anyRole,null,onlyCheckLogin);
+            return doInterceptorAuthService(joinPoint,anyRole,permissionCodes,null,onlyCheckLogin);
         }
         // 获取请求信息
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -132,7 +135,7 @@ public class AuthInterceptor {
                 log.info("[KaTool-Security-AOP-@AuthCheck-Store]认证中心保存更新状态state: {}",state);
                 // 网关没有鉴权，那么在这里鉴权
                 log.info("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行开始");
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
+                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,permissionCodes,onlyCheckLogin);
                 if (!KaSecurityValidMessage.success().equals(run)) {
                     return responseHandler(JSONUtils.getJSON(run));
                 }
@@ -148,7 +151,7 @@ public class AuthInterceptor {
         }
         else {
             log.info("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行开始");
-            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
+            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,permissionCodes,onlyCheckLogin);
             log.info("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行完毕");
             if (!KaSecurityValidMessage.success().equals(run)) {
                 return responseHandler(JSONUtils.getJSON(run));
@@ -165,6 +168,9 @@ public class AuthInterceptor {
         // 获取管理信息
         String mustRole = authControllerCheck.mustRole();
         List<String> anyRole = Arrays.stream(authControllerCheck.anyRole())
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
+        List<String> permissionCodes = Arrays.stream(authControllerCheck.permissionCodes())
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());
         // 必须有该权限才通过
@@ -215,7 +221,7 @@ public class AuthInterceptor {
                 log.info("[KaTool-Security-AOP-@AuthControllerCheck-Store]认证中心保存更新状态state: {}",state);
                 // 网关没有鉴权，那么在这里鉴权
                 log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
+                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,permissionCodes,onlyCheckLogin);
                 if (!KaSecurityValidMessage.success().equals(run)) {
                     return responseHandler(JSONUtils.getJSON(run));
                 }
@@ -231,7 +237,7 @@ public class AuthInterceptor {
         }
         else {
             log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
-            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
+            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,permissionCodes,onlyCheckLogin);
             log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
             if (!KaSecurityValidMessage.success().equals(run)) {
                 return responseHandler(JSONUtils.getJSON(run));
@@ -246,6 +252,9 @@ public class AuthInterceptor {
         List<String> anyRole = Arrays.stream(authServiceCheck.anyRole())
                 .filter(StringUtils::isNotBlank)
                 .collect(Collectors.toList());
+        List<String> permissionCodes = Arrays.stream(authServiceCheck.permissionCodes())
+                .filter(StringUtils::isNotBlank)
+                .collect(Collectors.toList());
         String mustRole = authServiceCheck.mustRole();
         if (StringUtils.isNotBlank(mustRole)) {
             if (!anyRole.contains(mustRole)) {
@@ -253,10 +262,10 @@ public class AuthInterceptor {
             }
         }
         List<String> excludeList = Arrays.stream(authServiceCheck.excludeMethods()).collect(Collectors.toList());
-        return doInterceptorAuthService(joinPoint,anyRole,excludeList,authServiceCheck.onlyCheckLogin());
+        return doInterceptorAuthService(joinPoint,anyRole,permissionCodes,excludeList,authServiceCheck.onlyCheckLogin());
     }
 
-    public Object doInterceptorAuthService(ProceedingJoinPoint joinPoint,List<String> anyRole,List<String> excludeList,boolean onlyCheckLogin) throws Throwable {
+    public Object doInterceptorAuthService(ProceedingJoinPoint joinPoint,List<String> anyRole,List<String> permissionCodes,List<String> excludeList,boolean onlyCheckLogin) throws Throwable {
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config]@AuthServiceCheck=>ExcludeList: {}",excludeList);
         String methodName = getFormatCurrentMethodName(joinPoint);
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config]@AuthServiceCheck=>CurrentMethod: {}",excludeList);
@@ -268,7 +277,7 @@ public class AuthInterceptor {
             return joinPoint.proceed();
         }
         log.info("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行开始");
-        KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,onlyCheckLogin);
+        KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole,permissionCodes,onlyCheckLogin);
         if (!KaSecurityValidMessage.success().equals(run)) {
             return responseHandler(JSONUtils.getJSON(run));
         }

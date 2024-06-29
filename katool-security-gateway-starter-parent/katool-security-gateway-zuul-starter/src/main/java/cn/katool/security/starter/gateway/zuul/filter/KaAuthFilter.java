@@ -48,7 +48,7 @@ public class KaAuthFilter extends ZuulFilter {
                     log.info("url:{} path:{}",url,path);
                     log.info("method:{} name:{}",method,requestMethod);
                     Boolean onlyCheckLogin = v.getOnlyCheckLogin();
-                    KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),onlyCheckLogin);
+                    KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),v.getPermission(),onlyCheckLogin);
                     if(!KaSecurityValidMessage.success().equals(run)){
                         RequestContext.getCurrentContext().setSendZuulResponse(false);
                         RequestContext.getCurrentContext().setResponseStatusCode(HttpStatus.FORBIDDEN.value());

@@ -36,12 +36,13 @@ public class AuthListSyncTask {
         GlobalContainer.authRouteList.removeAllElements(); // 删除所有元素，保证数据一致性
         List<AuthVO> list = authService.getlistByIsOpen();
         list.forEach(v->{
-            GlobalContainer.Route e = new GlobalContainer.Route(v.getMethod(), v.getUri(), v.getRoute(), v.getAuthRoles())
+            GlobalContainer.Route e = new GlobalContainer.Route(v.getMethod(), v.getUri(), v.getRoute(), v.getAuthRoles(),v.getPermissionCodes())
                     .setCheckLogin(v.getOnlyCheckLogin())
                     .setOpen(v.getIsOpen())
                     .setDef(v.getIsDef())
                     .setRole(v.getAuthRoles())
-                    .setRole(v.getAuthRole());
+                    .addRole(v.getAuthRole())
+                    .setRole(v.getPermissionCodes());
             log.info("open the route:{}",e);
             GlobalContainer.authRouteList.add(
                     e

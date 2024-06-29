@@ -11,8 +11,10 @@ import java.util.List;
 
 @Component
 public class AuthLogicPluginDemo implements KaSecurityAuthLogic {
+
+
     @Override
-    public KaSecurityValidMessage doAuth(List<String> roleList) {
+    public KaSecurityValidMessage doAuth(List<String> roleList, List<String> permissionCodeList) {
         System.out.println("插件测试");
         return KaSecurityValidMessage.success();
     }

@@ -53,7 +53,10 @@ public class AuthVO implements Serializable {
      *
      */
     private String authRole;
-
+    /**
+     *
+     */
+    private String authPermission;
     /**
      *
      */
@@ -149,8 +152,15 @@ public class AuthVO implements Serializable {
         this.authRole=JSONUtils.getJSON(authRoleList);
         return this;
     }
+    public AuthVO setPermissionCodes(List permissionCodes) {
+        this.authPermission=JSONUtils.getJSON(permissionCodes);
+        return this;
+    }
     public List getAuthRoles(){
         return JSONUtils.getList(this.authRole);
+    }
+    public List getPermissionCodes(){
+        return JSONUtils.getList(this.authPermission);
     }
 
 

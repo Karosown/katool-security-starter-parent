@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 @FunctionalInterface
 public interface KaSecurityAuthLogic{
 
-   KaSecurityValidMessage doAuth(List<String> roleList);
+   KaSecurityValidMessage doAuth(List<String> roleList,List<String> permissionCodeList);
 
    default KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin){
       if (onlyCheckLogin){
@@ -33,12 +33,12 @@ public interface KaSecurityAuthLogic{
       }
       return KaSecurityValidMessage.success();
    }
-   static KaSecurityValidMessage ValidFilter(KaSecurityAuthLogic kaSecurityAuthLogic,List<String> roleList,Boolean onlyCheckLogin){
+   static KaSecurityValidMessage ValidFilter(KaSecurityAuthLogic kaSecurityAuthLogic,List<String> roleList,List<String> permissionCodeList,Boolean onlyCheckLogin){
       KaSecurityValidMessage message = kaSecurityAuthLogic.doCheckLogin(onlyCheckLogin);
       if (!KaSecurityValidMessage.success().equals(message)||KaSecurityValidMessage.onlyLogin().equals(message)){
          return message;
       }
-      message = kaSecurityAuthLogic.doAuth(roleList);
+      message = kaSecurityAuthLogic.doAuth(roleList,permissionCodeList);
       if (KaSecurityValidMessage.onlyLogin().equals(message)){
          throw new RuntimeException("请勿在 KaSecurityAuthLogic 实现类中 doAuth 方法返回 onlyLogin 状态");
       }

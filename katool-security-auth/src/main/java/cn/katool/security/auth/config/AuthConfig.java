@@ -29,7 +29,7 @@ public class AuthConfig extends KaSecurityAuthUtil<KaSecurityUser> implements Ka
     }
 
     @Override
-    public KaSecurityValidMessage doAuth(List<String> roleList) {
+    public KaSecurityValidMessage doAuth(List<String> roleList,List<String> permissionCodesList) {
         KaSecurityUser payLoad = this.getPayLoad();
         String userRole = payLoad.getUserRole();
         if (roleList.contains(userRole)){
@@ -38,8 +38,9 @@ public class AuthConfig extends KaSecurityAuthUtil<KaSecurityUser> implements Ka
         return KaSecurityValidMessage.noAuth();
     }
     @Bean
-    public void initer(){
-        log.info("AuthConfig init");
-        KaToolSecurityAuthQueue.add(this);
+    @Override
+    public void loadPlugin(){
+        log.info("AuthConfig init...");
+        KaToolSecurityAuthQueue.insert(0,this);
     }
 }

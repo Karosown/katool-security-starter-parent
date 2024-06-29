@@ -33,6 +33,7 @@ public interface GlobalContainer {
         Boolean isDef;
         Boolean isOpen;
         List<String> role;
+        List<String> permission;
         public Route setCheckLogin(Boolean onlyCheckLogin) {
             this.onlyCheckLogin = onlyCheckLogin;
             return this;
@@ -61,16 +62,18 @@ public interface GlobalContainer {
         }
 
 
-        public Route(String method, String url,String route, List<String> role) {
+        public Route(String method, String url,String route, List<String> role,List<String> permissionCodes) {
             this.method = method;
             this.url = url;
             this.route = route;
             this.role = role;
+            this.permission = permissionCodes;
         }
-        public Route(String method, String uri ,List<String> role) {
+        public Route(String method, String uri ,List<String> role,List<String> permissionCodes) {
             this.method = method;
             this.url = NetUtils.normalizeUrl(uri);
             this.role = role;
+            this.permission = permissionCodes;
         }
 
         public void setMethod(String method) {
@@ -93,7 +96,7 @@ public interface GlobalContainer {
             return this;
         }
 
-        public Route setRole(String role){
+        public Route addRole(String role){
             this.role.add(role);
             return this;
         }

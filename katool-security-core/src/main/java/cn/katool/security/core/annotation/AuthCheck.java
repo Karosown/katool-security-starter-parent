@@ -24,6 +24,12 @@ public @interface AuthCheck {
     String mustRole() default "";
 
     /**
+     * 该接口需要的权限码
+     * 支持多个权限，只要有一个通过即可
+     * @return
+     */
+    String[] permissionCodes() default "";
+    /**
      * 检查登录，不会检查权限
      */
     boolean onlyCheckLogin() default false;
