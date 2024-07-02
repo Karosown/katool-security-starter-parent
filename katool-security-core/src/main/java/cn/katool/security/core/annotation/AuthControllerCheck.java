@@ -1,9 +1,12 @@
 package cn.katool.security.core.annotation;
 
+import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.util.List;
 
 @Target({ElementType.METHOD,ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
@@ -17,8 +20,7 @@ public @interface AuthControllerCheck {
      *"由于大多数情况下只有一个角色权限，所以说感觉这个很鸡肋"
      * @return
      */
-    @Deprecated
-    String mustRole() default "";
+    String[] mustRole() default "";
 
 
     /**
@@ -30,11 +32,15 @@ public @interface AuthControllerCheck {
      * 支持多个权限，只要有一个通过即可
      * @return
      */
-    String[] permissionCodes() default "";
+    String[] anyPermissionCodes() default "";
+    String[] mustPermissionCodes() default "";
 
     /**
      * 排除的方法
      * @return
      */
     String[] excludeMethods() default "";
+    KaSecurityAuthCheckMode roleMode() default KaSecurityAuthCheckMode.AND;
+    KaSecurityAuthCheckMode permissionMode() default KaSecurityAuthCheckMode.AND;
+    int[] logicIndex() default {0};
 }

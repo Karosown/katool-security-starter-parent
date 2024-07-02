@@ -1,6 +1,7 @@
 package cn.katool.security.core.model.vo;
 
 
+import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
 import cn.katool.security.core.utils.JSONUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,11 +53,16 @@ public class AuthVO implements Serializable {
     /**
      *
      */
-    private String authRole;
+    private String anyRole;
     /**
      *
      */
-    private String authPermission;
+    private String anyPermission;
+    private String mustRole;
+    private String mustPermission;
+    private Integer roleMode;
+    private Integer permissionMode;
+    private String logicIndex;
     /**
      *
      */
@@ -123,7 +129,7 @@ public class AuthVO implements Serializable {
     }
 
 
-    public AuthVO setoperUser(String operUser) {
+    public AuthVO setOperUser(String operUser) {
         this.operUser = operUser;
         return this;
     }
@@ -148,20 +154,70 @@ public class AuthVO implements Serializable {
         return this;
     }
 
-    public AuthVO setAuthRoles(List authRoleList) {
-        this.authRole=JSONUtils.getJSON(authRoleList);
+    public AuthVO setAnyRole(List authRoleList) {
+        this.anyRole=JSONUtils.getJSON(authRoleList);
         return this;
     }
-    public AuthVO setPermissionCodes(List permissionCodes) {
-        this.authPermission=JSONUtils.getJSON(permissionCodes);
+    public AuthVO setAnyPermission(List permissionCodes) {
+        this.anyPermission = JSONUtils.getJSON(permissionCodes);
         return this;
     }
-    public List getAuthRoles(){
-        return JSONUtils.getList(this.authRole);
+    public List getAnyRole(){
+        return JSONUtils.getList(this.anyRole);
     }
-    public List getPermissionCodes(){
-        return JSONUtils.getList(this.authPermission);
+    public List getAnyPermission(){
+        return JSONUtils.getList(this.anyPermission);
+    }
+    public AuthVO setMustRole(List authRoleList) {
+        this.mustRole=JSONUtils.getJSON(authRoleList);
+        return this;
+    }
+    public AuthVO setMustPermission(List permissionCodes) {
+        this.mustPermission = JSONUtils.getJSON(permissionCodes);
+        return this;
+    }
+    public List getMustRole(){
+        return JSONUtils.getList(this.mustRole);
+    }
+    public List getMustPermission(){
+        return JSONUtils.getList(this.mustPermission);
     }
 
+    public KaSecurityAuthCheckMode getRoleMode() {
+        return roleMode==1?KaSecurityAuthCheckMode.AND:KaSecurityAuthCheckMode.OR;
+    }
 
+    public AuthVO setRoleMode(KaSecurityAuthCheckMode roleMode) {
+        this.roleMode = roleMode.getMode();
+        return this;
+    }
+    public AuthVO setRoleMode(Integer roleMode) {
+        this.roleMode = roleMode;
+        return this;
+    }
+
+    public KaSecurityAuthCheckMode getPermissionMode() {
+        return permissionMode==1?KaSecurityAuthCheckMode.AND:KaSecurityAuthCheckMode.OR;
+    }
+
+    public AuthVO setPermissionMode(KaSecurityAuthCheckMode permissionMode) {
+        this.permissionMode = permissionMode.getMode();
+        return this;
+    }
+    public AuthVO setPermissionMode(Integer permissionMode) {
+        this.permissionMode = permissionMode;
+        return this;
+    }
+    public List<String> getLogicIndex() {
+        return JSONUtils.getList(this.logicIndex);
+    }
+
+    public void setLogicIndex(String logicIndex) {
+        this.logicIndex = logicIndex;
+    }
+
+    public AuthVO setLogicIndexs(List<Integer> logicIndex) {
+        this.logicIndex = JSONUtils.getJSON(logicIndex);
+        return this;
+    }
 }

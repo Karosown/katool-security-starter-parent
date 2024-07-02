@@ -49,21 +49,24 @@ public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface
 
     @Override
     public String getTokenWithHeader(String headerName){
-        return RequestContextUtil.getRequestMono().flatMap(
+        String token = RequestContextUtil.getRequestMono().flatMap(
                 request -> Mono.just(request.getHeaders().getFirst(headerName))
         ).block();
+        return token.substring(token.indexOf("Bearer ")+1);
     }
     @Override
     public String getTokenWithParameter(String parameterName){
-        return RequestContextUtil.getRequestMono().flatMap(
+        String token = RequestContextUtil.getRequestMono().flatMap(
                 request -> Mono.just(request.getQueryParams().getFirst(parameterName))
         ).block();
+        return token.substring(token.indexOf("Bearer ")+1);
     }
     @Override
     public String getTokenWithCookie(String cookieName){
-        return RequestContextUtil.getRequestMono().flatMap(
+        String token = RequestContextUtil.getRequestMono().flatMap(
                 request -> Mono.just(request.getCookies().getFirst(cookieName).getValue())
         ).block();
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 
     @Override

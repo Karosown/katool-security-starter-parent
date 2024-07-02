@@ -20,8 +20,6 @@ import org.yaml.snakeyaml.introspector.PropertySubstitute;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
@@ -200,11 +198,13 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
 
     default String getTokenWithDubboRPC(){
-        return RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 
     default String getTokenWithHeader(){
-        return getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        String token = getTokenWithHeader(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 
     String getTokenWithHeader(String headerName);
@@ -212,14 +212,15 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
     String getTokenWithCookie(String cookieName);
     default String getTokenWithHeaderOrParameter(String headerName, String parameterName){
         String tokenWithHeader = getTokenWithHeader(headerName);
-        return tokenWithHeader ==null?getTokenWithParameter(parameterName): tokenWithHeader;
+        String token = tokenWithHeader == null ? getTokenWithParameter(parameterName) : tokenWithHeader;
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 
     default String getTokenAllIn(String name){
         String token = getTokenWithHeaderOrParameter(name, name);
         token = null == token?getTokenWithCookie(name):token;
         token = null == token?getTokenWithDubboRPC():token;
-        return token;
+        return token.substring(token.indexOf("Bearer ")+1);
     }
     default String getTokenAllInDefineHeader(){
         return getTokenAllIn(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);

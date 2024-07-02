@@ -1,10 +1,9 @@
-package cn.katool.security.config;
+package cn.katool.security.core.config;
 
 import cn.katool.security.core.constant.KaSecurityMode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWarDeployment;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.DependsOn;

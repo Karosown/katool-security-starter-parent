@@ -35,8 +35,15 @@ public class AuthUpdateRequest implements Serializable {
     private String route;
 
 
-    private List<String> authRole;
+    private List<String> anyRole;
 
+    private List<String> mustRole;
+
+    private List<String> anyPermission;
+    private List<String> mustPermission;
+    private List<Integer> logicIndex;
+    private Integer roleMode;
+    private Integer permissionMode;
     /**
      *
      */

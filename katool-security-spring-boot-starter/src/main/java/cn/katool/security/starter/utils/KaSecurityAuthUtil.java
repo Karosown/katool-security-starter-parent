@@ -50,12 +50,14 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
 
     @Override
     public String getTokenWithHeader(String headerName) {
-        return getRequest().getHeader(headerName);
+        String token = getRequest().getHeader(headerName);
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 
     @Override
     public String getTokenWithParameter(String parameterName) {
-        return getRequest().getParameter(parameterName);
+        String token = getRequest().getParameter(parameterName);
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 
     @Override
@@ -63,7 +65,8 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
         HttpServletRequest request = getRequest();
         for (Cookie cookie : request.getCookies()) {
             if (cookieName.equals(cookie.getName())) {
-                return cookie.getValue();
+                String token = cookie.getValue();
+                return token.substring(token.indexOf("Bearer ")+1);
             }
         }
         return null;
@@ -71,6 +74,7 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
 
     @Override
     public String getTokenWithHeaderOrParameter(String headerName, String parameterName) {
-        return getTokenWithHeader(headerName) == null ? getTokenWithParameter(parameterName) : getTokenWithHeader(headerName);
+        String token = getTokenWithHeader(headerName) == null ? getTokenWithParameter(parameterName) : getTokenWithHeader(headerName);
+        return token.substring(token.indexOf("Bearer ")+1);
     }
 }

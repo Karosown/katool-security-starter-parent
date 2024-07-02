@@ -1,10 +1,10 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration = \
 cn.katool.security.core.config.KaSecurityCoreConfig,\
-cn.katool.security.core.config.KaSecurityCorePluginConfig,\
-cn.katool.security.config.KaSecurityModeConfig,\
+cn.katool.security.config.KaSecurityCorePluginConfig,\
+cn.katool.security.core.config.KaSecurityModeConfig,\
 cn.katool.config.cache.CacheConfig,\
 cn.katool.config.store.QiNiuConfig,\
 cn.katool.config.util.LockConfig,\
 cn.katool.config.util.RedisUtilConfig,\
 cn.katool.config.auth.AuthConfig,\
-cn.katool.security.task.config.TokenCleanConfig  
+cn.katool.security.task.config.TokenCleanConfig

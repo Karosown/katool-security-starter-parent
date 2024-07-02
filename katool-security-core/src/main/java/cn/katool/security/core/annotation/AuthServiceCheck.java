@@ -10,6 +10,8 @@
 
 package cn.katool.security.core.annotation;
 
+import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -28,7 +30,7 @@ public @interface AuthServiceCheck {
      * @return
      */
     @Deprecated
-    String mustRole() default "";
+    String[] mustRole() default "";
     
 
     /**
@@ -40,10 +42,16 @@ public @interface AuthServiceCheck {
      * 支持多个权限，只要有一个通过即可
      * @return
      */
-    String[] permissionCodes() default "";
+    String[] anyPermissionCodes() default "";
+    String[] mustPermissionCodes() default "";
+
     /**
      * 排除的方法
      * @return
      */
     String[] excludeMethods() default "";
+    KaSecurityAuthCheckMode roleMode() default KaSecurityAuthCheckMode.AND;
+    KaSecurityAuthCheckMode  permissionMode() default KaSecurityAuthCheckMode.AND;
+    int[] logicIndex() default {0};
+
 }
