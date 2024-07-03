@@ -10,10 +10,12 @@ import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.starter.utils.DefaultKaSecurityAuthUtilInterface;
 import com.alibaba.excel.util.ListUtils;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.context.annotation.Bean;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.yaml.snakeyaml.introspector.PropertySubstitute;
 
+import javax.management.MXBean;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,6 +27,20 @@ public interface KaSecurityAuthLogic<T> extends  DefaultKaSecurityAuthUtilInterf
    List<String> getUserRoleList();
    List<String> getUserPermissionCodeList();
 
+   default boolean caseAndValidMode(boolean any,boolean must,List<String> anyList,List<String> mustList,KaSecurityAuthCheckMode mode){
+      boolean validRole;
+      switch (mode){
+         case OR:
+            validRole = any || must;
+            break;
+         case AND:
+            validRole = ((ObjectUtils.isEmpty(anyList) || any) && (ObjectUtils.isEmpty(mustList) || must));
+            break;
+         default:
+            throw new KaToolException(ErrorCode.PARAMS_ERROR,"【KaTool-Security】请检测接口的roleMode鉴权的参数");
+      }
+      return validRole;
+   }
    default KaSecurityValidMessage doAuth(List<String> anyRoleList, List<String> mustRoleList,
                                          List<String> anyPermissionCodeList, List<String> mustPermissionCodeList,
                                          KaSecurityAuthCheckMode roleMode,KaSecurityAuthCheckMode permissionMode){
@@ -34,38 +50,37 @@ public interface KaSecurityAuthLogic<T> extends  DefaultKaSecurityAuthUtilInterf
       }
       // 取交集
       boolean validRole = false;
+      boolean validAnyRole =   userRoleList.stream().filter(anyRoleList::contains).count() > 0;
+      boolean validMustRole =  userRoleList.stream().filter(mustRoleList::contains).count() == mustRoleList.size();
       switch (roleMode){
          case OR:
-            validRole = ( ObjectUtils.isEmpty(anyRoleList) || userRoleList.stream().filter(anyRoleList::contains).count() > 0) ||
-                    ( ObjectUtils.isEmpty(mustRoleList) ||userRoleList.stream().filter(mustRoleList::contains).count() == mustRoleList.size());
+            validRole = validAnyRole || validMustRole;
             break;
          case AND:
-            validRole = ( ObjectUtils.isEmpty(anyRoleList) || userRoleList.stream().filter(anyRoleList::contains).count() > 0) &&
-                   ( ObjectUtils.isEmpty(mustRoleList) || userRoleList.stream().filter(mustRoleList::contains).count() == mustRoleList.size());
+            validRole = ((ObjectUtils.isEmpty(anyRoleList) || validAnyRole) && (ObjectUtils.isEmpty(mustRoleList) || validMustRole));
             break;
          default:
             throw new KaToolException(ErrorCode.PARAMS_ERROR,"【KaTool-Security】请检测接口的roleMode鉴权的参数");
-      }
-      if (!validRole){
-         return KaSecurityValidMessage.noAuth();
       }
       List<String> userPermissionCodeList = this.getUserPermissionCodeList();
       if (ObjectUtils.isEmpty(userPermissionCodeList)) {
          userPermissionCodeList = ListUtils.newArrayList();
       }
+      boolean validPermission = false;
+      boolean validAnyPermission =  userPermissionCodeList.stream().filter(anyPermissionCodeList::contains).count() > 0;
+      boolean validMustPermission = userPermissionCodeList.stream().filter(mustPermissionCodeList::contains).count() == mustPermissionCodeList.size();
       switch (permissionMode){
          case OR:
-            validRole = ( ObjectUtils.isEmpty(anyPermissionCodeList) || userPermissionCodeList.stream().filter(anyPermissionCodeList::contains).count() > 0) ||
-                    ( ObjectUtils.isEmpty(mustPermissionCodeList) || userPermissionCodeList.stream().filter(mustPermissionCodeList::contains).count() == mustPermissionCodeList.size());
+            validPermission = validAnyRole || validMustPermission;
             break;
          case AND:
-            validRole = ( ObjectUtils.isEmpty(anyPermissionCodeList) || userPermissionCodeList.stream().filter(anyPermissionCodeList::contains).count() > 0)
-                    && ( ObjectUtils.isEmpty(mustPermissionCodeList) || userPermissionCodeList.stream().filter(mustPermissionCodeList::contains).count() == mustPermissionCodeList.size());
+            validPermission = (ObjectUtils.isEmpty(anyPermissionCodeList) || validAnyPermission)
+                    && (ObjectUtils.isEmpty(mustPermissionCodeList) || validMustPermission);
             break;
          default:
             throw new KaToolException(ErrorCode.PARAMS_ERROR,"【KaTool-Security】请检测接口的permissionMode鉴权的参数");
       }
-      if (!validRole) {
+      if (!validRole && !validPermission) {
          return KaSecurityValidMessage.noAuth();
       }
       return KaSecurityValidMessage.success();
@@ -117,8 +132,8 @@ public interface KaSecurityAuthLogic<T> extends  DefaultKaSecurityAuthUtilInterf
       return request;
    }
 
-   default void loadPlugin(){
-      return ;
-   }
+
+   @Bean
+   void loadPlugin();
 
 }

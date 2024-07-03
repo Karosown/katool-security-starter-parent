@@ -53,5 +53,4 @@ public @interface AuthServiceCheck {
     KaSecurityAuthCheckMode roleMode() default KaSecurityAuthCheckMode.AND;
     KaSecurityAuthCheckMode  permissionMode() default KaSecurityAuthCheckMode.AND;
     int[] logicIndex() default {0};
-
 }

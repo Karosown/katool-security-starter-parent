@@ -3,7 +3,7 @@ package cn.katool.security.config;
 import cn.katool.Exception.ErrorCode;
 import cn.katool.Exception.KaToolException;
 import cn.katool.security.logic.KaSecurityAuthLogic;
-import cn.katool.security.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.util.cache.utils.CaffeineUtils;
 import cn.katool.util.classes.ClassUtil;
 import cn.katool.util.classes.SpringContextUtils;
@@ -88,7 +88,7 @@ public class KaSecurityCorePluginConfig {
         }
         if (backup) {
             backup = false;
-            CopyOnWriteArrayList<KaSecurityAuthLogic> list = KaToolSecurityAuthQueue.getList();
+            CopyOnWriteArrayList<KaSecurityAuthLogic> list = KaToolSecurityAuthLogicContainer.getList();
             CopyOnWriteArrayList<KaSecurityAuthLogic> backup = new CopyOnWriteArrayList<>();
             backup.addAll(list);
             flagBook.put("backUplist", backup);
@@ -138,8 +138,8 @@ public class KaSecurityCorePluginConfig {
             });
             clearOldBean();
             // 统一处理，避免异常。
-            log.info("[katool-security-auth-plugn-instead]:正在对鉴权逻辑进行替换");
-            KaToolSecurityAuthQueue.clear();
+            log.debug("[katool-security-auth-plugn-instead]:正在对鉴权逻辑进行替换");
+            KaToolSecurityAuthLogicContainer.clear();
             logicList.forEach(KaSecurityAuthLogic::loadPlugin);
         } else {
             if (BooleanUtils.isFalse(this.getEnable())) {

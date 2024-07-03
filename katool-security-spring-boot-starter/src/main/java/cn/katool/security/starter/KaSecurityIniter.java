@@ -13,7 +13,7 @@ public class KaSecurityIniter {
     private final String version = "V1.1.0.RELEASE";
 
     @Bean
-    public void init(){
+    public void KaSecurityInit(){
         System.out.println(
                 " ██   ██           ██████████                    ██        ████████                                ██   ██           \n" +
                 "░██  ██           ░░░░░██░░░                    ░██       ██░░░░░░                                ░░   ░██    ██   ██\n" +

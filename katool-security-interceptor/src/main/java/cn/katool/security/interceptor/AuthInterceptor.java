@@ -9,7 +9,7 @@ import cn.katool.security.core.annotation.AuthServiceCheck;
 import cn.katool.security.core.config.KaSecurityModeConfig;
 import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
 import cn.katool.security.core.constant.KaSecurityMode;
-import cn.katool.security.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.core.model.vo.AuthVO;
 import cn.katool.security.core.utils.JSONUtils;
@@ -94,7 +94,7 @@ public class AuthInterceptor {
             // 判断在gateway上是否鉴权
             String authed = request.getHeader("Authed");
             if (!"KaTool-Security".equals(authed)) {
-                log.info("\n[KaTool-Security-AOP-@AuthCheck-UnGateWay]路由信息如下:\n" +
+                log.debug("\n[KaTool-Security-AOP-@AuthCheck-UnGateWay]路由信息如下:\n" +
                         "method: [{}]\n" +
                         "requestURI: [{}]\n" +
                         "contextPath:  [{}]",method,requestURI,contextPath);
@@ -102,7 +102,7 @@ public class AuthInterceptor {
                 AuthVO one = authService.getOne(method, requestURI, contextPath);
                 // 如果是新增的路由，那么就加上
                 if (ObjectUtils.isEmpty(one)) {
-                    log.info("\n[KaTool-Security-AOP-@AuthCheck-Store]新增鉴权路由，路由信息如下:\n" +
+                    log.debug("\n[KaTool-Security-AOP-@AuthCheck-Store]新增鉴权路由，路由信息如下:\n" +
                             "method: [{}]\n" +
                             "requestURI: [{}]\n" +
                             "contextPath:  [{}]",method,requestURI,contextPath);
@@ -127,27 +127,27 @@ public class AuthInterceptor {
                         .setCheckLogin(onlyCheckLogin)
                         .setIsDef(true);    //设置成真值，一样的交给网关执行
                 boolean state = authService.saveOrUpdate(one);
-                log.info("[KaTool-Security-AOP-@AuthCheck-Store]认证中心保存更新状态state: {}",state);
+                log.debug("[KaTool-Security-AOP-@AuthCheck-Store]认证中心保存更新状态state: {}",state);
                 // 网关没有鉴权，那么在这里鉴权
-                log.info("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行开始");
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
+                log.debug("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行开始");
+                KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
                 if (!KaSecurityValidMessage.success().equals(run)) {
                     return responseHandler(JSONUtils.getJSON(run));
                 }
-                log.info("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行完毕");
+                log.debug("[KaTool-Security-AOP-@AuthCheck-Auth]AOP鉴权逻辑执行完毕");
             }
             else{
                 //如果已经鉴权，通过流量染色
-                log.info("[KaTool-Security-AOP-@AuthCheck-Authed]即将进入业务层，路由信息如下\n" +
+                log.debug("[KaTool-Security-AOP-@AuthCheck-Authed]即将进入业务层，路由信息如下\n" +
                         "method: [{}]\n" +
                         "requestURI: [{}]\n" +
                         "contextPath:  [{}]",method,requestURI,contextPath);
             }
         }
         else {
-            log.info("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行开始");
-            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
-            log.info("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行完毕");
+            log.debug("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行开始");
+            KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
+            log.debug("[KaTool-Security-AOP-@AuthCheck-Auth]鉴权逻辑执行完毕");
             if (!KaSecurityValidMessage.success().equals(run)) {
                 return responseHandler(JSONUtils.getJSON(run));
             }
@@ -160,6 +160,19 @@ public class AuthInterceptor {
 
     @Around("@within(authControllerCheck)")
     public Object doInterceptorAuthCheckController(ProceedingJoinPoint joinPoint, AuthControllerCheck authControllerCheck) throws Throwable {
+        // 获取方法上的注解
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method callback = signature.getMethod();
+        AuthCheck authCheck = callback.getAnnotation(AuthCheck.class);
+        if (null != authCheck){
+            log.debug("[KaTool-Security-AOP-@AuthControllerCheck] 方法 {} 走向 @AuthCheck 鉴权",callback.getName());
+            return joinPoint.proceed();
+        }
+        // 获取类上的注解
+        AuthServiceCheck AuthServiceCheck = callback.getDeclaringClass().getAnnotation(AuthServiceCheck.class);
+        if (null != AuthServiceCheck){
+            throw new RuntimeException("@AuthServiceCheck 与 @AuthControllerCheck 注解 不能共存");
+        }
         // 获取管理信息
         List<String> anyRole = Arrays.stream(authControllerCheck.anyRole())
                 .filter(StringUtils::isNotBlank)
@@ -178,9 +191,9 @@ public class AuthInterceptor {
         KaSecurityAuthCheckMode permissionMode = authControllerCheck.permissionMode();
         List<Integer> logicIndex = Arrays.stream(authControllerCheck.logicIndex()).boxed().collect(Collectors.toList());
         String methodName = getFormatCurrentMethodName(joinPoint);
-        log.info("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>CurrentMethod: {}",methodName);
+        log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>CurrentMethod: {}",methodName);
         if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName)){
-            log.info("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>ExcludeList: {}",excludeList);
+            log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Config]@AuthControllerCheck=>ExcludeList: {}",excludeList);
             return joinPoint.proceed();
         }
         Boolean onlyCheckLogin = authControllerCheck.onlyCheckLogin();
@@ -194,7 +207,7 @@ public class AuthInterceptor {
             // 判断在gateway上是否鉴权
             String authed = request.getHeader("Authed");
             if (!"KaTool-Security".equals(authed)) {
-                log.info("\n[KaTool-Security-AOP-@AuthControllerCheck-UnGateWay]路由信息如下:\n" +
+                log.debug("\n[KaTool-Security-AOP-@AuthControllerCheck-UnGateWay]路由信息如下:\n" +
                         "method: [{}]\n" +
                         "requestURI: [{}]\n" +
                         "contextPath:  [{}]",method,requestURI,contextPath);
@@ -202,7 +215,7 @@ public class AuthInterceptor {
                 AuthVO one = authService.getOne(method, requestURI, contextPath);
                 // 如果是新增的路由，那么就加上
                 if (ObjectUtils.isEmpty(one)) {
-                    log.info("\n[KaTool-Security-AOP-@AuthControllerCheck-Store]路由信息如下:\n" +
+                    log.debug("\n[KaTool-Security-AOP-@AuthControllerCheck-Store]路由信息如下:\n" +
                             "method: [{}]\n" +
                             "requestURI: [{}]\n" +
                             "contextPath:  [{}]",method,requestURI,contextPath);
@@ -225,27 +238,27 @@ public class AuthInterceptor {
                         .setLogicIndexs(logicIndex)
                         .setIsDef(true);    //设置成真值，一样的交给网关执行
                 boolean state = authService.saveOrUpdate(one);
-                log.info("[KaTool-Security-AOP-@AuthControllerCheck-Store]认证中心保存更新状态state: {}",state);
+                log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Store]认证中心保存更新状态state: {}",state);
                 // 网关没有鉴权，那么在这里鉴权
-                log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
+                log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
+                KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
                 if (!KaSecurityValidMessage.success().equals(run)) {
                     return responseHandler(JSONUtils.getJSON(run));
                 }
-                log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
+                log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
             }
             else{
                 //如果已经鉴权，通过流量染色
-                log.info("[KaTool-Security-AOP-@AuthControllerCheck-Authed]AOP鉴权逻辑执行即将进入业务层，路由信息如下\n" +
+                log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Authed]AOP鉴权逻辑执行即将进入业务层，路由信息如下\n" +
                         "method: [{}]\n" +
                         "requestURI: [{}]\n" +
                         "contextPath:  [{}]",method,requestURI,contextPath);
             }
         }
         else {
-            log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
-            KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
-            log.info("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
+            log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行开始");
+            KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermissionCodes, mustPermissionCodes, onlyCheckLogin,roleMode,permissionMode,logicIndex);
+            log.debug("[KaTool-Security-AOP-@AuthControllerCheck-Auth]AOP鉴权逻辑执行结束");
             if (!KaSecurityValidMessage.success().equals(run)) {
                 return responseHandler(JSONUtils.getJSON(run));
             }
@@ -255,6 +268,18 @@ public class AuthInterceptor {
     }
     @Around("@within(authServiceCheck)")
     public Object doInterceptorAuthService(ProceedingJoinPoint joinPoint, AuthServiceCheck authServiceCheck) throws Throwable {
+        // 获取方法上的注解
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method callback = signature.getMethod();
+        AuthCheck authCheck = callback.getAnnotation(AuthCheck.class);
+        if (null != authCheck){
+            log.debug("[KaTool-Security-AOP-@AuthServiceCheck] 方法 {} 走向 @AuthCheck 鉴权",callback.getName());
+            return joinPoint.proceed();
+        }
+        AuthControllerCheck authControllerCheck = callback.getDeclaringClass().getAnnotation(AuthControllerCheck.class);
+        if (null != authControllerCheck){
+            throw new RuntimeException("@AuthServiceCheck 与 @AuthControllerCheck 注解 不能共存");
+        }
         // 获取管理信息
         // 获取管理信息
         List<String> anyRole = Arrays.stream(authServiceCheck.anyRole())
@@ -281,21 +306,21 @@ public class AuthInterceptor {
                                            List<String> anyPermissionCodeList, List<String> mustPermissionCodeList,
                                            Boolean onlyCheckLogin, KaSecurityAuthCheckMode roleMode, KaSecurityAuthCheckMode permissionMode,List<Integer> logicIndex,List<String> excludeList) throws Throwable {
         String methodName = getFormatCurrentMethodName(joinPoint);
-        log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config] {} =>CurrentMethod: {}",currentAopMethodName,methodName);
+        log.debug("[KaTool-Security-AOP-@AuthServiceCheck-Config] {} =>CurrentMethod: {}",currentAopMethodName,methodName);
         if (CollectionUtil.isNotEmpty(excludeList)&&excludeList.contains(methodName)){
-            log.info("[KaTool-Security-AOP-@AuthServiceCheck-Config] {} =>ExcludeList: {}",currentAopMethodName,excludeList);
+            log.debug("[KaTool-Security-AOP-@AuthServiceCheck-Config] {} =>ExcludeList: {}",currentAopMethodName,excludeList);
             return joinPoint.proceed();
         }
         // 获取请求信息
         if (RequestContextHolder.getRequestAttributes()==null && StringUtils.isBlank(RpcContext.getContext().getAttachment(AuthConstant.TOKEN_HEADER)) ) {
             return joinPoint.proceed();
         }
-        log.info("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行开始");
-        KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRoleList, mustRoleList, anyPermissionCodeList, mustPermissionCodeList, onlyCheckLogin, roleMode, permissionMode,logicIndex);
+        log.debug("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行开始");
+        KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRoleList, mustRoleList, anyPermissionCodeList, mustPermissionCodeList, onlyCheckLogin, roleMode, permissionMode,logicIndex);
         if (!KaSecurityValidMessage.success().equals(run)) {
             return responseHandler(JSONUtils.getJSON(run));
         }
-        log.info("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行结束");
+        log.debug("[KaTool-Security-AOP-@AuthServiceCheck-Auth]AOP鉴权逻辑执行结束");
         // 进行响应日志记录
         return handelResponse(joinPoint);
     }

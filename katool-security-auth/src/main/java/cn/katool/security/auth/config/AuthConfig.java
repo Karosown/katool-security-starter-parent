@@ -2,7 +2,7 @@ package cn.katool.security.auth.config;
 
 import cn.katool.security.auth.model.entity.KaSecurityUser;
 import cn.katool.security.logic.KaSecurityAuthLogic;
-import cn.katool.security.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,7 @@ public class AuthConfig extends KaSecurityAuthUtil<KaSecurityUser> implements Ka
     @Override
     public void loadPlugin(){
         log.info("AuthConfig init...");
-        KaToolSecurityAuthQueue.insert(0,this);
+        KaToolSecurityAuthLogicContainer.insert(0,this);
     }
 
 

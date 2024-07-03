@@ -24,7 +24,7 @@ public class TokenCleanConfig {
     public static Integer effort_config;
 
     @Bean
-    void init(){
+    void TokenCleanConfigInit(){
         corn_config = corn;
         effort_config = effort;
     }

@@ -1,5 +1,9 @@
 package cn.katool.security.core.constant;
 
+
+class KaSeucrityAuthCheckModeEntity{
+    
+}
 public enum KaSecurityAuthCheckMode {
     OR(0),
     AND(1);

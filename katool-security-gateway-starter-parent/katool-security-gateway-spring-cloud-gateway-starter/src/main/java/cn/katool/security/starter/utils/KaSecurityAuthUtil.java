@@ -8,6 +8,7 @@ import cn.katool.security.starter.gateway.gateway.utils.RequestContextUtil;
 import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.classes.SpringContextUtils;
 import cn.katool.util.database.nosql.RedisUtils;
+import com.alibaba.excel.util.StringUtils;
 import eu.bitwalker.useragentutils.UserAgent;
 import org.springframework.http.HttpCookie;
 import org.springframework.http.ResponseCookie;
@@ -52,21 +53,30 @@ public class KaSecurityAuthUtil<T> implements DefaultKaSecurityAuthUtilInterface
         String token = RequestContextUtil.getRequestMono().flatMap(
                 request -> Mono.just(request.getHeaders().getFirst(headerName))
         ).block();
-        return token.substring(token.indexOf("Bearer ")+1);
+        if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
     }
     @Override
     public String getTokenWithParameter(String parameterName){
         String token = RequestContextUtil.getRequestMono().flatMap(
                 request -> Mono.just(request.getQueryParams().getFirst(parameterName))
         ).block();
-        return token.substring(token.indexOf("Bearer ")+1);
+        if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
     }
     @Override
     public String getTokenWithCookie(String cookieName){
         String token = RequestContextUtil.getRequestMono().flatMap(
                 request -> Mono.just(request.getCookies().getFirst(cookieName).getValue())
         ).block();
-        return token.substring(token.indexOf("Bearer ")+1);
+        if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
     }
 
     @Override

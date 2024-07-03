@@ -1,36 +1,36 @@
 package cn.katool.security.demo.boot.simple.config;
 
-import cn.hutool.core.util.BooleanUtil;
-import cn.katool.security.core.logic.KaSecurityAuthLogic;
-import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
-import cn.katool.security.core.model.entity.KaSecurityValidMessage;
+
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.starter.utils.KaSecurityAuthUtil;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
+import cn.katool.security.logic.KaSecurityAuthLogic;
 import java.util.List;
+
+
 @Component
-public class AuthConfig extends KaSecurityAuthUtil<String> implements KaSecurityAuthLogic{
+public class AuthConfig extends KaSecurityAuthUtil<User> implements KaSecurityAuthLogic<User>{
+
+
     @Override
-    public KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin) {
-        if (BooleanUtil.isFalse(onlyCheckLogin)){
-            return KaSecurityValidMessage.success();
-        }
-            String payLoad = this.getPayLoad();
-        return KaSecurityValidMessage.unLogin();
+    public List<String> getUserRoleList() {
+        // 正常情况下建议用int或者枚举进行映射
+        return this.getPayLoad().getUserRoles();
     }
 
     @Override
-    public KaSecurityValidMessage doAuth(List<String> roleList) {
-        // 这里可以根据角色列表进行鉴权，返回鉴权失败或者鉴权成功的消息
-        System.out.println("进入鉴权，roleList:" + roleList);
-        return KaSecurityValidMessage.success();
+    public List<String> getUserPermissionCodeList() {
+        // 正常情况下应该是有专门的权限服务或者读取配置来获取
+        return this.getPayLoad().getUserPermissions();
     }
+
 
     @Bean
-    private void initAuth(){
-        System.out.println("初始化鉴权框架");
-        KaToolSecurityAuthQueue.add(this);
+    @Override
+    public void loadPlugin() {
+        // 加载自定义插件
+        KaToolSecurityAuthLogicContainer.insert(0,this);
     }
-
 }

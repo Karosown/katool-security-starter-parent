@@ -2,7 +2,7 @@ package cn.katool.security.task;
 
 import cn.katool.security.config.KaSecurityCorePluginConfig;
 import cn.katool.security.logic.KaSecurityAuthLogic;
-import cn.katool.security.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.util.cache.utils.CaffeineUtils;
 import cn.katool.util.classes.ClassUtil;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -65,7 +65,7 @@ public class AuthPluginLoaderTask {
             List<String> oldClassUrls = (List<String>) flagBook.getIfNotExist("classUrls", new ArrayList<String>());
             // 取出差集，避免加载短时间内已经加载过的类
             List<String> reduceList = config.getClassUrls().stream().filter(v -> !oldClassUrls.contains(v)).collect(Collectors.toList());
-            KaToolSecurityAuthQueue.clear();
+            KaToolSecurityAuthLogicContainer.clear();
             reduceList.forEach(classUrl->{
                 String className=classUrl.substring(classUrl.lastIndexOf('/') + 1, classUrl.lastIndexOf(".class"));
 //                Class aClass = classUtil.urlLoader(classUrl, config.getPackageName()+"."+className);

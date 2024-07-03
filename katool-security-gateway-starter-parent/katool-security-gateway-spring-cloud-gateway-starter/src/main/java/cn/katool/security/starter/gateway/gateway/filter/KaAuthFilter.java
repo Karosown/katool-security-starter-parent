@@ -1,7 +1,7 @@
 package cn.katool.security.starter.gateway.gateway.filter;
 
 import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
-import cn.katool.security.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.starter.gateway.utils.KaToolSecurityResultUtils;
 import cn.katool.security.starter.gateway.core.constant.GlobalContainer;
@@ -56,7 +56,7 @@ public class KaAuthFilter implements GlobalFilter, Ordered {
                 KaSecurityAuthCheckMode roleMode = v.getRoleMode();
                 KaSecurityAuthCheckMode permissionMode = v.getPermissionMode();
                 List<Integer> logicIndex = v.getLogicIndex();
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(anyRole, mustRole, anyPermission, mustPermission, onlyCheckLogin,
+                KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermission, mustPermission, onlyCheckLogin,
                         roleMode, permissionMode,logicIndex);
                 if(!KaSecurityValidMessage.success().equals(run)){
                     return handleNoAuth(response);

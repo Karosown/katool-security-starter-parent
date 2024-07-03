@@ -2,7 +2,7 @@ package cn.katool.security.demo.zuul.simple.config;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.katool.security.core.logic.KaSecurityAuthLogic;
-import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.core.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class AuthConfig extends KaSecurityAuthUtil<String> implements KaSecurity
     @Bean
     private void initAuth(){
         System.out.println("初始化鉴权框架");
-        KaToolSecurityAuthQueue.add(this);
+        KaToolSecurityAuthLogicContainer.add(this);
     }
 
 }

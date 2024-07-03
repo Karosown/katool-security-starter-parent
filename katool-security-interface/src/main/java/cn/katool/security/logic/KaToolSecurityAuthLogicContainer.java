@@ -4,14 +4,10 @@ import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import org.springframework.util.ObjectUtils;
 
-import java.lang.reflect.Array;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.stream.Collectors;
 
-public class KaToolSecurityAuthQueue {
+public class KaToolSecurityAuthLogicContainer {
 
     private static final CopyOnWriteArrayList<KaSecurityAuthLogic> list=new CopyOnWriteArrayList<>();
 
@@ -19,6 +15,7 @@ public class KaToolSecurityAuthQueue {
      * 添加到末尾
      * @param logic
      */
+    @Deprecated
     public static void add(KaSecurityAuthLogic logic){
         if (ObjectUtils.isEmpty(logic)){
             throw new IllegalArgumentException("logic is null");
@@ -111,7 +108,7 @@ public class KaToolSecurityAuthQueue {
     }
 
     public static void setQueue(CopyOnWriteArrayList<KaSecurityAuthLogic> queue){
-        KaToolSecurityAuthQueue.clear();
+        KaToolSecurityAuthLogicContainer.clear();
         list.addAll(queue);
     }
 

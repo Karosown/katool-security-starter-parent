@@ -1,6 +1,7 @@
 package cn.katool.security.starter.utils;
 
 import com.netflix.zuul.context.RequestContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.Cookie;
@@ -42,13 +43,19 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
     @Override
     public String getTokenWithHeader(String headerName) {
         String token = getRequest().getHeader(headerName);
-        return token.substring(token.indexOf("Bearer ")+1);
+        if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
     }
 
     @Override
     public String getTokenWithParameter(String parameterName) {
         String token = getRequest().getParameter(parameterName);
-        return token.substring(token.indexOf("Bearer ")+1);
+        if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
     }
 
     @Override
@@ -57,15 +64,15 @@ public class KaSecurityAuthUtil<T> implements AbstractKaSecurityAuthUtil<T>{
         for (Cookie cookie : request.getCookies()) {
             if (cookieName.equals(cookie.getName())) {
                 String token = cookie.getValue();
-                return token.substring(token.indexOf("Bearer ")+1);
+                if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
             }
         }
         return null;
     }
 
-    @Override
-    public String getTokenWithHeaderOrParameter(String headerName, String parameterName) {
-        return getTokenWithHeader(headerName) == null ? getTokenWithParameter(parameterName) : getTokenWithHeader(headerName);
-    }
+
 
 }
