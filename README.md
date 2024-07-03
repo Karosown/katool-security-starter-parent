@@ -1,6 +1,6 @@
 # KaTool Security鉴权框架文档
 
-![template](http://7n.cdn.wzl.fyi/typora/img/template.png)
+![template](https://7n.cdn.wzl.fyi/typora/img/template.png)
 
 ![SpringBoot-2.7.0](https://img.shields.io/badge/SpringBoot-2.7.2-green)![SpringCloudGateWay-2.7.0](https://img.shields.io/badge/SpringCloudGateWay-2.2.10.RELEASE-orange)![SpringCloudZuul-2.7.0](https://img.shields.io/badge/SpringCloudZuul-2.2.10.RELEASE-orange)![KaTool-1.9.5.GAMA](https://img.shields.io/badge/KaTool-1.9.5.RELEASE-blue)
 
@@ -16,11 +16,11 @@ KaTool Security鉴权框架是KaTool提供的权限管理工具（基于Role和P
 
 - 拥有Token管理，上下线、踢人、角色可视化管理
 
-  ![image-20240216044605157](http://7n.cdn.wzl.fyi/typora/img/image-20240216044605157.png)
+  ![image-20240216044605157](https://7n.cdn.wzl.fyi/typora/img/image-20240216044605157.png)
 
-  ![image-20240216044654758](http://7n.cdn.wzl.fyi/typora/img/image-20240216044654758.png)
+  ![image-20240216044654758](https://7n.cdn.wzl.fyi/typora/img/image-20240216044654758.png)
 
-  ![image-20240216044731072](http://7n.cdn.wzl.fyi/typora/img/image-20240216044731072.png)
+  ![image-20240216044731072](https://7n.cdn.wzl.fyi/typora/img/image-20240216044731072.png)
 
 ## 2. 模块简介
 
