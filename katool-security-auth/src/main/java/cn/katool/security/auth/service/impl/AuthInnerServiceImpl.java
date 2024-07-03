@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 @AuthServiceCheck(
         anyRole =  {"admin"},
-        excludeMethods = {"getlistByIsOpen()"})
+        excludeMethods = {"getlistByIsOpen()","reload()"})
 public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
     implements AuthInnerService {
     @Override
@@ -46,19 +46,29 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         String method = addRequest.getMethod();
         String uri = addRequest.getUri();
         String route = addRequest.getRoute();
-        List<String> authRole = addRequest.getAuthRole();
+        List<String> anyRole = addRequest.getAnyRole();
+        List<String> mustRole = addRequest.getMustRole();
+        List<String> anyPermission = addRequest.getAnyPermission();
+        List<String> mustPermission = addRequest.getMustPermission();
+        Integer roleMode = addRequest.getRoleMode();
+        Integer permissionMode = addRequest.getPermissionMode();
+        List<Integer> logicIndex = addRequest.getLogicIndex();
         String operUser = addRequest.getOperUser();
-        Boolean onlyCheckLogin = addRequest.getOnlyCheckLogin();
-        Boolean isDef = addRequest.getIsDef();
         if (StringUtils.isAnyBlank(method,uri,route,operUser)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        if (ObjectUtils.isEmpty(authRole)||authRole.size()<1){
-            authRole.add("admin");
+        if (ObjectUtils.isEmpty(anyRole)||anyRole.size()<1){
+            anyRole.add("admin");
         }
         Auth auth=new Auth();
         BeanUtils.copyProperties(addRequest,auth);
-        auth.setAuthRoles(authRole);
+        auth.setAnyRoles(anyRole)
+                .setMustRoles(mustRole)
+                .setAnyPermissions(anyPermission)
+                .setMustPermissions(mustPermission)
+                .setRoleMode(roleMode)
+                .setPermissionMode(permissionMode)
+                .setLogicIndexs(logicIndex);
         boolean save = this.save(auth);
         return save;
     }
@@ -74,20 +84,29 @@ public class AuthInnerServiceImpl extends ServiceImpl<AuthMapper, Auth>
         String method = authUpdateRequest.getMethod();
         String uri = authUpdateRequest.getUri();
         String route = authUpdateRequest.getRoute();
-        List<String> authRole = authUpdateRequest.getAuthRole();
+        List<String> anyRole = authUpdateRequest.getAnyRole();
+        List<String> mustRole = authUpdateRequest.getMustRole();
+        List<String> anyPermission = authUpdateRequest.getAnyPermission();
+        List<String> mustPermission = authUpdateRequest.getMustPermission();
+        Integer roleMode = authUpdateRequest.getRoleMode();
+        Integer permissionMode = authUpdateRequest.getPermissionMode();
         String operUser = authUpdateRequest.getOperUser();
-        Boolean onlyCheckLogin = authUpdateRequest.getOnlyCheckLogin();
-        Boolean isDef = authUpdateRequest.getIsDef();
+        List<Integer> logicIndex = authUpdateRequest.getLogicIndex();
         if (StringUtils.isAnyBlank(method,uri,route,operUser)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        if (ObjectUtils.isEmpty(authRole)||authRole.size()<1){
-            authRole.add("admin");
+        if (ObjectUtils.isEmpty(anyRole)||anyRole.size()<1){
+            anyRole.add("admin");
         }
         Auth auth=new Auth();
         BeanUtils.copyProperties(authUpdateRequest,auth);
-        auth.setAuthRoles(authRole);
-
+        auth.setAnyRoles(anyRole)
+            .setMustRoles(mustRole)
+            .setAnyPermissions(anyPermission)
+            .setMustPermissions(mustPermission)
+            .setRoleMode(roleMode)
+            .setPermissionMode(permissionMode)
+            .setLogicIndexs(logicIndex);
         QueryWrapper<Auth> updateWrapper = new QueryWrapper<>();
         updateWrapper.eq(StringUtils.isNotBlank(id),"id",id)
                 .or()

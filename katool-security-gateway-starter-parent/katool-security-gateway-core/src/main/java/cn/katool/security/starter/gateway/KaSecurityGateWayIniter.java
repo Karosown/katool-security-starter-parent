@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @EnableKaSecurityAuthCenter
 public class KaSecurityGateWayIniter {
 
-    private final String version = "V1.1.0.BETA";
+    private final String version = "V1.1.0.RELEASE";
 
     @Bean
     public void GateWayInit(){

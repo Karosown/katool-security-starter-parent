@@ -1,6 +1,7 @@
 package cn.katool.security.starter.gateway.gateway.filter;
 
-import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.starter.gateway.utils.KaToolSecurityResultUtils;
 import cn.katool.security.starter.gateway.core.constant.GlobalContainer;
@@ -48,7 +49,15 @@ public class KaAuthFilter implements GlobalFilter, Ordered {
             log.info("method:{} name:{}",method,requestMethod);
             if (url.equals(path.value())&&method.equals(requestMethod)){
                 Boolean onlyCheckLogin = v.getOnlyCheckLogin();
-                KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),onlyCheckLogin);
+                List<String> anyPermission = v.getAnyPermission();
+                List<String> anyRole = v.getAnyRole();
+                List<String> mustPermission = v.getMustPermission();
+                List<String> mustRole = v.getMustRole();
+                KaSecurityAuthCheckMode roleMode = v.getRoleMode();
+                KaSecurityAuthCheckMode permissionMode = v.getPermissionMode();
+                List<Integer> logicIndex = v.getLogicIndex();
+                KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermission, mustPermission, onlyCheckLogin,
+                        roleMode, permissionMode,logicIndex);
                 if(!KaSecurityValidMessage.success().equals(run)){
                     return handleNoAuth(response);
                 }

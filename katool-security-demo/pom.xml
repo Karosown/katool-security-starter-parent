@@ -5,7 +5,7 @@
     <artifactId>katool-security-demo</artifactId>
     <packaging>pom</packaging>
     <name>katool-security-demo</name>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0.RELEASE</version>
     <url>https://security.katool.cn</url>
     <modules>
         <module>katool-security-boot-simple-demo</module>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>cn.katool.security</groupId>
             <artifactId>katool-security-spring-boot-starter</artifactId>
-            <version>1.1.0.BETA</version>
+            <version>1.1.0.RELEASE</version>
         </dependency>
     </dependencies>
 </project>

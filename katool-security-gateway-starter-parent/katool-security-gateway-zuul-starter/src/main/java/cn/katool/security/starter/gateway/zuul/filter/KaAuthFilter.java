@@ -1,7 +1,8 @@
 package cn.katool.security.starter.gateway.zuul.filter;
 
 
-import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
+import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
 import cn.katool.security.core.utils.JSONUtils;
 import cn.katool.security.starter.gateway.core.constant.GlobalContainer;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 // Zuul网关过滤器
@@ -48,7 +50,15 @@ public class KaAuthFilter extends ZuulFilter {
                     log.info("url:{} path:{}",url,path);
                     log.info("method:{} name:{}",method,requestMethod);
                     Boolean onlyCheckLogin = v.getOnlyCheckLogin();
-                    KaSecurityValidMessage run = KaToolSecurityAuthQueue.run(v.getRole(),onlyCheckLogin);
+                    List<String> anyPermission = v.getAnyPermission();
+                    List<String> anyRole = v.getAnyRole();
+                    List<String> mustPermission = v.getMustPermission();
+                    List<String> mustRole = v.getMustRole();
+                    KaSecurityAuthCheckMode roleMode = v.getRoleMode();
+                    KaSecurityAuthCheckMode permissionMode = v.getPermissionMode();
+                    List<Integer> logicIndex = v.getLogicIndex();
+                    KaSecurityValidMessage run = KaToolSecurityAuthLogicContainer.run(anyRole, mustRole, anyPermission, mustPermission, onlyCheckLogin,
+                            roleMode, permissionMode,logicIndex);
                     if(!KaSecurityValidMessage.success().equals(run)){
                         RequestContext.getCurrentContext().setSendZuulResponse(false);
                         RequestContext.getCurrentContext().setResponseStatusCode(HttpStatus.FORBIDDEN.value());

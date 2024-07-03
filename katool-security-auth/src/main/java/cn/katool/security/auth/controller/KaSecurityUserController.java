@@ -254,7 +254,7 @@ public class KaSecurityUserController extends KaSecurityAuthUtil<KaSecurityUser>
         queryWrapper.eq("user_name",kaSecurityUserName);
         KaSecurityUser kaSecurityUser = kaSecurityUserService.getOne(queryWrapper);
         if (ObjectUtils.isEmpty(kaSecurityUser)){
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+            return ResultUtils.success(null);
         }
         return ResultUtils.success(kaSecurityUserService.getLoginKaSecurityUserVO(kaSecurityUser));
     }

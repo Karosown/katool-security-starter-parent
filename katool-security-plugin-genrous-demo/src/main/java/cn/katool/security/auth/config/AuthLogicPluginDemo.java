@@ -1,30 +1,36 @@
 package cn.katool.security.auth.config;
 
 
-import cn.katool.security.core.logic.KaSecurityAuthLogic;
-import cn.katool.security.core.logic.KaToolSecurityAuthQueue;
+
 import cn.katool.security.core.model.entity.KaSecurityValidMessage;
+import cn.katool.security.core.model.entity.UserAgentInfo;
+import cn.katool.security.logic.KaSecurityAuthLogic;
+import cn.katool.security.logic.KaToolSecurityAuthLogicContainer;
+import cn.katool.security.starter.utils.KaSecurityAuthUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-public class AuthLogicPluginDemo implements KaSecurityAuthLogic {
+public class AuthLogicPluginDemo extends KaSecurityAuthUtil implements KaSecurityAuthLogic {
+
+
+
     @Override
-    public KaSecurityValidMessage doAuth(List<String> roleList) {
-        System.out.println("插件测试");
-        return KaSecurityValidMessage.success();
+    public List<String> getUserRoleList() {
+        return null;
     }
 
     @Override
-    public KaSecurityValidMessage doCheckLogin(Boolean onlyCheckLogin) {
-        System.out.println("插件测试");
-        return KaSecurityValidMessage.success();
+    public List<String> getUserPermissionCodeList() {
+        return null;
     }
-    @Bean
+
     @Override
-    public void loadPlugin(){
-        KaToolSecurityAuthQueue.insert(0,this);
+    public void loadPlugin() {
+
     }
+
+
 }

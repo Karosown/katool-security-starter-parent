@@ -13,7 +13,7 @@
         <module>katool-security-zuul-simple-demo-gateway</module>
     </modules>
     <packaging>pom</packaging>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.1.0.RELEASE</version>
     <groupId>cn.katool.security.demo</groupId>
     <artifactId>katool-security-zuul-simple-demo</artifactId>
     <name>katool-security-zuul-simple-demo</name>

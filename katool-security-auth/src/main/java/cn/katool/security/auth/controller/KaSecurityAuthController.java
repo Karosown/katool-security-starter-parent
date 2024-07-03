@@ -120,6 +120,11 @@ public class KaSecurityAuthController {
         IPage<AuthVO> convert = page.convert(v -> {
             AuthVO authVO = new AuthVO();
             BeanUtils.copyProperties(v, authVO);
+            authVO.setLogicIndexs(v.getLogicIndexs()).setAnyRole(v.getAnyRoles())
+                    .setMustRole(v.getMustRoles()).setAnyPermission(v.getAnyPermissions())
+                    .setMustPermission(v.getMustPermissions())
+                    .setPermissionMode(v.getPermissionMode())
+                    .setRoleMode(v.getRoleMode());
             return authVO;
         });
         log.info("{}",convert.getRecords());

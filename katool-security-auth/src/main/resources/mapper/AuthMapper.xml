@@ -10,7 +10,13 @@
         <result property="method" column="method" jdbcType="VARCHAR"/>
         <result property="uri" column="uri" jdbcType="VARCHAR"/>
         <result property="route" column="route" jdbcType="VARCHAR"/>
-        <result property="authRole" column="auth_role" jdbcType="VARCHAR"/>
+        <result property="anyRole" column="any_role" jdbcType="VARCHAR"/>
+        <result property="mustRole" column="must_role" jdbcType="VARCHAR"/>
+        <result property="anyPermission" column="any_permission" jdbcType="VARCHAR"/>
+        <result property="mustPermission" column="must_permission" jdbcType="VARCHAR"/>
+        <result property="logicIndex" column="logic_index" jdbcType="VARCHAR"/>
+        <result property="roleMode" column="role_mode" jdbcType="TINYINT"/>
+        <result property="permissionMode" column="permission_mode" jdbcType="TINYINT"/>
         <result property="operUser" column="oper_user" jdbcType="VARCHAR"/>
         <result property="onlyCheckLogin" column="only_check_login" jdbcType="BOOLEAN"/>
         <result property="isOpen" column="is_open" jdbcType="BOOLEAN"/>
@@ -19,8 +25,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_name,pass_word,
-        user_role,is_delete,created_time,
+        id,service_name,method,uri,route,any_role,must_role,any_permission,must_permission,logic_index,role_mode,permission_mode,
+        ,is_delete,created_time,
         update_time
     </sql>
     <sql id="swtich">

@@ -1,6 +1,9 @@
 package cn.katool.security.starter.utils;
 
 import cn.hutool.json.JSONObject;
+import cn.katool.Exception.ErrorCode;
+import cn.katool.Exception.KaToolException;
+import cn.katool.config.util.RedisUtilConfig;
 import cn.katool.security.core.annotation.AuthPrimary;
 import cn.katool.security.core.config.KaSecurityCoreConfig;
 
@@ -12,6 +15,7 @@ import cn.katool.util.auth.AuthUtil;
 import cn.katool.util.classes.SpringContextUtils;
 import cn.katool.util.database.nosql.RedisUtils;
 import com.qiniu.util.Auth;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -20,8 +24,6 @@ import org.yaml.snakeyaml.introspector.PropertySubstitute;
 import reactor.core.publisher.Mono;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.*;
 import java.util.List;
 import java.util.Map;
@@ -91,9 +93,7 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
             }
         }
         if (null == primary){
-            // 如果没有设置主键，则默认取第一个字段作为主键
-            JSONObject payLoad1 = (JSONObject) payLoad;
-            primary = payLoad1.get(KaSecurityCoreConfig.defautPrimaryKeyName);
+            throw new KaToolException(ErrorCode.OPER_ERROR,"请为AuthPayLoad设置主键，tips:在确定的属性上添加@AuthPrimary注解");
         }
         return primary.toString();
     }
@@ -113,6 +113,9 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
                 }
             }
         }
+        if (null == primary){
+            throw new KaToolException(ErrorCode.OPER_ERROR,"请为AuthPayLoad设置主键，tips:在确定的属性上添加@AuthPrimary注解");
+        }
         return primary.toString();
     }
     default String getPayLoadPrimary(T payLoad){
@@ -131,8 +134,7 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
             }
         }
         if (primary == null){
-            JSONObject payLoad1 = (JSONObject) payLoad;
-            primary = payLoad1.get(KaSecurityCoreConfig.defautPrimaryKeyName);
+            throw new KaToolException(ErrorCode.OPER_ERROR,"请为AuthPayLoad设置主键，tips:在确定的属性上添加@AuthPrimary注解");
         }
         return primary.toString();
     }
@@ -152,9 +154,8 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
                 }
             }
         }
-        if (primary == null){
-            JSONObject payLoad1 = (JSONObject) payLoad;
-            primary = payLoad1.get("id");
+        if (null == primary){
+            throw new KaToolException(ErrorCode.OPER_ERROR,"请为AuthPayLoad设置主键，tips:在确定的属性上添加@AuthPrimary注解");
         }
         return primary.toString();
     }
@@ -200,7 +201,11 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
 
     default String getTokenWithDubboRPC(){
-        return RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        String token = RpcContext.getContext().getAttachment(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
+        if (StringUtils.isNotBlank(token)){
+            return token.substring(token.indexOf("Bearer ")+"Bearer ".length());
+        }
+        return null;
     }
 
     default String getTokenWithHeader(){
@@ -212,14 +217,13 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
     String getTokenWithCookie(String cookieName);
     default String getTokenWithHeaderOrParameter(String headerName, String parameterName){
         String tokenWithHeader = getTokenWithHeader(headerName);
-        return tokenWithHeader ==null?getTokenWithParameter(parameterName): tokenWithHeader;
+        return tokenWithHeader == null ? getTokenWithParameter(parameterName) : tokenWithHeader;
     }
 
     default String getTokenAllIn(String name){
         String token = getTokenWithHeaderOrParameter(name, name);
         token = null == token?getTokenWithCookie(name):token;
-        token = null == token?getTokenWithDubboRPC():token;
-        return token;
+        return null == token?getTokenWithDubboRPC():token;
     }
     default String getTokenAllInDefineHeader(){
         return getTokenAllIn(KaSecurityCoreConfig.CURRENT_TOKEN_HEADER);
@@ -228,6 +232,14 @@ public interface DefaultKaSecurityAuthUtilInterface<T> {
 
     default Object redisOper(RedisUtils redisUtils, Supplier supplier){
         boolean status = false;
+        RedisUtilConfig redisUtilConfig = (RedisUtilConfig) SpringContextUtils.getBean("RedisUtilConfig");
+        String policy = null;
+        if (null != redisUtilConfig){
+            policy = redisUtilConfig.getPolicy();
+        }
+        if ("default".equals(policy)){
+            return supplier.get();
+        }
         if (redisUtils.getOnfCacheInThread().equals(true)){
             redisUtils.onfCacheInThread(false);
             status = true;

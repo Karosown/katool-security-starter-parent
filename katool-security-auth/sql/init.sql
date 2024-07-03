@@ -22,22 +22,32 @@
 DROP TABLE IF EXISTS `ka_security_auth`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ka_security_auth` (
-                                    `id` varchar(36) DEFAULT NULL,
-                                    `service_name` varchar(50) DEFAULT NULL,
-                                    `method` varchar(6) DEFAULT NULL,
-                                    `route` varchar(50) DEFAULT NULL,
-                                    `oper_user` varchar(36) DEFAULT NULL,
-                                    `uri` varchar(128) DEFAULT NULL,
-                                    `auth_role` varchar(256) DEFAULT NULL,
-                                    `is_delete` tinyint NOT NULL DEFAULT '0',
-                                    `is_def` tinyint NOT NULL DEFAULT '0',
-                                    `is_open` tinyint NOT NULL DEFAULT '0',
-                                    `only_check_login` tinyint DEFAULT NULL,
-                                    `created_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                    `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                                    UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+-- auto-generated definition
+create table ka_security_auth
+(
+    id               varchar(36)                            null,
+    service_name     varchar(50)                            null,
+    method           varchar(6)                             null,
+    route            varchar(50)                            null,
+    oper_user        varchar(36)                            null,
+    uri              varchar(128)                           null,
+    any_role         varchar(256)                           null,
+    must_role        varchar(256)                           null,
+    any_permission   varchar(256)                           null,
+    must_permission  varchar(256)                           null,
+    role_mode        tinyint(1)   default 1                 not null,
+    permission_mode  tinyint(1)   default 1                 not null,
+    logic_index      varchar(256) default '[0]'             not null,
+    is_delete        tinyint      default 0                 not null,
+    is_def           tinyint      default 0                 not null,
+    is_open          tinyint      default 0                 not null,
+    only_check_login tinyint                                null,
+    created_time     datetime     default CURRENT_TIMESTAMP not null,
+    update_time      datetime     default CURRENT_TIMESTAMP null on update CURRENT_TIMESTAMP,
+    constraint id
+        unique (id)
+);
+
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

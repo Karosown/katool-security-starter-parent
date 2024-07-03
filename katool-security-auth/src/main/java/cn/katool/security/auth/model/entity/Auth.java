@@ -1,5 +1,6 @@
 package cn.katool.security.auth.model.entity;
 
+import cn.katool.security.core.constant.KaSecurityAuthCheckMode;
 import cn.katool.security.core.utils.JSONUtils;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -49,9 +50,22 @@ public class Auth implements Serializable {
     /**
      * 
      */
-    @TableField(value = "auth_role")
-    private String authRole;
+    @TableField(value = "any_role")
+    private String anyRole;
 
+    @TableField(value = "must_role")
+    private String mustRole;
+
+    @TableField(value = "any_permission")
+    private String anyPermission;
+    @TableField(value = "must_permission")
+    private String mustPermission;
+    @TableField(value = "role_mode")
+    private Integer roleMode;
+    @TableField(value = "permission_mode")
+    private Integer permissionMode;
+    @TableField(value = "logic_index")
+    private String logicIndex;
     /**
      * 
      */
@@ -67,10 +81,9 @@ public class Auth implements Serializable {
     @TableField(value = "only_check_login")
     private Boolean onlyCheckLogin;
 
+
     @TableField(value = "is_open")
     private Boolean isOpen;
-
-
     /**
      * 
      */
@@ -117,9 +130,45 @@ public class Auth implements Serializable {
         return this;
     }
 
-    public Auth setAuthRole(String authRole) {
-        this.authRole = authRole;
+    public Auth setAnyRole(String authRole) {
+        this.anyRole = authRole;
         return this;
+    }
+    public Auth setMustRole(String authRole) {
+        this.mustRole = authRole;
+        return this;
+    }
+    public Auth setAnyPermission(String authRole) {
+        this.anyPermission = authRole;
+        return this;
+    }
+    public Auth setMustPermission(String authRole) {
+        this.mustPermission = authRole;
+        return this;
+    }
+    public Auth setRoleMode(Integer roleMode) {
+        this.roleMode = roleMode;
+        return this;
+    }
+    public Auth setPermissionMode(Integer permissionMode) {
+        this.permissionMode = permissionMode;
+        return this;
+    }
+    public Auth setRoleMode(KaSecurityAuthCheckMode mode){
+        this.roleMode = mode.getMode();
+        return this;
+    }
+    public Auth setPermissionMode(KaSecurityAuthCheckMode mode){
+        this.permissionMode = mode.getMode();
+        return this;
+    }
+    public KaSecurityAuthCheckMode getRoleModeEnum(){
+        switch (this.roleMode){
+            case 0: return KaSecurityAuthCheckMode.OR;
+            case 1: return KaSecurityAuthCheckMode.AND;
+            default:
+                throw new RuntimeException("读取RoleMode异常，请检测authId="+this.id);
+        }
     }
 
     public Auth setOperUser(String operUser) {
@@ -147,11 +196,40 @@ public class Auth implements Serializable {
         return this;
     }
 
-    public Auth setAuthRoles(List authRoleList) {
-        this.authRole=JSONUtils.getJSON(authRoleList);
+    public Auth setAnyRoles(List authRoleList) {
+        this.anyRole=JSONUtils.getJSON(authRoleList);
         return this;
     }
-    public List getAuthRoles(){
-        return JSONUtils.getList(this.authRole);
+    public List getAnyRoles(){
+        return JSONUtils.getList(this.anyRole);
+    }
+    public Auth setMustRoles(List authRoleList) {
+        this.mustRole=JSONUtils.getJSON(authRoleList);
+        return this;
+    }
+    public List getMustRoles(){
+        return JSONUtils.getList(this.mustRole);
+    }
+    public Auth setAnyPermissions(List authPermissionList) {
+        this.anyPermission=JSONUtils.getJSON(authPermissionList);
+        return this;
+    }
+    public List getAnyPermissions(){
+        return JSONUtils.getList(this.anyPermission);
+    }
+    public Auth setMustPermissions(List authPermissionList) {
+        this.mustPermission=JSONUtils.getJSON(authPermissionList);
+        return this;
+    }
+    public List getMustPermissions(){
+        return JSONUtils.getList(this.mustPermission);
+    }
+
+    public Auth setLogicIndexs(List logicIndex) {
+        this.logicIndex=JSONUtils.getJSON(logicIndex);
+        return this;
+    }
+    public List getLogicIndexs(){
+        return JSONUtils.getList(this.logicIndex);
     }
 }

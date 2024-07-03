@@ -28,14 +28,30 @@ public class UserAgentInfo {
         BrowserType browserTypeObj = browser.getBrowserType();
         OperatingSystem operatingSystem = userAgent.getOperatingSystem();
         DeviceType deviceTypeObj = operatingSystem.getDeviceType();
-        String browserName         = browser.getName();
-        String browserType         = browserTypeObj.getName();
-        String browserversion      = browserVersionObj.getVersion();
-        String BrowserMajorVersion = browserVersionObj.getMajorVersion();
-        String BrowserMinorVersion = browserVersionObj.getMinorVersion();
-        String sysName             = operatingSystem.getName();
-        Boolean isMobile           = operatingSystem.isMobileDevice();
-        String deviceType          = deviceTypeObj.getName();
+        String browserName = null;
+        if (null != browser) {
+            browserName = browser.getName();
+        }
+        String browserType         = null;
+        String browserversion      = null;
+        String BrowserMajorVersion = null;
+        String BrowserMinorVersion = null;
+        if (null!=browserVersionObj) {
+            browserType = browserTypeObj.getName();
+            browserversion = browserVersionObj.getVersion();
+            BrowserMajorVersion = browserVersionObj.getMajorVersion();
+            BrowserMinorVersion = browserVersionObj.getMinorVersion();
+        }
+        String sysName             = null;
+        Boolean isMobile           = null;
+        if (null != operatingSystem) {
+            sysName = operatingSystem.getName();
+            isMobile = operatingSystem.isMobileDevice();
+        }
+        String deviceType          = null;
+        if (null != deviceTypeObj) {
+            deviceType = deviceTypeObj.getName();
+        }
         return new UserAgentInfo(browserName,browserType,browserversion,BrowserMajorVersion,BrowserMinorVersion,sysName,deviceType,isMobile);
     }
 }
